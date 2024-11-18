@@ -209,7 +209,7 @@ div#content.externalPage {
 /* Custom Scrollbar */
 .custom-scroll {
   scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* For Firefox */
+  scrollbar-color: rgb(50,50,50) transparent; /* For Firefox */
   overflow-y: auto; /* Ensure scrollbars are visible when needed */
 }
 
@@ -223,7 +223,7 @@ div#content.externalPage {
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2); /* Minimal color */
+  background-color: rgb(50,50,50); /* Minimal color */
   border-radius: 10px; /* Rounded corners for smoothness */
 }
 
