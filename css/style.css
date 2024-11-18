@@ -421,6 +421,14 @@ body.light-theme .custom-scroll::-webkit-scrollbar-thumb {
   background-color: rgb(170,170,170);
 }
 
+body.custom-scroll {
+  scrollbar-color: rgb(170,170,170) transparent;
+}
+
+body.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(170,170,170);
+}
+
 /* Rules for desktop screens */
 @media (min-width: 769px) {
 
