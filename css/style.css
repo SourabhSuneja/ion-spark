@@ -413,6 +413,13 @@ body.light-theme #loading-overlay div.credits {
 	color: rgb(50, 50, 50);
 }
 
+body.light-theme .custom-scroll {
+  scrollbar-color: rgb(170,170,170) transparent;
+}
+
+body.light-theme .custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(170,170,170);
+}
 
 /* Rules for desktop screens */
 @media (min-width: 769px) {
