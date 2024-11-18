@@ -1,1 +1,66 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Ion Spark | Spark Your Learning</title>
+      <meta name="description" content="Discover the ultimate student learning app crafted by Sourabh sir! Engage with interactive quizzes, fun games, insightful notes, and hands-on projects designed to make learning exciting and effective.">
+      <!-- ion icons link -->
+      <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="./css/style.css">
+      <link rel="stylesheet" href="./css/dialog.css">
+   </head>
+   <body>
+      <!-- Overlays -->
+      <div id="overlay" onclick="toggleMenu()"></div>
+      <div id="loading-overlay">
+          <ion-icon class="fading-element" name="flash"></ion-icon>
+          <div class="credits">Crafted by Sourabh Sir</div>
+      </div>
+      <!-- Sidebar Menu -->
+      <div id="sidebar">
+         <span class="close-btn" onclick="toggleMenu()">&times;</span>        
+         <!-- Menu items will be added here dynamically-->
+      </div>
+      <!-- Main Container -->
+      <div id="main-container">
+         <!-- Header -->
+         <div id="header">
+            <div class="left-section">
+               <ion-icon id="menu-btn" name="menu-outline" onclick="toggleMenu()"></ion-icon>
+               <div class="app-name">Ion Spark <ion-icon name="flash"></ion-icon></div>
+            </div>
+            <div class="right-section avatar">
+               <ion-icon class="theme-toggle" name="contrast-outline" onclick="toggleTheme()"></ion-icon>
+               <img id="header-avatar" alt="Avatar">
+               <div class="name">Divya Sharma</div>
+            </div>
+         </div>
+         <!-- Student Profile -->
+         <div id="student-profile">
+            <!-- Student profile will be added here dynamically-->
+         </div>
+         <!-- Content Area -->
+         <div id="content">
+            <!-- Cards will be added here dynamically-->
+         </div>
+      </div>
+      <!-- Dialog Overlay -->
+      <div id="dialog-overlay" class="dialog-overlay">
+         <div class="dialog-box" id="dialog-box">
+            <div class="dialog-header" id="dialog-header">Title</div>
+            <div class="dialog-message" id="dialog-message">Message goes here</div>
+            <div class="dialog-buttons" id="dialog-buttons">
+               <!-- Buttons will be added dynamically -->
+            </div>
+         </div>
+      </div>
+      <!-- Dialog Overlay Ends -->
+      <script src="./js/dialog.js"></script>
+      <script src="./js/script.js"></script>
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+   </body>
+</html>
+
