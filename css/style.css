@@ -205,6 +205,28 @@ div#content.externalPage {
 	padding-bottom: 2px;
 }
 
+
+/* Custom Scrollbar */
+.custom-scroll {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* For Firefox */
+  overflow-y: auto; /* Ensure scrollbars are visible when needed */
+}
+
+/* For WebKit-based browsers (Chrome, Edge, Safari) */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px; /* Thin width */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent; /* Optional: Invisible track */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* Minimal color */
+  border-radius: 10px; /* Rounded corners for smoothness */
+}
+
 .card {
 	background-color: #1f1f1f;
 	padding: 20px;
