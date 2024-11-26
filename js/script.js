@@ -278,4 +278,3 @@ init();
 setTimeout(function() {
     document.getElementById('loading-overlay').style.display = 'none';
 }, 2000);
-
