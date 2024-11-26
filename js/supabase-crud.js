@@ -109,3 +109,19 @@ async function updateRow(tableName, matchColumn, matchValue, updateColumn, newVa
         return null;
     }
 }
+
+// invoke a function 
+async function invokeFunction(functionName, functionArgs = {}, fetchSingle = false) {
+    try {
+        // Invoke the PostgreSQL function using Supabase's rpc method
+        const { data, error } = await supabase.rpc(functionName, functionArgs);
+
+        if (error) throw error;
+
+        // If fetchSingle is true, return the first row only
+        return fetchSingle ? data?.[0] || null : data;
+    } catch (error) {
+        console.error(`Error invoking function ${functionName}:`, error.message);
+        return null;
+    }
+}
