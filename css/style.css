@@ -62,6 +62,7 @@ body {
       width: 100vw;
       background: #000;
       z-index: 9999999; 
+      overflow: scroll;
 }
 
     .sign-in-container {
