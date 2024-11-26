@@ -105,7 +105,3 @@ function getRandomLoadingPhrase() {
     window.hideProcessingDialog = function () {
         document.getElementById('dialog-overlay').classList.remove('show');
     };
-
-
-
-
