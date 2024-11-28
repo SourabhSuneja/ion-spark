@@ -433,12 +433,6 @@ div#content.externalPage {
 		display: none;
 	}
 
-	#student-profile {
-		flex-direction: column;
-		align-items: center;
-		text-align: center; 
-	}
-
 	.profile-avatar img {
 		width: 70px;
 		height: 70px;
@@ -457,6 +451,14 @@ div#content.externalPage {
              #sidebar .menu-item, #sidebar .logout-btn {
 		font-size: 1.1rem;
              }
+}
+
+@media (max-width: 600px) {
+	#student-profile {
+		flex-direction: column;
+		align-items: center;
+		text-align: center; 
+	}
 }
 
 
