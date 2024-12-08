@@ -125,3 +125,10 @@ async function invokeFunction(functionName, functionArgs = {}, fetchSingle = fal
         return null;
     }
 }
+
+window.checkAuth = checkAuth;
+window.insertData = insertData;
+window.selectData = selectData;
+window.deleteRow = deleteRow;
+window.updateRow = updateRow;
+window.invokeFunction = invokeFunction;
