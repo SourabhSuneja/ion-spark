@@ -265,6 +265,47 @@ function addIframeToContent(src, contentDiv) {
 }
 
 
+// function to login user
+async function login() {
+    const errorField = document.getElementById('error-message');
+    const btn = document.getElementById('sign-in-btn');
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    const errorIcon = '<ion-icon name="alert-circle-outline" class="sign-in-error-icon"></ion-icon>';
+
+    const email = (username + '@jvp.com').toLowerCase();
+
+    btn.innerHTML = '<i class="fas white fa-spinner fa-spin"></i> Wait...';
+    btn.disabled = true;
+    errorField.innerHTML = '';
+
+    if(username === '' || password === '') {
+        errorField.innerHTML = errorIcon + '<span>Username and password are required.</span>';
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In';
+        return ;       
+    }
+
+    
+    try {
+        const data = await window.signInUser(email, password);
+        window.userId = data.user.id;
+        document.write(JSON.stringify(window.userId));
+    } catch (error) {
+        errorField.innerHTML = errorIcon + '<span>' + error.message + '</span>';
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In';
+    }
+
+}
+
+
+// add event listener to sign in button
+document.getElementById('sign-in-btn').addEventListener('click', function(event) {
+    event.preventDefault();
+    login();
+});
 
 // function to initialize app states
 function init() {
