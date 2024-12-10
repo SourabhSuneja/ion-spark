@@ -6,7 +6,8 @@ const supabaseUrl = 'https://ckltcwampaagyzneaznt.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrbHRjd2FtcGFhZ3l6bmVhem50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1MDI2NjgsImV4cCI6MjA0ODA3ODY2OH0.pUT2kngS0nkzFBjI-P6g8azU5E3tZzGDQGL68-AUWFc';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-window.user = {};
+window.userId = null;
+window.userDetails = null;
 const redirectURL = null;
 
 // check authentication status
@@ -20,10 +21,10 @@ async function checkAuth() {
 
       if (session && session.user) {
          // User is signed in, fetch the user data
-         user.userId = session.user.id;
+         window.userId = session.user.id;
 
          // Wait for fetchUserData to resolve or reject
-         user.userDetails = await fetchUserData(userId, 'students'); 
+         window.userDetails = await fetchUserData(userId, 'students'); 
 
           // Stay on page, authentication successful
          // Do nothing
@@ -36,6 +37,90 @@ async function checkAuth() {
       // User is registered but user details are missing
       window.location.href = redirectURL;
    }
+}
+
+// sign in user
+async function signInUser(email, password) {
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            console.error("Error signing in:", error.message);
+            throw error;
+        }
+
+        console.log("User signed in successfully.");
+        return data; // Contains user session and user information
+    } catch (err) {
+        console.error("Unexpected error during sign-in:", err.message);
+        throw err;
+    }
+}
+
+// sign out user
+async function signOutUser() {
+    try {
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.error("Error logging out:", error.message);
+            throw error;
+        }
+
+        console.log("User logged out successfully.");
+    } catch (err) {
+        console.error("Unexpected error during logout:", err.message);
+        throw err;
+    }
+}
+
+// sign up a new user
+async function signUpUser(email, password) {
+    try {
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            console.error("Error signing up:", error.message);
+            throw error;
+        }
+
+        console.log("User signed up successfully:", data);
+        return data; // Contains user information and any session details
+    } catch (err) {
+        console.error("Unexpected error during sign-up:", err.message);
+        throw err;
+    }
+}
+
+// change user account password
+async function changeUserPassword(newPassword) {
+    try {
+        // Check if the user is authenticated
+        const { data: user, error: userError } = await supabase.auth.getUser();
+        if (userError) {
+            console.error("Error fetching user:", userError.message);
+            throw userError;
+        }
+
+        // Update the user's password
+        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        if (error) {
+            console.error("Error updating password:", error.message);
+            throw error;
+        }
+
+        console.log("Password changed successfully.");
+        return true;
+    } catch (err) {
+        console.error("Error changing password:", err.message);
+        throw err;
+    }
 }
 
 // insert data
@@ -126,9 +211,14 @@ async function invokeFunction(functionName, functionArgs = {}, fetchSingle = fal
     }
 }
 
+// expose all methods globally by attaching them to the window object
 window.checkAuth = checkAuth;
+window.signInUser = signInUser;
+window.signOutUser = signOutUser;
 window.insertData = insertData;
 window.selectData = selectData;
 window.deleteRow = deleteRow;
 window.updateRow = updateRow;
 window.invokeFunction = invokeFunction;
+
+signOutUser();
