@@ -267,6 +267,7 @@ function addIframeToContent(src, contentDiv) {
 
 // function to login user
 async function login() {
+    const signInScreen = document.getElementById('sign-in-screen');
     const errorField = document.getElementById('error-message');
     const btn = document.getElementById('sign-in-btn');
     const username = document.getElementById('username').value.trim();
@@ -291,7 +292,7 @@ async function login() {
     try {
         const data = await window.signInUser(email, password);
         window.userId = data.user.id;
-        //document.write(JSON.stringify(window.userId));
+        signInScreen.style.display = 'none';
     } catch (error) {
         errorField.innerHTML = errorIcon + '<span>' + error.message + '</span>';
         btn.disabled = false;
