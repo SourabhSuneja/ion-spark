@@ -291,7 +291,7 @@ async function login() {
     try {
         const data = await window.signInUser(email, password);
         window.userId = data.user.id;
-        document.write(JSON.stringify(window.userId));
+        //document.write(JSON.stringify(window.userId));
     } catch (error) {
         errorField.innerHTML = errorIcon + '<span>' + error.message + '</span>';
         btn.disabled = false;
