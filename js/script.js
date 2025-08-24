@@ -335,8 +335,10 @@ function init() {
           } catch (error) {
              console.error('Auth check error:', error);
           } finally {
-              // Hide flash loading screen
-              document.getElementById('loading-overlay').style.display = 'none';
+              // Hide flash loading screen after 3 seconds
+              setTimeout(() => {
+  document.getElementById('loading-overlay').style.display = 'none';
+}, 3000);
           }
           });
 
