@@ -112,7 +112,6 @@ function loadPage(page) {
   if(page !== 'home') {
     contentDiv.innerHTML = '';
     contentDiv.classList.add('externalPage');
-    contentDiv.style.height = `calc(100vh - ${header.offsetHeight}px)`;
     // Hide student profile
     document.getElementById('student-profile').style.display = 'none';
     addIframeToContent(links[page], contentDiv);
@@ -293,6 +292,7 @@ async function login() {
         const data = await window.signInUser(email, password);
         window.userId = data.user.id;
         signInScreen.style.display = 'none';
+        init();
     } catch (error) {
         errorField.innerHTML = errorIcon + '<span>' + error.message + '</span>';
         btn.disabled = false;
@@ -315,8 +315,26 @@ function init() {
    createAndAppendMenuItems();
 }
 
-init();
+          // Check authentication status when the window loads
+          window.addEventListener('load', async () => {
+          
+          try {
+             const isAuthenticated = await checkAuth();
+             
+             if (isAuthenticated) {
+                 // Hide signInScreen
+                 signInScreen.style.display = 'none';
+                 // Initialise app state
+                 init();
+             } else {
+                 // User is not logged in, show signInScreen
+                                  signInScreen.style.display = 'none';
+             }
+          } catch (error) {
+             console.error('Auth check error:', error);
+          } finally {
+              // Hide flash loading screen
+              document.getElementById('loading-overlay').style.display = 'none';
+          }
+          });
 
-setTimeout(function() {
-    document.getElementById('loading-overlay').style.display = 'none';
-}, 2000);
