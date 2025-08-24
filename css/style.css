@@ -246,6 +246,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	padding: 0;
+              height: 100vh;
 	overflow: hidden;
 }
 
@@ -256,7 +257,7 @@ body {
 	padding: 14px 20px;
 	border-bottom: 2px solid #333;
 	justify-content: space-between;
-	position: sticky;
+	flex-shrink: 0;
 	top: 0;
 	background-color: #121212;
 	z-index: 10;
@@ -320,13 +321,18 @@ body {
 	overflow-y: auto;
 	padding: 16px 20px;
 	padding-bottom: 26px;
+              flex: 1;
+              align-content: flex-start;
 }
 
 div#content.externalPage {
               margin-top: 0;
 	margin-bottom: 0;
-              padding: 0 0;
+              padding: 0;
 	padding-bottom: 2px;
+              flex-wrap: nowrap;
+              gap: 0;
+              align-content: stretch;
 }
 
 
@@ -592,19 +598,6 @@ body.custom-scroll::-webkit-scrollbar-thumb {
 
 /* Rules for desktop screens */
 @media (min-width: 769px) {
-
-  body, #main-container {
-       display: block;
-       height: auto;
-       overflow-y: auto;
-  }
-
-  #header {
-       position: fixed;
-       top: 0;
-       left: 0;
-       width: 100%;
-  }
 
   #student-profile {
        margin-top: 90px;
