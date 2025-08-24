@@ -317,7 +317,9 @@ function init() {
 
           // Check authentication status when the window loads
           window.addEventListener('load', async () => {
-          
+
+          const signInScreen = document.getElementById('sign-in-screen');
+
           try {
              const isAuthenticated = await checkAuth();
              
@@ -328,7 +330,7 @@ function init() {
                  init();
              } else {
                  // User is not logged in, show signInScreen
-                                  signInScreen.style.display = 'none';
+                                  signInScreen.style.display = 'block';
              }
           } catch (error) {
              console.error('Auth check error:', error);
