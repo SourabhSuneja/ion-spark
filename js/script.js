@@ -330,7 +330,7 @@ function init() {
                  init();
              } else {
                  // User is not logged in, show signInScreen
-                                  signInScreen.style.display = 'block';
+                                  signInScreen.style.display = 'flex';
              }
           } catch (error) {
              console.error('Auth check error:', error);
