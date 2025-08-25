@@ -132,6 +132,8 @@ async function logOut() {
    if (confirmLogout) {
       // Show loading overlay
       document.getElementById('loading-overlay').style.display = 'flex';
+      // Close side menu
+      toggleMenu();
       // Log user out
       await signOutUser();
       // Remove the Avatar image in the header (right side)
