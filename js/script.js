@@ -235,6 +235,21 @@ function createAndAppendCards() {
 function createAndAppendMenuItems() {
    const sidebar = document.getElementById('sidebar');
 
+   // Clear all previous content
+   sidebar.innerHTML = '';
+   
+   // Create the span element for close button on sidebar
+   const span = document.createElement("span");
+   // Add the class "close-btn"
+   span.className = "close-btn";
+   // Set the inner HTML to × (times symbol)
+   span.innerHTML = "&times;";
+   // Set the onclick handler to call toggleMenu()
+   span.onclick = toggleMenu;
+   // Append the element to sidebar
+   sidebar.appendChild(span);
+
+   // Create and append menu items
    menuItems.forEach(item => {
       // Create the main menu item div
       const menuItemDiv = document.createElement('div');
