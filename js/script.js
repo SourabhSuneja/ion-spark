@@ -125,11 +125,22 @@ function loadPage(page) {
 }
 
 function logOut() {
-   window.showDialog({
-      title: '',
+   const signInScreen = document.getElementById('sign-in-screen');
+   const confirmLogout = window.showDialog({
+      title: 'Confirm Logout?',
       message: 'Are you sure you want to log out?',
       type: 'confirm'
    });
+   if(confirmLogout) {
+      // Show loading overlay
+      document.getElementById('loading-overlay').style.display = 'block';
+      // Log user out
+      await signOutUser();
+      // Show sign in screen again
+      signInScreen.style.display = 'flex';
+      // Hide loading overlay
+      document.getElementById('loading-overlay').style.display = 'none';
+   }
 }
 
 
