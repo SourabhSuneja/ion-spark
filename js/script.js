@@ -124,7 +124,7 @@ function loadPage(page) {
 
 }
 
-function logOut() {
+async function logOut() {
    const signInScreen = document.getElementById('sign-in-screen');
    const confirmLogout = window.showDialog({
       title: 'Confirm Logout?',
