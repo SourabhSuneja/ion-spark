@@ -131,11 +131,26 @@ async function logOut() {
       message: 'Are you sure you want to log out?',
       type: 'confirm'
    });
-   if(confirmLogout) {
+   if (confirmLogout) {
       // Show loading overlay
       document.getElementById('loading-overlay').style.display = 'block';
       // Log user out
       await signOutUser();
+      // Remove the Avatar image in the header (right side)
+      document.getElementById('header-avatar').src = '';
+      // Clear the parent container where the profile was appended
+      document.getElementById('student-profile').innerHTML = '';
+      // Clear the app content (all cards)
+      document.getElementById('content').innerHTML = '';
+      // Clear the app sidebar (menu)
+      document.getElementById('sidebar').innerHTML = '';
+      // Reset the sign in button
+      const btn = document.getElementById('sign-in-btn');
+      btn.innerHTML = 'Sign In';
+      btn.disabled = false;
+      // Reset the username and password fields
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
       // Show sign in screen again
       signInScreen.style.display = 'flex';
       // Hide loading overlay
@@ -362,6 +377,6 @@ window.addEventListener('load', async () => {
       // Hide flash loading screen after 2 seconds
       setTimeout(() => {
          document.getElementById('loading-overlay').style.display = 'none';
-      }, 2000);
+      }, 1000);
    }
 });
