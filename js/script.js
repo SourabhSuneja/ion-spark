@@ -120,8 +120,6 @@ function loadPage(page) {
       document.getElementById('student-profile').style.display = 'none';
       addIframeToContent(links[page], contentDiv, page);
    }
-
-
 }
 
 async function logOut() {
@@ -133,7 +131,7 @@ async function logOut() {
    });
    if (confirmLogout) {
       // Show loading overlay
-      document.getElementById('loading-overlay').style.display = 'block';
+      document.getElementById('loading-overlay').style.display = 'flex';
       // Log user out
       await signOutUser();
       // Remove the Avatar image in the header (right side)
