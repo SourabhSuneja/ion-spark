@@ -1,428 +1,488 @@
-const links = {
-   home: null,
-   classwork: 'https://sourabhsuneja.github.io/question-paper/?ed=%7B%22schoolName%22%3A%22Jamna%20Vidyapeeth%22%2C%22examName%22%3A%22Term-1%20Book%20Work%20%2B%20Notebook%20Work%22%2C%22subject%22%3A%22Computer%22%2C%22duration%22%3A60%2C%22grade%22%3A%22VI%22%7D&qpm=%7B%22avartan-6-ch-1%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-2%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-3%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-5%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-8%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%7D&qc=%7B%22headings%22%3A%5B%22Ch-1%20MCQs%22%2C%22Ch-1%20Fill%20ups%22%2C%22Ch-1%20True%2FFalse%22%2C%22Ch-1%20QAs%22%2C%22Ch-2%20MCQs%22%2C%22Ch-2%20Fill%20ups%22%2C%22Ch-2%20True%2FFalse%22%2C%22Ch-2%20QAs%22%2C%22Ch-3%20MCQs%22%2C%22Ch-3%20Fill%20ups%22%2C%22Ch-3%20True%2FFalse%22%2C%22Ch-3%20QAs%22%2C%22Ch-5%20MCQs%22%2C%22Ch-5%20Fill%20ups%22%2C%22Ch-5%20True%2FFalse%22%2C%22Ch-5%20QAs%22%2C%22Ch-8%20MCQs%22%2C%22Ch-8%20Fill%20ups%22%2C%22Ch-8%20True%2FFalse%22%2C%22Ch-8%20QAs%22%5D%2C%22qTypes%22%3A%5B%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%5D%2C%22weightPerQ%22%3A%5B%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%5D%2C%22mustInclude%22%3A%5B%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%5D%2C%22settings%22%3A%7B%22provideAnsOrSpace%22%3A%22ans%22%2C%22randomiseSelection%22%3Afalse%2C%22strictChapterWiseDistribution%22%3Afalse%2C%22editable%22%3Afalse%2C%22showAIBtns%22%3Afalse%2C%22hideWeightage%22%3Atrue%2C%22showStudentDetails%22%3Afalse%2C%22border%22%3Afalse%2C%22shuffleMCQOptions%22%3Afalse%2C%22useDotPatternInBlanks%22%3Atrue%2C%22showHelpBoxInFillUp%22%3Afalse%2C%22mergeMatchItems%22%3Atrue%2C%22convertQForm%22%3A%7B%22MCQ%22%3A%7B%22toFillUp%22%3A0%2C%22toTF%22%3A0%2C%22toVSA%22%3A0%7D%2C%22flipTF%22%3Afalse%7D%2C%22spaceForAns%22%3A%7B%22Very%20Short%20Answer%20Type%22%3A1%2C%22Short%20Answer%20Type%22%3A3%2C%22Long%20Answer%20Type%22%3A5%2C%22Very%20Long%20Answer%20Type%22%3A8%2C%22Diagram%2FPicture%2FMap%20Based%22%3A6%7D%2C%22qTypesAllowedInImageQ%22%3A%5B%22Short%20Answer%20Type%22%2C%22Long%20Answer%20Type%22%2C%22Very%20Long%20Answer%20Type%22%2C%22Diagram%2FPicture%2FMap%20Based%22%5D%7D%7D&files=avartan-6-ch-1%2Bavartan-6-ch-2%2Bavartan-6-ch-3%2Bavartan-6-ch-5%2Bavartan-6-ch-8&diff=easy',
-   quiz: 'https://sourabhsuneja.github.io/quiz/play/?title=Data+Science+Quiz&quizType=individual&s=&q=kips-8-ch-3%2Bbetween-8-ch-3&allowMCQ=y&allowTF=y&m=random&shuffle=n&qshuffle=y&qproceed=click&maxchances=3&countdown=0&volume=100&customselect=y&usecards=n&useteam=n&teammap=%7B%7D&absent=%5B%5D&killPrevSession=y&quizID=Class+8+Quiz+Visit+from+Portal'
+// =============================================================================
+// CONFIGURATION & CONSTANTS
+// =============================================================================
+
+const APP_CONFIG = {
+  name: 'Ion Spark',
+  loadingDelay: 1000,
+  iframeTransitionDuration: '2s'
 };
 
-const pageMinWidthConfig = {
-   classwork: 750
+const LINKS = {
+  home: null,
+  classwork: 'https://sourabhsuneja.github.io/question-paper/?ed=%7B%22schoolName%22%3A%22Jamna%20Vidyapeeth%22%2C%22examName%22%3A%22Term-1%20Book%20Work%20%2B%20Notebook%20Work%22%2C%22subject%22%3A%22Computer%22%2C%22duration%22%3A60%2C%22grade%22%3A%22VI%22%7D&qpm=%7B%22avartan-6-ch-1%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-2%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-3%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-5%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-8%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%7D&qc=%7B%22headings%22%3A%5B%22Ch-1%20MCQs%22%2C%22Ch-1%20Fill%20ups%22%2C%22Ch-1%20True%2FFalse%22%2C%22Ch-1%20QAs%22%2C%22Ch-2%20MCQs%22%2C%22Ch-2%20Fill%20ups%22%2C%22Ch-2%20True%2FFalse%22%2C%22Ch-2%20QAs%22%2C%22Ch-3%20MCQs%22%2C%22Ch-3%20Fill%20ups%22%2C%22Ch-3%20True%2FFalse%22%2C%22Ch-3%20QAs%22%2C%22Ch-5%20MCQs%22%2C%22Ch-5%20Fill%20ups%22%2C%22Ch-5%20True%2FFalse%22%2C%22Ch-5%20QAs%22%2C%22Ch-8%20MCQs%22%2C%22Ch-8%20Fill%20ups%22%2C%22Ch-8%20True%2FFalse%22%2C%22Ch-8%20QAs%22%5D%2C%22qTypes%22%3A%5B%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%2C%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%5D%2C%22weightPerQ%22%3A%5B%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%5D%2C%22mustInclude%22%3A%5B%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%5D%2C%22settings%22%3A%7B%22provideAnsOrSpace%22%3A%22ans%22%2C%22randomiseSelection%22%3Afalse%2C%22strictChapterWiseDistribution%22%3Afalse%2C%22editable%22%3Afalse%2C%22showAIBtns%22%3Afalse%2C%22hideWeightage%22%3Atrue%2C%22showStudentDetails%22%3Afalse%2C%22border%22%3Afalse%2C%22shuffleMCQOptions%22%3Afalse%2C%22useDotPatternInBlanks%22%3Atrue%2C%22showHelpBoxInFillUp%22%3Afalse%2C%22mergeMatchItems%22%3Atrue%2C%22convertQForm%22%3A%7B%22MCQ%22%3A%7B%22toFillUp%22%3A0%2C%22toTF%22%3A0%2C%22toVSA%22%3A0%7D%2C%22flipTF%22%3Afalse%7D%2C%22spaceForAns%22%3A%7B%22Very%20Short%20Answer%20Type%22%3A1%2C%22Short%20Answer%20Type%22%3A3%2C%22Long%20Answer%20Type%22%3A5%2C%22Very%20Long%20Answer%20Type%22%3A8%2C%22Diagram%2FPicture%2FMap%20Based%22%3A6%7D%2C%22qTypesAllowedInImageQ%22%3A%5B%22Short%20Answer%20Type%22%2C%22Long%20Answer%20Type%22%2C%22Very%20Long%20Answer%20Type%22%2C%22Diagram%2FPicture%2FMap%20Based%22%5D%7D%7D&files=avartan-6-ch-1%2Bavartan-6-ch-2%2Bavartan-6-ch-3%2Bavartan-6-ch-5%2Bavartan-6-ch-8&diff=easy',
+  quiz: 'https://sourabhsuneja.github.io/quiz/play/?title=Data+Science+Quiz&quizType=individual&s=&q=kips-8-ch-3%2Bbetween-8-ch-3&allowMCQ=y&allowTF=y&m=random&shuffle=n&qshuffle=y&qproceed=click&maxchances=3&countdown=0&volume=100&customselect=y&usecards=n&useteam=n&teammap=%7B%7D&absent=%5B%5D&killPrevSession=y&quizID=Class+8+Quiz+Visit+from+Portal'
 };
 
-const user = {
-   'name': 'Divya Sharma',
-   'grade': '8',
-   'accountType': 'Student',
-   'avatar': 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight2&hairColor=BrownDark&clotheType=BlazerSweater&eyeType=Happy&mouthType=Smile&skinColor=Light&facialHairType=Blank&accessoriesType=Blank'
+const PAGE_MIN_WIDTH_CONFIG = {
+  classwork: 750
 };
-const cards = [{
-      icon: 'podium-outline',
-      title: 'My Result',
-      page: 'myresult'
-   },
-   {
-      icon: 'book-outline',
-      title: 'Classwork',
-      page: 'classwork'
-   },
-   {
-      icon: 'document-outline',
-      title: 'Worksheet',
-      page: 'worksheet'
-   },
-   {
-      icon: 'clipboard-outline',
-      title: 'PT-3 Blueprint',
-      page: 'pt3blueprint'
-   },
-   {
-      icon: 'bulb-outline',
-      title: 'Knowledge Dose',
-      page: 'knowledgedose'
-   },
-   {
-      icon: 'help-outline',
-      title: 'Quiz',
-      page: 'quiz'
-   },
-   {
-      icon: 'language',
-      title: 'Word of the Day',
-      page: 'word'
-   },
-   {
-      icon: 'trophy-outline',
-      title: 'Our Champions',
-      page: 'stars'
-   },
-   {
-      icon: 'chatbubble-outline',
-      title: 'Sarthak AI',
-      page: 'sarthak'
-   },
-   {
-      icon: 'color-wand-outline',
-      title: 'Chatbot Creator',
-      page: 'chatbotcreator'
-   },
-   {
-      icon: 'ribbon-outline',
-      title: 'Favourite Student Certificate',
-      page: 'feedback'
-   },
+
+const USER_DATA = {
+  name: 'Divya Sharma',
+  grade: '8',
+  accountType: 'Student',
+  avatar: 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight2&hairColor=BrownDark&clotheType=BlazerSweater&eyeType=Happy&mouthType=Smile&skinColor=Light&facialHairType=Blank&accessoriesType=Blank'
+};
+
+const DASHBOARD_CARDS = [
+  { icon: 'podium-outline', title: 'My Result', page: 'myresult' },
+  { icon: 'book-outline', title: 'Classwork', page: 'classwork' },
+  { icon: 'document-outline', title: 'Worksheet', page: 'worksheet' },
+  { icon: 'clipboard-outline', title: 'PT-3 Blueprint', page: 'pt3blueprint' },
+  { icon: 'bulb-outline', title: 'Knowledge Dose', page: 'knowledgedose' },
+  { icon: 'help-outline', title: 'Quiz', page: 'quiz' },
+  { icon: 'language', title: 'Word of the Day', page: 'word' },
+  { icon: 'trophy-outline', title: 'Our Champions', page: 'stars' },
+  { icon: 'chatbubble-outline', title: 'Sarthak AI', page: 'sarthak' },
+  { icon: 'color-wand-outline', title: 'Chatbot Creator', page: 'chatbotcreator' },
+  { icon: 'ribbon-outline', title: 'Favourite Student Certificate', page: 'feedback' }
 ];
 
-const menuItems = [{
-      icon: 'home',
-      title: 'Dashboard',
-      page: 'dashboard'
-   },
-   {
-      icon: 'game-controller',
-      title: 'Games',
-      page: 'games'
-   },
-   {
-      icon: 'notifications',
-      title: 'Notifications',
-      page: 'notifications'
-   },
-   {
-      icon: 'settings',
-      title: 'Settings',
-      page: 'settings'
-   },
+const MENU_ITEMS = [
+  { icon: 'home', title: 'Dashboard', page: 'dashboard' },
+  { icon: 'game-controller', title: 'Games', page: 'games' },
+  { icon: 'notifications', title: 'Notifications', page: 'notifications' },
+  { icon: 'settings', title: 'Settings', page: 'settings' }
 ];
 
-// Toggle the sidebar menu and overlay
-function toggleMenu() {
-   document.getElementById("sidebar").classList.toggle("active");
-   document.getElementById("overlay").style.display = document.getElementById("sidebar").classList.contains("active") ? "block" : "none";
-}
+// =============================================================================
+// DOM UTILITIES
+// =============================================================================
 
-// Toggle between dark and light themes
-function toggleTheme() {
-   document.body.classList.toggle("light-theme");
-}
+const DOMUtils = {
+  getElementById: (id) => document.getElementById(id),
+  
+  createElement: (tag, className = '', textContent = '') => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (textContent) element.textContent = textContent;
+    return element;
+  },
+  
+  createIcon: (iconName) => {
+    const icon = document.createElement('ion-icon');
+    icon.setAttribute('name', iconName);
+    return icon;
+  },
+  
+  toggleClass: (element, className) => {
+    element.classList.toggle(className);
+  },
+  
+  show: (element) => {
+    element.style.display = 'revert';
+  },
+  
+  hide: (element) => {
+    element.style.display = 'none';
+  },
+  
+  setDisplay: (element, display) => {
+    element.style.display = display;
+  }
+};
 
+// =============================================================================
+// UI COMPONENTS
+// =============================================================================
 
-function loadPage(page) {
-   // Show loading overlay
-   showProcessingDialog();
-   // Fetch elements to be manipulated
-   const contentDiv = document.getElementById('content');
-   const screenName = document.getElementById('screen-name');
-   const header = document.getElementById('header');
-   // Clear contentDiv
-   contentDiv.innerHTML = '';
-
-   if (page !== 'home') {
-      contentDiv.classList.add('externalPage');
-      // Set new screen name
-      screenName.innerText = capitalizeFirstLetter(page) + ' ';
-      // Hide student profile
-      document.getElementById('student-profile').style.display = 'none';
-      // Hide menu btn and show back button
-      document.getElementById("menu-btn").style.display = 'none';
-      document.getElementById("back-btn").style.display = 'revert';
-      addIframeToContent(links[page], contentDiv, page);
-   } else {
-      // Hide back btn and show menu button
-      document.getElementById("menu-btn").style.display = 'revert';
-      document.getElementById("back-btn").style.display = 'none';
-      // Show student profile again
-      document.getElementById('student-profile').style.display = 'revert';
-      // Set screen name back to app name
-      screenName.innerText = 'Ion Spark ';
-      // Remove externalPage class from contentDiv
-      contentDiv.classList.remove('externalPage');
-      // Re-initialize home screen elements
-      init();
-      // Hide loading animation
+const UIComponents = {
+  createCard: (cardData) => {
+    const cardDiv = DOMUtils.createElement('div', 'card');
+    const icon = DOMUtils.createIcon(cardData.icon);
+    const title = DOMUtils.createElement('div', 'title', cardData.title);
+    
+    cardDiv.appendChild(icon);
+    cardDiv.appendChild(title);
+    cardDiv.addEventListener('click', () => PageManager.loadPage(cardData.page));
+    
+    return cardDiv;
+  },
+  
+  createMenuItem: (itemData) => {
+    const menuItemDiv = DOMUtils.createElement('div', 'menu-item');
+    const icon = DOMUtils.createIcon(itemData.icon);
+    const titleText = document.createTextNode(itemData.title);
+    
+    menuItemDiv.appendChild(icon);
+    menuItemDiv.appendChild(titleText);
+    menuItemDiv.addEventListener('click', () => PageManager.loadPage(itemData.page));
+    
+    return menuItemDiv;
+  },
+  
+  createUserProfile: () => {
+    // Update header avatar
+    DOMUtils.getElementById('header-avatar').src = USER_DATA.avatar;
+    
+    const profileContainer = DOMUtils.getElementById('student-profile');
+    profileContainer.innerHTML = '';
+    
+    // Create profile avatar section
+    const profileAvatarDiv = DOMUtils.createElement('div', 'profile-avatar');
+    const avatarImg = DOMUtils.createElement('img');
+    avatarImg.src = USER_DATA.avatar;
+    avatarImg.alt = 'Avatar';
+    profileAvatarDiv.appendChild(avatarImg);
+    
+    // Create profile info section
+    const profileInfoDiv = DOMUtils.createElement('div', 'profile-info');
+    const nameHeading = DOMUtils.createElement('h2', 'student-name', USER_DATA.name);
+    const gradeParagraph = DOMUtils.createElement('p', 'student-grade', `Grade: ${USER_DATA.grade}`);
+    const descriptionParagraph = DOMUtils.createElement('p', 'student-description', `${USER_DATA.accountType} Account`);
+    
+    profileInfoDiv.append(nameHeading, gradeParagraph, descriptionParagraph);
+    profileContainer.append(profileAvatarDiv, profileInfoDiv);
+  },
+  
+  createIframe: (src, page) => {
+    const iframe = DOMUtils.createElement('iframe');
+    
+    Object.assign(iframe.style, {
+      width: '100%',
+      height: '100%',
+      border: 'none',
+      flex: '1',
+      opacity: '0',
+      transition: `opacity ${APP_CONFIG.iframeTransitionDuration}`
+    });
+    
+    if (PAGE_MIN_WIDTH_CONFIG[page]) {
+      iframe.style.minWidth = `${PAGE_MIN_WIDTH_CONFIG[page]}px`;
+    }
+    
+    iframe.src = src;
+    iframe.addEventListener('load', function() {
       hideProcessingDialog();
-   }
-}
+      this.style.opacity = '1';
+    });
+    
+    return iframe;
+  }
+};
 
-async function logOut() {
-   const signInScreen = document.getElementById('sign-in-screen');
-   const confirmLogout = await window.showDialog({
+// =============================================================================
+// MENU MANAGEMENT
+// =============================================================================
+
+const MenuManager = {
+  toggle: () => {
+    const sidebar = DOMUtils.getElementById('sidebar');
+    const overlay = DOMUtils.getElementById('overlay');
+    
+    DOMUtils.toggleClass(sidebar, 'active');
+    const isActive = sidebar.classList.contains('active');
+    DOMUtils.setDisplay(overlay, isActive ? 'block' : 'none');
+  },
+  
+  close: () => {
+    const sidebar = DOMUtils.getElementById('sidebar');
+    const overlay = DOMUtils.getElementById('overlay');
+    
+    sidebar.classList.remove('active');
+    DOMUtils.hide(overlay);
+  },
+  
+  initialize: () => {
+    const sidebar = DOMUtils.getElementById('sidebar');
+    sidebar.innerHTML = '';
+    
+    // Add close button
+    const closeBtn = DOMUtils.createElement('span', 'close-btn', '&times;');
+    closeBtn.innerHTML = '&times;'; // Need to set innerHTML for HTML entity
+    closeBtn.onclick = MenuManager.toggle;
+    sidebar.appendChild(closeBtn);
+    
+    // Add menu items
+    MENU_ITEMS.forEach(item => {
+      sidebar.appendChild(UIComponents.createMenuItem(item));
+    });
+    
+    // Add logout button
+    const logoutBtn = DOMUtils.createElement('button', 'logout-btn', 'Logout');
+    logoutBtn.addEventListener('click', AuthManager.logout);
+    sidebar.appendChild(logoutBtn);
+  }
+};
+
+// =============================================================================
+// PAGE MANAGEMENT
+// =============================================================================
+
+const PageManager = {
+  loadPage: (page) => {
+    showProcessingDialog();
+    
+    const elements = {
+      content: DOMUtils.getElementById('content'),
+      screenName: DOMUtils.getElementById('screen-name'),
+      studentProfile: DOMUtils.getElementById('student-profile'),
+      menuBtn: DOMUtils.getElementById('menu-btn'),
+      backBtn: DOMUtils.getElementById('back-btn')
+    };
+    
+    elements.content.innerHTML = '';
+    
+    if (page !== 'home') {
+      PageManager.loadExternalPage(page, elements);
+    } else {
+      PageManager.loadHomePage(elements);
+    }
+  },
+  
+  loadExternalPage: (page, elements) => {
+    elements.content.classList.add('externalPage');
+    elements.screenName.innerText = `${StringUtils.capitalizeFirstLetter(page)} `;
+    
+    DOMUtils.hide(elements.studentProfile);
+    DOMUtils.hide(elements.menuBtn);
+    DOMUtils.show(elements.backBtn);
+    
+    const iframe = UIComponents.createIframe(LINKS[page], page);
+    elements.content.appendChild(iframe);
+  },
+  
+  loadHomePage: (elements) => {
+    DOMUtils.show(elements.menuBtn);
+    DOMUtils.hide(elements.backBtn);
+    DOMUtils.show(elements.studentProfile);
+    
+    elements.screenName.innerText = `${APP_CONFIG.name} `;
+    elements.content.classList.remove('externalPage');
+    
+    AppManager.initialize();
+    hideProcessingDialog();
+  }
+};
+
+// =============================================================================
+// AUTHENTICATION MANAGEMENT
+// =============================================================================
+
+const AuthManager = {
+  login: async () => {
+    const elements = {
+      signInScreen: DOMUtils.getElementById('sign-in-screen'),
+      errorField: DOMUtils.getElementById('error-message'),
+      btn: DOMUtils.getElementById('sign-in-btn'),
+      username: DOMUtils.getElementById('username'),
+      password: DOMUtils.getElementById('password')
+    };
+    
+    const username = elements.username.value.trim();
+    const password = elements.password.value;
+    const errorIcon = '<ion-icon name="alert-circle-outline" class="sign-in-error-icon"></ion-icon>';
+    
+    AuthManager.setLoadingState(elements.btn, elements.errorField, true);
+    
+    if (!username || !password) {
+      AuthManager.showError(elements, errorIcon, 'Username and password are required.');
+      return;
+    }
+    
+    try {
+      const email = `${username}@jvp.com`.toLowerCase();
+      const data = await window.signInUser(email, password);
+      window.userId = data.user.id;
+      
+      DOMUtils.hide(elements.signInScreen);
+      AppManager.initialize();
+    } catch (error) {
+      AuthManager.showError(elements, errorIcon, error.message);
+    }
+  },
+  
+  logout: async () => {
+    const confirmLogout = await window.showDialog({
       title: 'Confirm Logout',
       message: 'Are you sure you want to log out?',
       type: 'confirm'
-   });
-   if (confirmLogout) {
-      // Show loading overlay
-      document.getElementById('loading-overlay').style.display = 'flex';
-      // Close side menu
-      toggleMenu();
-      // Log user out
-      await signOutUser();
-      // Remove the Avatar image in the header (right side)
-      document.getElementById('header-avatar').src = '';
-      // Clear the parent container where the profile was appended
-      document.getElementById('student-profile').innerHTML = '';
-      // Clear the app content (all cards)
-      document.getElementById('content').innerHTML = '';
-      // Clear the app sidebar (menu)
-      document.getElementById('sidebar').innerHTML = '';
-      // Reset the sign in button
-      const btn = document.getElementById('sign-in-btn');
+    });
+    
+    if (!confirmLogout) return;
+    
+    const loadingOverlay = DOMUtils.getElementById('loading-overlay');
+    DOMUtils.setDisplay(loadingOverlay, 'flex');
+    
+    MenuManager.close();
+    await signOutUser();
+    
+    AuthManager.clearUserSession();
+    AuthManager.showSignInScreen();
+    
+    DOMUtils.hide(loadingOverlay);
+  },
+  
+  setLoadingState: (btn, errorField, isLoading) => {
+    if (isLoading) {
+      btn.innerHTML = '<i class="fas white fa-spinner fa-spin"></i> Wait...';
+      btn.disabled = true;
+      errorField.innerHTML = '';
+    } else {
       btn.innerHTML = 'Sign In';
       btn.disabled = false;
-      // Reset the username and password fields
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
-      // Show sign in screen again
-      signInScreen.style.display = 'flex';
-      // Hide loading overlay
-      document.getElementById('loading-overlay').style.display = 'none';
-   }
+    }
+  },
+  
+  showError: (elements, errorIcon, message) => {
+    elements.errorField.innerHTML = `${errorIcon}<span>${message}</span>`;
+    AuthManager.setLoadingState(elements.btn, elements.errorField, false);
+  },
+  
+  clearUserSession: () => {
+    const elements = {
+      headerAvatar: DOMUtils.getElementById('header-avatar'),
+      studentProfile: DOMUtils.getElementById('student-profile'),
+      content: DOMUtils.getElementById('content'),
+      sidebar: DOMUtils.getElementById('sidebar'),
+      username: DOMUtils.getElementById('username'),
+      password: DOMUtils.getElementById('password')
+    };
+    
+    elements.headerAvatar.src = '';
+    elements.studentProfile.innerHTML = '';
+    elements.content.innerHTML = '';
+    elements.sidebar.innerHTML = '';
+    elements.username.value = '';
+    elements.password.value = '';
+  },
+  
+  showSignInScreen: () => {
+    const signInScreen = DOMUtils.getElementById('sign-in-screen');
+    const btn = DOMUtils.getElementById('sign-in-btn');
+    
+    btn.innerHTML = 'Sign In';
+    btn.disabled = false;
+    
+    DOMUtils.setDisplay(signInScreen, 'flex');
+  },
+  
+  checkAuthenticationStatus: async () => {
+    const signInScreen = DOMUtils.getElementById('sign-in-screen');
+    
+    try {
+      const isAuthenticated = await checkAuth();
+      
+      if (isAuthenticated) {
+        DOMUtils.hide(signInScreen);
+        AppManager.initialize();
+      } else {
+        DOMUtils.setDisplay(signInScreen, 'flex');
+      }
+    } catch (error) {
+      console.error('Auth check error:', error);
+    } finally {
+      setTimeout(() => {
+        DOMUtils.hide(DOMUtils.getElementById('loading-overlay'));
+      }, APP_CONFIG.loadingDelay);
+    }
+  }
+};
+
+// =============================================================================
+// THEME MANAGEMENT
+// =============================================================================
+
+const ThemeManager = {
+  toggle: () => {
+    document.body.classList.toggle('light-theme');
+  }
+};
+
+// =============================================================================
+// UTILITY FUNCTIONS
+// =============================================================================
+
+const StringUtils = {
+  capitalizeFirstLetter: (str) => {
+    if (!str || str.length === 0) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+};
+
+// =============================================================================
+// APP MANAGEMENT
+// =============================================================================
+
+const AppManager = {
+  initialize: () => {
+    UIComponents.createUserProfile();
+    AppManager.renderDashboardCards();
+    MenuManager.initialize();
+  },
+  
+  renderDashboardCards: () => {
+    const content = DOMUtils.getElementById('content');
+    content.innerHTML = '';
+    
+    DASHBOARD_CARDS.forEach(card => {
+      content.appendChild(UIComponents.createCard(card));
+    });
+  }
+};
+
+// =============================================================================
+// GLOBAL FUNCTIONS (for backward compatibility)
+// =============================================================================
+
+// These functions maintain the original API for external calls
+function toggleMenu() {
+  MenuManager.toggle();
 }
 
-
-// dynamically create user profile card
-function createUserProfile() {
-
-   // First update the Avatar image in the header (right side)
-   document.getElementById('header-avatar').src = user.avatar;
-   // Get the parent container where the profile will be appended
-   const profileContainer = document.getElementById('student-profile');
-   // Clear the profile container to remove previous content
-   profileContainer.innerHTML = '';
-
-   // Create the profile avatar section
-   const profileAvatarDiv = document.createElement('div');
-   profileAvatarDiv.classList.add('profile-avatar');
-
-   const avatarImg = document.createElement('img');
-   avatarImg.src = user.avatar;
-   avatarImg.alt = 'Avatar';
-
-   profileAvatarDiv.appendChild(avatarImg);
-
-   // Create the profile info section
-   const profileInfoDiv = document.createElement('div');
-   profileInfoDiv.classList.add('profile-info');
-
-   const nameHeading = document.createElement('h2');
-   nameHeading.classList.add('student-name');
-   nameHeading.textContent = user.name;
-
-   const gradeParagraph = document.createElement('p');
-   gradeParagraph.classList.add('student-grade');
-   gradeParagraph.textContent = `Grade: ${user.grade}`;
-
-   const descriptionParagraph = document.createElement('p');
-   descriptionParagraph.classList.add('student-description');
-   descriptionParagraph.textContent = `${user.accountType} Account`;
-
-   profileInfoDiv.appendChild(nameHeading);
-   profileInfoDiv.appendChild(gradeParagraph);
-   profileInfoDiv.appendChild(descriptionParagraph);
-
-   // Append both profile sections to the container
-   profileContainer.appendChild(profileAvatarDiv);
-   profileContainer.appendChild(profileInfoDiv);
+function toggleTheme() {
+  ThemeManager.toggle();
 }
 
-// dynamically create and append cards to the app screen
-function createAndAppendCards() {
-   const content = document.getElementById('content');
-
-   // Clear previous content
-   content.innerHTML = '';
-
-   cards.forEach(card => {
-      // Create the main card div
-      const cardDiv = document.createElement('div');
-      cardDiv.className = 'card';
-
-      // Create the ion icon element
-      const iconElement = document.createElement('ion-icon');
-      iconElement.setAttribute('name', card.icon);
-
-      // Create the title div
-      const titleDiv = document.createElement('div');
-      titleDiv.className = 'title';
-      titleDiv.textContent = card.title;
-
-      // Append icon and title to the card
-      cardDiv.appendChild(iconElement);
-      cardDiv.appendChild(titleDiv);
-
-      // Add click event listener to load the page
-      cardDiv.addEventListener('click', () => loadPage(card.page));
-
-      // Append the card to the content container
-      content.appendChild(cardDiv);
-   });
+function loadPage(page) {
+  PageManager.loadPage(page);
 }
 
-
-// dynamically create and append menu items to the app side navigation
-function createAndAppendMenuItems() {
-   const sidebar = document.getElementById('sidebar');
-
-   // Clear all previous content
-   sidebar.innerHTML = '';
-   
-   // Create the span element for close button on sidebar
-   const span = document.createElement("span");
-   // Add the class "close-btn"
-   span.className = "close-btn";
-   // Set the inner HTML to × (times symbol)
-   span.innerHTML = "&times;";
-   // Set the onclick handler to call toggleMenu()
-   span.onclick = toggleMenu;
-   // Append the element to sidebar
-   sidebar.appendChild(span);
-
-   // Create and append menu items
-   menuItems.forEach(item => {
-      // Create the main menu item div
-      const menuItemDiv = document.createElement('div');
-      menuItemDiv.className = 'menu-item';
-
-      // Create the ion icon element
-      const iconElement = document.createElement('ion-icon');
-      iconElement.setAttribute('name', item.icon);
-
-      // Create the text node for the title
-      const titleText = document.createTextNode(item.title);
-
-      // Append icon and title to the menu item
-      menuItemDiv.appendChild(iconElement);
-      menuItemDiv.appendChild(titleText);
-
-      // Add click event listener to load the page
-      menuItemDiv.addEventListener('click', () => loadPage(item.page));
-
-      // Append the menu item to the sidebar
-      sidebar.appendChild(menuItemDiv);
-   });
-
-   // Create a logout button
-   const logoutBtn = document.createElement('button');
-   logoutBtn.textContent = 'Logout';
-   logoutBtn.className = 'logout-btn';
-   logoutBtn.addEventListener('click', logOut);
-   sidebar.appendChild(logoutBtn);
+async function logOut() {
+  await AuthManager.logout();
 }
 
-
-// Function to fetch a page and show it as an iframe inside the content div
-function addIframeToContent(src, contentDiv, page) {
-
-
-   // Create a new iframe element
-   const iframe = document.createElement('iframe');
-
-   // Set the iframe's source
-   iframe.src = src;
-
-   // Style the iframe to fully fit and cover the content div
-   iframe.style.width = '100%';
-   iframe.style.height = '100%';
-   iframe.style.border = 'none';
-   iframe.style.flex = '1'; // Ensures it behaves as a flex item if needed
-   iframe.style.opacity = '0';
-   iframe.style.transition = 'opacity 2s';
-
-   // Set min width for the iframe if available in the config
-   if (pageMinWidthConfig[page]) {
-      const minWidth = pageMinWidthConfig[page];
-      iframe.style.minWidth = minWidth + 'px';
-   }
-
-   iframe.addEventListener('load', function () {
-      hideProcessingDialog();
-      this.style.opacity = '1';
-   });
-
-   // Append the iframe to the content div
-   contentDiv.appendChild(iframe);
-}
-
-
-// function to login user
 async function login() {
-   const signInScreen = document.getElementById('sign-in-screen');
-   const errorField = document.getElementById('error-message');
-   const btn = document.getElementById('sign-in-btn');
-   const username = document.getElementById('username').value.trim();
-   const password = document.getElementById('password').value;
-
-   const errorIcon = '<ion-icon name="alert-circle-outline" class="sign-in-error-icon"></ion-icon>';
-
-   const email = (username + '@jvp.com').toLowerCase();
-
-   btn.innerHTML = '<i class="fas white fa-spinner fa-spin"></i> Wait...';
-   btn.disabled = true;
-   errorField.innerHTML = '';
-
-   if (username === '' || password === '') {
-      errorField.innerHTML = errorIcon + '<span>Username and password are required.</span>';
-      btn.disabled = false;
-      btn.innerHTML = 'Sign In';
-      return;
-   }
-
-
-   try {
-      const data = await window.signInUser(email, password);
-      window.userId = data.user.id;
-      signInScreen.style.display = 'none';
-      init();
-   } catch (error) {
-      errorField.innerHTML = errorIcon + '<span>' + error.message + '</span>';
-      btn.disabled = false;
-      btn.innerHTML = 'Sign In';
-   }
-
+  await AuthManager.login();
 }
 
+function init() {
+  AppManager.initialize();
+}
 
-// add event listener to sign in button
-document.getElementById('sign-in-btn').addEventListener('click', function (event) {
-   event.preventDefault();
-   login();
+function capitalizeFirstLetter(str) {
+  return StringUtils.capitalizeFirstLetter(str);
+}
+
+function createUserProfile() {
+  UIComponents.createUserProfile();
+}
+
+function createAndAppendCards() {
+  AppManager.renderDashboardCards();
+}
+
+function createAndAppendMenuItems() {
+  MenuManager.initialize();
+}
+
+function addIframeToContent(src, contentDiv, page) {
+  const iframe = UIComponents.createIframe(src, page);
+  contentDiv.appendChild(iframe);
+}
+
+// =============================================================================
+// EVENT LISTENERS
+// =============================================================================
+
+// Sign in button event listener
+document.getElementById('sign-in-btn').addEventListener('click', (event) => {
+  event.preventDefault();
+  AuthManager.login();
 });
 
-// function to initialize app states
-function init() {
-   createUserProfile();
-   createAndAppendCards();
-   createAndAppendMenuItems();
-}
-
-// function to capitalize just the first letter of string
-function capitalizeFirstLetter(str) {
-  if (str.length === 0) return str; // Handle empty string
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
-// Check authentication status when the window loads
-window.addEventListener('load', async () => {
-
-   const signInScreen = document.getElementById('sign-in-screen');
-
-   try {
-      const isAuthenticated = await checkAuth();
-
-      if (isAuthenticated) {
-         // Hide signInScreen
-         signInScreen.style.display = 'none';
-         // Initialise app state
-         init();
-      } else {
-         // User is not logged in, show signInScreen
-         signInScreen.style.display = 'flex';
-      }
-   } catch (error) {
-      console.error('Auth check error:', error);
-   } finally {
-      // Hide flash loading screen after 2 seconds
-      setTimeout(() => {
-         document.getElementById('loading-overlay').style.display = 'none';
-      }, 1000);
-   }
+// Window load event listener
+window.addEventListener('load', () => {
+  AuthManager.checkAuthenticationStatus();
 });
