@@ -129,6 +129,8 @@ function loadPage(page) {
       // Hide back btn and show menu button
       document.getElementById("menu-btn").style.display = 'revert';
       document.getElementById("back-btn").style.display = 'none';
+      // Show student profile again
+      document.getElementById('student-profile').style.display = 'revert';
       // Set screen name back to app name
       screenName.innerText = 'Ion Spark ';
       // Remove externalPage class from contentDiv
