@@ -5,7 +5,8 @@
 const APP_CONFIG = {
    name: 'Ion Spark',
    loadingDelay: 1000,
-   iframeTransitionDuration: '2s'
+   iframeTransitionDuration: '2s',
+   currentPage: 'home'
 };
 
 const LINKS = {
@@ -271,6 +272,8 @@ const MenuManager = {
 const PageManager = {
    loadPage: (page) => {
       showProcessingDialog();
+
+      APP_CONFIG.currentPage = page;
 
       const elements = {
          content: DOMUtils.getElementById('content'),
