@@ -360,7 +360,7 @@ const AuthManager = {
       }
 
       try {
-         const email = `${username}@jvp.com`.toLowerCase();
+         const email = `${username}@ionspark.com`.toLowerCase();
          const data = await window.signInUser(email, password);
          window.userId = data.user.id;
 
