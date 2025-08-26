@@ -13,16 +13,17 @@
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="./css/style.css">
       <link rel="stylesheet" href="./css/dialog.css">
+      <link rel="stylesheet" href="./css/word-card-styles.css">
    </head>
    <body class="custom-scroll light-themse">
       <!-- Overlays -->
       <div id="overlay" onclick="toggleMenu()"></div>
       <div id="loading-overlay">
-          <ion-icon class="fading-element" name="flash"></ion-icon>
-          <div class="credits">Crafted by Sourabh Sir</div>
+         <ion-icon class="fading-element" name="flash"></ion-icon>
+         <div class="credits">Crafted by Sourabh Sir</div>
       </div>
       <!-- Sidebar Menu -->
-      <div id="sidebar">       
+      <div id="sidebar">
          <!-- Menu items will be added here dynamically-->
       </div>
       <!-- Main Container -->
@@ -32,7 +33,10 @@
             <div class="left-section">
                <ion-icon id="menu-btn" name="menu-outline" onclick="toggleMenu()"></ion-icon>
                <ion-icon id="back-btn" name="arrow-back"></ion-icon>
-               <div class="app-name"><span id="screen-name">Ion Spark </span><ion-icon name="flash"></ion-icon></div>
+               <div class="app-name">
+                  <span id="screen-name">Ion Spark </span>
+                  <ion-icon name="flash"></ion-icon>
+               </div>
             </div>
             <div class="right-section avatar">
                <ion-icon class="theme-toggle" name="contrast-outline" onclick="toggleTheme()"></ion-icon>
@@ -62,29 +66,45 @@
       <!-- Dialog Overlay Ends -->
       <!-- Sign in Screen Starts -->
       <div id="sign-in-screen" class="custom-scroll">
-           <div class="sign-in-container">
-    <h1><ion-icon name="flash"></ion-icon><br>Ion Spark</h1>
-    <div class="sign-in-text">Sign in to continue</div>
-    <form id="signInForm">
-      <div class="form-group">
-        <input type="text" id="username" placeholder="Enter your username" >
-        <ion-icon name="person-outline"></ion-icon>
-      </div>
-      <div class="form-group">
-        <input type="password" id="password" placeholder="Enter your password" >
-        <ion-icon name="lock-closed"></ion-icon>
-      </div>
-      <button id="sign-in-btn" type="submit">Sign In</button>
-      <div id="error-message" class="error-message"></div>
-    </form>
-    <div class="credit-text-in-form">Crafted by Sourabh Sir</div>
-  </div>
+         <div class="sign-in-container">
+            <h1>
+               <ion-icon name="flash"></ion-icon>
+               <br>Ion Spark
+            </h1>
+            <div class="sign-in-text">Sign in to continue</div>
+            <form id="signInForm">
+               <div class="form-group">
+                  <input type="text" id="username" placeholder="Enter your username" >
+                  <ion-icon name="person-outline"></ion-icon>
+               </div>
+               <div class="form-group">
+                  <input type="password" id="password" placeholder="Enter your password" >
+                  <ion-icon name="lock-closed"></ion-icon>
+               </div>
+               <button id="sign-in-btn" type="submit">Sign In</button>
+               <div id="error-message" class="error-message"></div>
+            </form>
+            <div class="credit-text-in-form">Crafted by Sourabh Sir</div>
+         </div>
       </div>
       <!-- Sign in Screen Ends -->
+      <!-- Word of the Day Card Starts -->
+      <div class="word-card" id="word-card">
+         <p id="word-text"></p>
+         <p id="pronunciation-text"></p>
+         <p id="meaning-text"><span>Meaning:</span> </p>
+         <p id="synonym-text"><span>Synonym:</span> </p>
+         <p id="antonym-text"><span>Antonym:</span> </p>
+         <p id="sentence-text"><span>Sentence:</span> </p>
+         <button id="new-word">More</button>
+         <button id="close-word-card">Close</button>
+      </div>
+      <!-- Word of the Day Card Ends -->
       <script type="module" src="./js/supabase-crud.js"></script>
       <script src="./js/dialog.js"></script>
       <script src="./js/script.js"></script>
       <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
       <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <script src="./js/word-card.js"></script>
    </body>
 </html>
