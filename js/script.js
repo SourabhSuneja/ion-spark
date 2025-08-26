@@ -60,7 +60,7 @@ const DASHBOARD_CARDS = [{
    {
       icon: 'language',
       title: 'Word of the Day',
-      page: 'word'
+      page: 'word-of-the-day'
    },
    {
       icon: 'trophy-outline',
@@ -274,6 +274,13 @@ const PageManager = {
    loadPage: (page) => {
       showProcessingDialog();
 
+      // Show word of the day if Word card was clicked
+      if (page === 'word-of-the-day') {
+         showRandomWord();
+         hideProcessingDialog();
+         return;
+      }
+
       APP_CONFIG.currentPage = page;
 
       const elements = {
@@ -294,6 +301,7 @@ const PageManager = {
    },
 
    loadExternalPage: (page, elements) => {
+
       elements.content.classList.add('externalPage');
 
       // Find the card object with matching page property
@@ -565,7 +573,9 @@ document.getElementById('back-btn').addEventListener('click', () => {
 // =============================================================================
 
 // Push an initial state so back button events can be detected
-window.history.replaceState({ page: APP_CONFIG.currentPage }, "");
+window.history.replaceState({
+   page: APP_CONFIG.currentPage
+}, "");
 
 // Whenever a new page is loaded, push it to the history
 const originalLoadPage = PageManager.loadPage;
@@ -574,7 +584,9 @@ PageManager.loadPage = (page) => {
 
    // Push state only if not already on this page
    if (window.history.state?.page !== page) {
-      window.history.pushState({ page }, "");
+      window.history.pushState({
+         page
+      }, "");
    }
 };
 
