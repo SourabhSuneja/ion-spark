@@ -49,7 +49,7 @@ function getRandomWord() {
 
 
 // Show the word card with a random word
-function showRandomWord() {
+window.showRandomWord = function() {
    const randomWord = getRandomWord();
 
    // Fill the card with the word's details
@@ -65,7 +65,7 @@ function showRandomWord() {
 }
 
 // Event listener for new word button
-newWordButton.addEventListener('click', showRandomWord);
+newWordButton.addEventListener('click', window.showRandomWord);
 
 // Event listener to close the word card
 closeWordCardButton.addEventListener('click', () => {
