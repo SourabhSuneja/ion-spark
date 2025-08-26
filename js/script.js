@@ -96,8 +96,7 @@ const menuItems = [{
 // Toggle the sidebar menu and overlay
 function toggleMenu() {
    document.getElementById("sidebar").classList.toggle("active");
-   document.getElementById("overlay").style.display =
-      document.getElementById("sidebar").classList.contains("active") ? "block" : "none";
+   document.getElementById("overlay").style.display = document.getElementById("sidebar").classList.contains("active") ? "block" : "none";
 }
 
 // Toggle between dark and light themes
@@ -118,7 +117,15 @@ function loadPage(page) {
       contentDiv.classList.add('externalPage');
       // Hide student profile
       document.getElementById('student-profile').style.display = 'none';
+      // Hide menu btn and show back button
+      document.getElementById("menu-btn").style.display = 'none';
+      document.getElementById("back-btn").style.display = 'revert';
       addIframeToContent(links[page], contentDiv, page);
+   } else {
+      // Show home screen
+      // Hide back btn and show menu button
+      document.getElementById("menu-btn").style.display = 'revert';
+      document.getElementById("back-btn").style.display = 'none';
    }
 }
 
