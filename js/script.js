@@ -131,6 +131,8 @@ function loadPage(page) {
       document.getElementById("back-btn").style.display = 'none';
       // Set screen name back to app name
       screenName.innerText = 'Ion Spark ';
+      // Remove externalPage class from contentDiv
+      contentDiv.classList.remove('externalPage');
       // Re-initialize home screen elements
       init();
       // Hide loading animation
