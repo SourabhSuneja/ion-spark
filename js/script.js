@@ -110,12 +110,15 @@ function loadPage(page) {
    showProcessingDialog();
    // Fetch elements to be manipulated
    const contentDiv = document.getElementById('content');
+   const screenName = document.getElementById('screen-name');
    const header = document.getElementById('header');
    // Clear contentDiv
    contentDiv.innerHTML = '';
 
    if (page !== 'home') {
       contentDiv.classList.add('externalPage');
+      // Set new screen name
+      screenName.innerText = capitalizeFirstLetter(page) + ' ';
       // Hide student profile
       document.getElementById('student-profile').style.display = 'none';
       // Hide menu btn and show back button
@@ -126,6 +129,8 @@ function loadPage(page) {
       // Hide back btn and show menu button
       document.getElementById("menu-btn").style.display = 'revert';
       document.getElementById("back-btn").style.display = 'none';
+      // Set screen name back to app name
+      screenName.innerText = 'Ion Spark ';
       // Re-initialize home screen elements
       init();
       // Hide loading animation
@@ -383,6 +388,12 @@ function init() {
    createUserProfile();
    createAndAppendCards();
    createAndAppendMenuItems();
+}
+
+// function to capitalize just the first letter of string
+function capitalizeFirstLetter(str) {
+  if (str.length === 0) return str; // Handle empty string
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 // Check authentication status when the window loads
