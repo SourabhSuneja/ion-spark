@@ -111,9 +111,10 @@ function loadPage(page) {
    // Fetch elements to be manipulated
    const contentDiv = document.getElementById('content');
    const header = document.getElementById('header');
+   // Clear contentDiv
+   contentDiv.innerHTML = '';
 
    if (page !== 'home') {
-      contentDiv.innerHTML = '';
       contentDiv.classList.add('externalPage');
       // Hide student profile
       document.getElementById('student-profile').style.display = 'none';
@@ -122,10 +123,11 @@ function loadPage(page) {
       document.getElementById("back-btn").style.display = 'revert';
       addIframeToContent(links[page], contentDiv, page);
    } else {
-      // Show home screen
       // Hide back btn and show menu button
       document.getElementById("menu-btn").style.display = 'revert';
       document.getElementById("back-btn").style.display = 'none';
+      // Re-initialize home screen elements
+      init();
    }
 }
 
