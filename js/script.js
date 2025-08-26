@@ -175,6 +175,8 @@ function createUserProfile() {
    document.getElementById('header-avatar').src = user.avatar;
    // Get the parent container where the profile will be appended
    const profileContainer = document.getElementById('student-profile');
+   // Clear the profile container to remove previous content
+   profileContainer.innerHTML = '';
 
    // Create the profile avatar section
    const profileAvatarDiv = document.createElement('div');
@@ -214,6 +216,9 @@ function createUserProfile() {
 // dynamically create and append cards to the app screen
 function createAndAppendCards() {
    const content = document.getElementById('content');
+
+   // Clear previous content
+   content.innerHTML = '';
 
    cards.forEach(card => {
       // Create the main card div
