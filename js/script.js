@@ -16,7 +16,8 @@ const LINKS = {
 };
 
 const PAGE_MIN_WIDTH_CONFIG = {
-   classwork: 750
+   classwork: 750,
+   worksheet: 750
 };
 
 const USER_DATA = {
