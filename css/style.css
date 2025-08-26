@@ -451,7 +451,7 @@ body.light-theme #header {
   text-align: left;
 }
 
-#menu-btn {
+#menu-btn, #back-btn {
   font-size: var(--font-icon-md);
   cursor: pointer;
   vertical-align: middle;
