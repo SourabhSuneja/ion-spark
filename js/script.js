@@ -553,6 +553,11 @@ window.addEventListener('load', () => {
    AuthManager.checkAuthenticationStatus();
 });
 
+// Simulate back button when user clicks on the custom back button
+document.getElementById('back-btn').addEventListener('click', () => {
+   window.history.back(); // This will trigger popstate handler
+});
+
 
 // =============================================================================
 // BROWSER BACK BUTTON HANDLING
