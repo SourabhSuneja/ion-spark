@@ -552,3 +552,34 @@ document.getElementById('sign-in-btn').addEventListener('click', (event) => {
 window.addEventListener('load', () => {
    AuthManager.checkAuthenticationStatus();
 });
+
+
+// =============================================================================
+// BROWSER BACK BUTTON HANDLING
+// =============================================================================
+
+// Push an initial state so back button events can be detected
+window.history.replaceState({ page: APP_CONFIG.currentPage }, "");
+
+// Whenever a new page is loaded, push it to the history
+const originalLoadPage = PageManager.loadPage;
+PageManager.loadPage = (page) => {
+   originalLoadPage(page);
+
+   // Push state only if not already on this page
+   if (window.history.state?.page !== page) {
+      window.history.pushState({ page }, "");
+   }
+};
+
+// Handle back/forward navigation
+window.addEventListener("popstate", (event) => {
+   const statePage = event.state?.page;
+
+   if (!statePage || statePage === "home") {
+      // Always go to home if back is pressed from any other page
+      PageManager.loadPage("home");
+   } else {
+      PageManager.loadPage(statePage);
+   }
+});
