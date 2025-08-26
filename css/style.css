@@ -457,6 +457,10 @@ body.light-theme #header {
   vertical-align: middle;
 }
 
+#back-btn {
+  display: none;
+}
+
 /* Content Area */
 #content {
   margin-top: var(--spacing-lg);
