@@ -324,7 +324,7 @@ const PageManager = {
    loadHomePage: (elements) => {
       DOMUtils.show(elements.menuBtn);
       DOMUtils.hide(elements.backBtn);
-      DOMUtils.show(elements.studentProfile);
+      DOMUtils.setDisplay(elements.studentProfile, 'flex');
 
       elements.screenName.innerText = `${APP_CONFIG.name} `;
       elements.content.classList.remove('externalPage');
