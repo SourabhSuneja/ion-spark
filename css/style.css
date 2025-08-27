@@ -548,7 +548,6 @@ div#content.externalPage {
   margin-bottom: 10px;
   margin-top: var(--spacing-xl);
   transition: transform var(--transition-base);
-  cursor: pointer;
   flex-shrink: 0;
   position: relative;
   overflow-y: hidden;
@@ -621,5 +620,8 @@ div#content.externalPage {
 @media (min-width: 769px) {
   #student-profile {
     margin-top: 40px;
+  }
+  .card {
+    flex: 1 1 200px;
   }
 }
