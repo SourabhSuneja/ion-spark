@@ -3,9 +3,33 @@
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="theme-color" content="#000">
+      <meta name="theme-color" content="#000" id="theme-color-meta">
+      
+      <!-- PWA Meta Tags -->
+      <meta name="application-name" content="Ion Spark">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="default">
+      <meta name="apple-mobile-web-app-title" content="Ion Spark">
+      <meta name="format-detection" content="telephone=no">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="msapplication-config" content="browserconfig.xml">
+      <meta name="msapplication-TileColor" content="#000000">
+      <meta name="msapplication-tap-highlight" content="no">
+      
+      <!-- PWA Manifest -->
+      <link rel="manifest" href="manifest.json">
+      
+      <!-- Favicons and Icons -->
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
+      <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+      <link rel="apple-touch-icon" href="apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+      
       <title>Ion Spark | Spark Your Learning</title>
       <meta name="description" content="Discover the ultimate student learning app crafted by Sourabh sir! Engage with interactive quizzes, fun games, insightful notes, and hands-on projects designed to make learning exciting and effective.">
+      
       <!-- font awesome icons link -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
       <!-- ion icons link -->
@@ -16,6 +40,11 @@
       <link rel="stylesheet" href="./css/word-card-styles.css">
    </head>
    <body class="custom-scroll light-themse">
+      <!-- PWA Install Button (optional - will be hidden by default) -->
+      <button id="install-button" style="display: none; position: fixed; top: 10px; right: 10px; z-index: 9999; background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+         <i class="fas fa-download"></i> Install App
+      </button>
+      
       <!-- Overlays -->
       <div id="overlay" onclick="toggleMenu()"></div>
       <div id="loading-overlay">
@@ -100,6 +129,62 @@
          <button id="close-word-card">Close</button>
       </div>
       <!-- Word of the Day Card Ends -->
+      
+      <!-- PWA Scripts -->
+      <script>
+         // Register Service Worker
+         if ('serviceWorker' in navigator) {
+           window.addEventListener('load', () => {
+             navigator.serviceWorker.register('sw.js')
+               .then((registration) => {
+                 console.log('SW registered: ', registration);
+               })
+               .catch((registrationError) => {
+                 console.log('SW registration failed: ', registrationError);
+               });
+           });
+         }
+
+         // PWA Install Prompt
+         let deferredPrompt;
+         const installButton = document.getElementById('install-button');
+
+         window.addEventListener('beforeinstallprompt', (e) => {
+           // Prevent the mini-infobar from appearing on mobile
+           e.preventDefault();
+           // Stash the event so it can be triggered later
+           deferredPrompt = e;
+           // Show the install button
+           installButton.style.display = 'block';
+         });
+
+         installButton.addEventListener('click', async () => {
+           if (deferredPrompt) {
+             // Show the install prompt
+             deferredPrompt.prompt();
+             // Wait for the user to respond to the prompt
+             const { outcome } = await deferredPrompt.userChoice;
+             console.log(`User response to the install prompt: ${outcome}`);
+             // Clear the deferredPrompt variable
+             deferredPrompt = null;
+             // Hide the install button
+             installButton.style.display = 'none';
+           }
+         });
+
+         // Hide install button if app is already installed
+         window.addEventListener('appinstalled', () => {
+           installButton.style.display = 'none';
+           deferredPrompt = null;
+           console.log('PWA was installed');
+         });
+
+         // Check if app is running in standalone mode
+         if (window.matchMedia('(display-mode: standalone)').matches) {
+           console.log('App is running in standalone mode');
+         }
+      </script>
+      
       <script type="module" src="./js/supabase-crud.js"></script>
       <script src="./js/dialog.js"></script>
       <script src="./js/script.js"></script>
