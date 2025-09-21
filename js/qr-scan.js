@@ -188,6 +188,42 @@ function loginWithQR(qrContent) {
     }
 }
 
+         function generateEmail(name, studentClass, section) {
+           // Step 1: Clean up the name
+           let cleanName = name
+             .toLowerCase()                // make lowercase
+             .replace(/[^a-z0-9\s]/g, "")  // remove dots & special chars
+             .trim()                       // remove leading/trailing spaces
+             .replace(/\s+/g, "-");        // replace spaces with hyphens
+         
+           // Step 2: Build email
+           let email = `${cleanName}-${studentClass}-${section.toLowerCase()}@ionspark.com`;
+         
+           return email;
+         }
+         
+         
+         async function uuidToNumericHash(uuid) {
+           // Encode UUID to bytes
+           const encoder = new TextEncoder();
+           const data = encoder.encode(uuid);
+         
+           // Hash using SHA-256
+           const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+           const hashArray = Array.from(new Uint8Array(hashBuffer));
+         
+           // Take first 8 bytes -> convert to big integer
+           const hashInt = hashArray
+             .slice(0, 8)
+             .reduce((acc, byte) => (acc << 8n) + BigInt(byte), 0n);
+         
+           // Convert to 8-digit number
+           const numericHash = Number(hashInt % 100000000n);
+         
+           // Ensure it's 8 digits with leading zeros
+           return numericHash.toString().padStart(8, "0");
+         }
+
 // Cleanup on page unload
 window.addEventListener('beforeunload', function() {
     if (html5QrCode) {
