@@ -463,9 +463,20 @@ const AuthManager = {
 // =============================================================================
 
 const ThemeManager = {
-   toggle: () => {
-      document.body.classList.toggle('light-theme');
-   }
+  toggle: () => {
+    const body = document.body;
+    const metaThemeColor = document.querySelector("meta[name=theme-color]");
+
+    // Toggle the theme class
+    body.classList.toggle("light-theme");
+
+    // If body has light-theme → set status bar to white
+    if (body.classList.contains("light-theme")) {
+      metaThemeColor.setAttribute("content", "#ffffff"); // light mode
+    } else {
+      metaThemeColor.setAttribute("content", "#000000"); // dark mode
+    }
+  }
 };
 
 // =============================================================================
