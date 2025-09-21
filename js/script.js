@@ -192,7 +192,7 @@ const UIComponents = {
 
    createUserProfile: async () => {
       // Fetch student profile from backend
-      const profile = await BackendManager.getStudentProfile(student_id);
+      const profile = await BackendManager.getStudentProfile(window.userId);
 
     if (profile && typeof profile === 'object') {
       // Copy all keys from backend response into USER_DATA
