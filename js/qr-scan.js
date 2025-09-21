@@ -169,20 +169,26 @@ function clearError() {
     }
 }
 
-// YOUR FUNCTION - Implement this with your actual login logic
-function loginWithQR(qrContent) {
-    console.log('Login with QR content:', qrContent);
-    
-    // Demo implementation - replace with your actual login logic
+// Login with QR functionality
+async function loginWithQR(qrContent) {
+
     if (qrContent && qrContent.length > 0) {
-        showError(''); // Clear any errors
-        alert(`QR Login Success!\nContent: ${qrContent}\n\nReplace this with your actual login logic.`);
-        
-        // Example of how you might handle the QR content:
-        // 1. Validate the token format
-        // 2. Send to your authentication endpoint
-        // 3. Handle the response
-        // 4. Redirect or update UI on success
+        // Clear any errors
+        showError(''); 
+
+        // Fetch student details using the access token
+        const student = await invokeFunction('get_student_by_access_token', {'access_token_param': qrContent}, true);
+
+        // Generate email by using the student details
+        const email = generateEmail(student['name'], student['grade'], student['section']);
+
+       // Generate password by hashing the access token
+        const password =          await uuidToNumericHash(qrContent);
+
+        // Set email and password in the form inputs
+        document.getElementById('username').value = username;
+        document.getElementById('password').value = password;
+
     } else {
         showError('Invalid QR code. Please try again.');
     }
