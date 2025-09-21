@@ -513,7 +513,11 @@ const ThemeManager = {
 const StringUtils = {
    capitalizeFirstLetter: (str) => {
       if (!str || str.length === 0) return str;
-      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      return str
+         .toLowerCase()
+         .split(/\s+/) // split by spaces (or multiple spaces)
+         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+         .join(" ");
    }
 };
 
