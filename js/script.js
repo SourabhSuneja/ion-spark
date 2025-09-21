@@ -202,7 +202,7 @@ const UIComponents = {
     }
 
       // Update header avatar
-      DOMUtils.getElementById('header-avatar').src = USER_DATA.avatar;
+      DOMUtils.getElementById('header-avatar').src = `https://avataaars.io/?${USER_DATA.avatar}`;
 
       const profileContainer = DOMUtils.getElementById('student-profile');
       profileContainer.innerHTML = '';
@@ -210,7 +210,7 @@ const UIComponents = {
       // Create profile avatar section
       const profileAvatarDiv = DOMUtils.createElement('div', 'profile-avatar');
       const avatarImg = DOMUtils.createElement('img');
-      avatarImg.src = USER_DATA.avatar;
+      avatarImg.src = `https://avataaars.io/?${USER_DATA.avatar}`;
       avatarImg.alt = 'Avatar';
       profileAvatarDiv.appendChild(avatarImg);
 
