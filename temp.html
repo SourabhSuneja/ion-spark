@@ -3,7 +3,7 @@
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="theme-color" content="#fff">
+      <meta name="theme-color" content="#000">
       
       <!-- PWA Meta Tags -->
       <meta name="application-name" content="Ion Spark">
@@ -36,159 +36,20 @@
       <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="./css/style.css">
+      <link rel="stylesheet" href="./css/qr-scan.css">
       <link rel="stylesheet" href="./css/dialog.css">
       <link rel="stylesheet" href="./css/word-card-styles.css">
-      
-      <style>
-         /* Install Popup Styles */
-         .install-popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            animation: fadeIn 0.3s ease-out;
-         }
-
-         .install-popup {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 40px 30px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: popupSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: white;
-         }
-
-         .install-popup-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            animation: pulse 2s infinite;
-         }
-
-         .install-popup h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0 0 15px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-         }
-
-         .install-popup p {
-            font-size: 16px;
-            margin: 0 0 30px;
-            line-height: 1.5;
-            opacity: 0.9;
-         }
-
-         .install-popup-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-         }
-
-         .install-btn {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-         }
-
-         .install-btn:hover {
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-         }
-
-         .install-btn.secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-         }
-
-         .install-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: white;
-         }
-
-         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-         }
-
-         @keyframes popupSlideIn {
-            from {
-               opacity: 0;
-               transform: translate(-50%, -60%) scale(0.8);
-            }
-            to {
-               opacity: 1;
-               transform: translate(-50%, -50%) scale(1);
-            }
-         }
-
-         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-         }
-
-         /* Responsive Design */
-         @media (max-width: 480px) {
-            .install-popup {
-               padding: 30px 25px;
-               margin: 20px;
-            }
-            
-            .install-popup h2 {
-               font-size: 24px;
-            }
-            
-            .install-popup-buttons {
-               flex-direction: column;
-            }
-            
-            .install-btn {
-               width: 100%;
-            }
-         }
-
-         /* Dark theme support */
-         .dark-theme .install-popup {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-         }
-      </style>
+      <link rel="stylesheet" href="./css/install-popup-styles.css">
    </head>
-   <body class="custom-scroll light-themse">
-      <!-- Beautiful Install Popup -->
+   <body class="custom-scroll light-thesme">
+      <!-- App Install Popup -->
       <div id="install-popup-overlay" class="install-popup-overlay">
          <div class="install-popup">
             <div class="install-popup-icon">
                <ion-icon name="flash"></ion-icon>
             </div>
             <h2>Install Ion Spark</h2>
-            <p>Get the full app experience! Install Ion Spark for faster access, offline features, and a native app feel.</p>
+            <p>Get the full app experience! Install our app for faster access, offline features, and a native app feel.</p>
             <div class="install-popup-buttons">
                <button id="install-app-btn" class="install-btn">
                   <i class="fas fa-download"></i> Install Now
@@ -266,6 +127,36 @@
                <button id="sign-in-btn" type="submit">Sign In</button>
                <div id="error-message" class="error-message"></div>
             </form>
+            <!-- Login Divider -->
+            <div class="login-divider">
+                <span>OR</span>
+            </div>
+
+            <!-- QR Code Login Section -->
+            <div class="qr-login-section">
+                <!-- QR Scanner Container (Initially Hidden) -->
+                <div class="qr-scanner-container" id="qr-scanner-container">
+                    <div id="qr-reader"></div>
+                    <div class="qr-loading" id="qr-loading">
+                        <div class="spinner"></div>
+                        Processing QR Code...
+                    </div>
+                    <button class="qr-close-btn" id="qr-close-btn" onclick="closeQRScanner()">
+                        <i class="fas fa-times"></i> Close Scanner
+                    </button>
+                </div>
+
+                <!-- QR Scanner Action Buttons -->
+                <div class="qr-scanner-actions" id="qr-scanner-actions">
+                    <button class="qr-action-btn" id="qr-camera-btn" onclick="startQRScanner()">
+                        <i class="fas fa-camera"></i> Scan QR Code with Camera
+                    </button>
+                    <label for="qr-file-input" class="qr-action-btn">
+                        <i class="fas fa-image"></i> Upload QR Code Image
+                        <input type="file" id="qr-file-input" accept="image/*" onchange="handleQRFileSelect(event)">
+                    </label>
+                </div>
+            </div>
             <div class="credit-text-in-form">Crafted by Sourabh Sir</div>
          </div>
       </div>
@@ -282,128 +173,24 @@
          <button id="close-word-card">Close</button>
       </div>
       <!-- Word of the Day Card Ends -->
-      
-      <!-- PWA Scripts -->
-      <script>
-         // Register Service Worker
-         if ('serviceWorker' in navigator) {
-           window.addEventListener('load', () => {
-             navigator.serviceWorker.register('sw.js')
-               .then((registration) => {
-                 console.log('SW registered: ', registration);
-               })
-               .catch((registrationError) => {
-                 console.log('SW registration failed: ', registrationError);
-               });
-           });
-         }
 
-         // PWA Install Prompt - Beautiful Popup Version
-         let deferredPrompt;
-         const installPopupOverlay = document.getElementById('install-popup-overlay');
-         const installAppBtn = document.getElementById('install-app-btn');
-         const installLaterBtn = document.getElementById('install-later-btn');
-
-         // Show popup when install prompt is available
-         window.addEventListener('beforeinstallprompt', (e) => {
-           // Prevent the mini-infobar from appearing on mobile
-           e.preventDefault();
-           // Stash the event so it can be triggered later
-           deferredPrompt = e;
-           
-           // Show the beautiful popup after a short delay
-           setTimeout(() => {
-             showInstallPopup();
-           }, 2000); // Show after 2 seconds
-         });
-
-         function showInstallPopup() {
-           installPopupOverlay.style.display = 'block';
-           document.body.style.overflow = 'hidden'; // Prevent background scrolling
-         }
-
-         function hideInstallPopup() {
-           installPopupOverlay.style.display = 'none';
-           document.body.style.overflow = ''; // Restore scrolling
-         }
-
-         // Install button click handler
-         installAppBtn.addEventListener('click', async () => {
-           if (deferredPrompt) {
-             // Show the install prompt
-             deferredPrompt.prompt();
-             // Wait for the user to respond to the prompt
-             const { outcome } = await deferredPrompt.userChoice;
-             console.log(`User response to the install prompt: ${outcome}`);
-             
-             if (outcome === 'accepted') {
-               console.log('User accepted the install prompt');
-             } else {
-               console.log('User dismissed the install prompt');
-             }
-             
-             // Clear the deferredPrompt variable
-             deferredPrompt = null;
-           }
-           // Hide the popup regardless of outcome
-           hideInstallPopup();
-         });
-
-         // Maybe later button click handler
-         installLaterBtn.addEventListener('click', () => {
-           hideInstallPopup();
-           // Show again after 24 hours (optional)
-           localStorage.setItem('installPromptDismissed', Date.now());
-         });
-
-         // Hide popup when clicking outside
-         installPopupOverlay.addEventListener('click', (e) => {
-           if (e.target === installPopupOverlay) {
-             hideInstallPopup();
-           }
-         });
-
-         // Hide install popup if app is already installed
-         window.addEventListener('appinstalled', () => {
-           hideInstallPopup();
-           deferredPrompt = null;
-           console.log('PWA was installed');
-         });
-
-         // Check if app is running in standalone mode
-         if (window.matchMedia('(display-mode: standalone)').matches) {
-           console.log('App is running in standalone mode');
-         }
-
-         // Optional: Check if user previously dismissed and don't show for 24 hours
-         function shouldShowInstallPrompt() {
-           const dismissed = localStorage.getItem('installPromptDismissed');
-           if (dismissed) {
-             const dismissedTime = parseInt(dismissed);
-             const oneDayInMs = 24 * 60 * 60 * 1000;
-             return (Date.now() - dismissedTime) > oneDayInMs;
-           }
-           return true;
-         }
-
-         // Modify the beforeinstallprompt handler to respect user preferences
-         window.addEventListener('beforeinstallprompt', (e) => {
-           e.preventDefault();
-           deferredPrompt = e;
-           
-           if (shouldShowInstallPrompt()) {
-             setTimeout(() => {
-               showInstallPopup();
-             }, 2000);
-           }
-         });
-      </script>
-      
+      <!-- Scripts Start -->
+      <!-- PWA Script -->     
+      <script src="./js/pwa-utils.js"></script>
+      <!-- HTML5 QR Scan -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+      <script src="./js/qr-scan.js"></script>
+      <!-- Supabase CRUD -->
       <script type="module" src="./js/supabase-crud.js"></script>
+      <!-- Dialog box script -->
       <script src="./js/dialog.js"></script>
+      <!-- Main JS script -->
       <script src="./js/script.js"></script>
+      <!-- Ion Icons -->
       <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
       <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <!-- Word of the Day -->
       <script type="module" src="./js/word-card.js"></script>
+      <!-- Scripts End -->
    </body>
 </html>
