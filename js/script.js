@@ -109,6 +109,22 @@ const MENU_ITEMS = [{
 ];
 
 // =============================================================================
+// BACKEND MANAGEMENT
+// =============================================================================
+
+const BackendManager = {
+  getStudentProfile: async (student_id) => {
+    try {
+      const student = await invokeFunction('get_student_profile', { p_student_id: student_id }, true);
+      return student;
+    } catch (err) {
+      console.error("Error fetching student profile:", err);
+      return null;
+    }
+  }
+};
+
+// =============================================================================
 // DOM UTILITIES
 // =============================================================================
 
