@@ -55,6 +55,7 @@ async function signInUser(email, password) {
          throw error;
       }
 
+      window.userId = data.user.id;
       console.log("User signed in successfully.");
       return data; // Contains user session and user information
    } catch (err) {
