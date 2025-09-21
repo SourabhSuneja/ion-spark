@@ -12,7 +12,7 @@
             visibility: hidden;
             opacity: 0;
             transition: opacity 0.3s ease, visibility 0.3s;
-            z-index: 99999;
+            z-index: 999999;
         }
 
         /* Dialog Box */
