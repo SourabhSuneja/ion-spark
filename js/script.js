@@ -199,6 +199,7 @@ const UIComponents = {
       Object.keys(profile).forEach(key => {
         USER_DATA[key] = profile[key];
       }); 
+    }
 
       // Update header avatar
       DOMUtils.getElementById('header-avatar').src = USER_DATA.avatar;
