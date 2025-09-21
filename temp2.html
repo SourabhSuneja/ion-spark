@@ -59,7 +59,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white;
+            color: #333;
             border-radius: 20px;
             padding: 40px 30px;
             max-width: 400px;
@@ -67,14 +68,14 @@
             text-align: center;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: popupSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: white;
          }
 
          .install-popup-icon {
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
-            background: rgba(255, 255, 255, 0.2);
+            background: #007bff;
+            color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -87,14 +88,14 @@
             font-size: 28px;
             font-weight: 700;
             margin: 0 0 15px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: #333;
          }
 
          .install-popup p {
             font-size: 16px;
             margin: 0 0 30px;
             line-height: 1.5;
-            opacity: 0.9;
+            color: #666;
          }
 
          .install-popup-buttons {
@@ -104,8 +105,8 @@
          }
 
          .install-btn {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
+            background: #007bff;
+            color: white;
             border: none;
             padding: 15px 30px;
             border-radius: 50px;
@@ -113,24 +114,26 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
          }
 
          .install-btn:hover {
-            background: white;
+            background: #0056b3;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
          }
 
          .install-btn.secondary {
             background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: #666;
+            border: 2px solid #ddd;
+            box-shadow: none;
          }
 
          .install-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: white;
+            background: #f8f9fa;
+            border-color: #bbb;
+            color: #333;
          }
 
          @keyframes fadeIn {
@@ -154,6 +157,49 @@
             50% { transform: scale(1.05); }
          }
 
+         /* Dark theme support */
+         body:not(.light-theme) .install-popup-overlay {
+            background: rgba(0, 0, 0, 0.8);
+         }
+
+         body:not(.light-theme) .install-popup {
+            background: #2d3748;
+            color: #e2e8f0;
+         }
+
+         body:not(.light-theme) .install-popup-icon {
+            background: #4299e1;
+         }
+
+         body:not(.light-theme) .install-popup h2 {
+            color: #e2e8f0;
+         }
+
+         body:not(.light-theme) .install-popup p {
+            color: #a0aec0;
+         }
+
+         body:not(.light-theme) .install-btn {
+            background: #4299e1;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+         }
+
+         body:not(.light-theme) .install-btn:hover {
+            background: #3182ce;
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.4);
+         }
+
+         body:not(.light-theme) .install-btn.secondary {
+            color: #a0aec0;
+            border-color: #4a5568;
+         }
+
+         body:not(.light-theme) .install-btn.secondary:hover {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e2e8f0;
+         }
+
          /* Responsive Design */
          @media (max-width: 480px) {
             .install-popup {
@@ -172,11 +218,6 @@
             .install-btn {
                width: 100%;
             }
-         }
-
-         /* Dark theme support */
-         .dark-theme .install-popup {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
          }
       </style>
    </head>
@@ -311,7 +352,7 @@
            // Stash the event so it can be triggered later
            deferredPrompt = e;
            
-           // Show the beautiful popup after a short delay
+           // Always show the popup (every time if app isn't installed)
            setTimeout(() => {
              showInstallPopup();
            }, 2000); // Show after 2 seconds
@@ -352,8 +393,7 @@
          // Maybe later button click handler
          installLaterBtn.addEventListener('click', () => {
            hideInstallPopup();
-           // Show again after 24 hours (optional)
-           localStorage.setItem('installPromptDismissed', Date.now());
+           // No longer saving dismissal state - popup will show again next time
          });
 
          // Hide popup when clicking outside
@@ -374,29 +414,6 @@
          if (window.matchMedia('(display-mode: standalone)').matches) {
            console.log('App is running in standalone mode');
          }
-
-         // Optional: Check if user previously dismissed and don't show for 24 hours
-         function shouldShowInstallPrompt() {
-           const dismissed = localStorage.getItem('installPromptDismissed');
-           if (dismissed) {
-             const dismissedTime = parseInt(dismissed);
-             const oneDayInMs = 24 * 60 * 60 * 1000;
-             return (Date.now() - dismissedTime) > oneDayInMs;
-           }
-           return true;
-         }
-
-         // Modify the beforeinstallprompt handler to respect user preferences
-         window.addEventListener('beforeinstallprompt', (e) => {
-           e.preventDefault();
-           deferredPrompt = e;
-           
-           if (shouldShowInstallPrompt()) {
-             setTimeout(() => {
-               showInstallPopup();
-             }, 2000);
-           }
-         });
       </script>
       
       <script type="module" src="./js/supabase-crud.js"></script>
