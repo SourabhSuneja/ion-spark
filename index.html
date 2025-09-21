@@ -36,6 +36,7 @@
       <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="./css/style.css">
+      <link rel="stylesheet" href="./css/qr-scan.css">
       <link rel="stylesheet" href="./css/dialog.css">
       <link rel="stylesheet" href="./css/word-card-styles.css">
       <link rel="stylesheet" href="./css/install-popup-styles.css">
@@ -126,6 +127,32 @@
                <button id="sign-in-btn" type="submit">Sign In</button>
                <div id="error-message" class="error-message"></div>
             </form>
+            <!-- Login Divider -->
+            <div class="login-divider">
+                <span>OR</span>
+            </div>
+
+            <!-- QR Code Login Section -->
+            <div class="qr-login-section">
+                <!-- QR Scanner Container (Initially Hidden) -->
+                <div class="qr-scanner-container" id="qr-scanner-container">
+                    <div id="qr-reader"></div>
+                    <button class="qr-close-btn" id="qr-close-btn" onclick="closeQRScanner()">
+                        <i class="fas fa-times"></i> Close Scanner
+                    </button>
+                </div>
+
+                <!-- QR Scanner Action Buttons -->
+                <div class="qr-scanner-actions" id="qr-scanner-actions">
+                    <button class="qr-action-btn" id="qr-camera-btn" onclick="startQRScanner()">
+                        <i class="fas fa-camera"></i> Scan QR Code with Camera
+                    </button>
+                    <label for="qr-file-input" class="qr-action-btn">
+                        <i class="fas fa-image"></i> Upload QR Code Image
+                        <input type="file" id="qr-file-input" accept="image/*" onchange="handleQRFileSelect(event)">
+                    </label>
+                </div>
+            </div>
             <div class="credit-text-in-form">Crafted by Sourabh Sir</div>
          </div>
       </div>
@@ -146,6 +173,9 @@
       <!-- Scripts Start -->
       <!-- PWA Script -->     
       <script src="./js/pwa-utils.js"></script>
+      <!-- HTML5 QR Scan -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+      <script src="./js/qr-scan.js"></script>
       <!-- Supabase CRUD -->
       <script type="module" src="./js/supabase-crud.js"></script>
       <!-- Dialog box script -->
