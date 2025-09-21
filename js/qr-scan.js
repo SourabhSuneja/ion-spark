@@ -1,0 +1,162 @@
+        // QR Code Scanner Variables
+        let html5QrCode;
+        const qrScannerContainer = document.getElementById('qr-scanner-container');
+        const qrScannerActions = document.getElementById('qr-scanner-actions');
+        const qrLoading = document.getElementById('qr-loading');
+
+        // Function to start the QR scanner
+        function startQRScanner() {
+            qrScannerContainer.style.display = 'block';
+            qrScannerActions.style.display = 'none';
+            clearError();
+
+            html5QrCode = new Html5Qrcode("qr-reader");
+            const qrConfig = { 
+                fps: 20, 
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                qrConfig, 
+                onQRScanSuccess, 
+                onQRScanFailure
+            ).catch((err) => {
+                console.error("Error starting QR scanner:", err);
+                showError("Couldn't access camera. Please check permissions and try again.");
+                closeQRScanner();
+            });
+        }
+
+        // Handle QR file selection from gallery/device
+        function handleQRFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            qrScannerActions.style.display = 'none';
+            qrLoading.style.display = 'flex';
+            clearError();
+
+            html5QrCode = new Html5Qrcode("qr-reader");
+
+            html5QrCode.scanFile(file, true)
+                .then(decodedText => {
+                    qrLoading.style.display = 'none';
+                    processQRCode(decodedText);
+                })
+                .catch(err => {
+                    qrLoading.style.display = 'none';
+                    console.error("Error scanning QR file:", err);
+                    showError("Could not read QR code from image. Please try another image or use camera scanning.");
+                    resetQRScanner();
+                });
+
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Handle successful QR code scan
+        function onQRScanSuccess(decodedText, decodedResult) {
+            // Stop scanning
+            html5QrCode.stop().then(() => {
+                console.log("QR Code scanning stopped");
+                processQRCode(decodedText);
+            }).catch((err) => {
+                console.error("Error stopping QR scanner:", err);
+                processQRCode(decodedText);
+            });
+        }
+
+        // Handle QR scan failure (silent - normal when no QR in view)
+        function onQRScanFailure(error) {
+            // Silent handling - this fires constantly when no QR code is detected
+        }
+
+        // Process the scanned QR code
+        function processQRCode(decodedText) {
+            console.log("QR Code detected:", decodedText);
+            
+            // Extract token if it's a URL with token parameter
+            const qrContent = extractTokenOrReturn(decodedText);
+            
+            // Show loading
+            qrLoading.style.display = 'flex';
+            
+            // Simulate processing delay and call your function
+            setTimeout(() => {
+                qrLoading.style.display = 'none';
+                closeQRScanner();
+                
+                // Call your loginWithQR function
+                loginWithQR(qrContent);
+            }, 1000);
+        }
+
+        // Extract token from URL or return original content
+        function extractTokenOrReturn(input) {
+            try {
+                const url = new URL(input);
+                const token = url.searchParams.get("token");
+                return token !== null ? token : input;
+            } catch (error) {
+                // Not a valid URL, return the input as is
+                return input;
+            }
+        }
+
+        // Close QR scanner and reset to initial state
+        function closeQRScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().catch(err => console.error("Error stopping scanner:", err));
+                html5QrCode.clear();
+                html5QrCode = null;
+            }
+            
+            qrScannerContainer.style.display = 'none';
+            qrScannerActions.style.display = 'flex';
+            qrLoading.style.display = 'none';
+        }
+
+        // Reset QR scanner without closing (for retrying)
+        function resetQRScanner() {
+            closeQRScanner();
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+        }
+
+        // Clear error message
+        function clearError() {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = '';
+        }
+
+        // YOUR FUNCTION - Implement this with your actual login logic
+        function loginWithQR(qrContent) {
+            console.log('Login with QR content:', qrContent);
+            
+            // Demo implementation - replace with your actual login logic
+            if (qrContent && qrContent.length > 0) {
+                showError(''); // Clear any errors
+                alert(`QR Login Success!\nContent: ${qrContent}\n\nReplace this with your actual login logic.`);
+                
+                // Example of how you might handle the QR content:
+                // 1. Validate the token format
+                // 2. Send to your authentication endpoint
+                // 3. Handle the response
+                // 4. Redirect or update UI on success
+            } else {
+                showError('Invalid QR code. Please try again.');
+            }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (html5QrCode) {
+                html5QrCode.stop().catch(err => console.error("Error stopping scanner on unload:", err));
+            }
+        });
