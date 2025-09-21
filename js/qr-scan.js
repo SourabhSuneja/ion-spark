@@ -178,6 +178,7 @@ async function loginWithQR(qrContent) {
 
         // Fetch student details using the access token
         const student = await invokeFunction('get_student_by_access_token', {'access_token_param': qrContent}, true);
+console.log(student);
 
         // Generate email by using the student details
         const email = generateEmail(student['name'], student['grade'], student['section']);
