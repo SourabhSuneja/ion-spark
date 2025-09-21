@@ -26,7 +26,7 @@ const USER_DATA = {
    grade: '',
    section: '',
    accountType: 'Student',
-   avatar: 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight2&hairColor=BrownDark&clotheType=BlazerSweater&eyeType=Happy&mouthType=Smile&skinColor=Light&facialHairType=Blank&accessoriesType=Blank'
+   avatar: ''
 };
 
 const DASHBOARD_CARDS = [{
@@ -190,7 +190,16 @@ const UIComponents = {
       return menuItemDiv;
    },
 
-   createUserProfile: () => {
+   createUserProfile: async () => {
+      // Fetch student profile from backend
+      const profile = await BackendManager.getStudentProfile(student_id);
+
+    if (profile && typeof profile === 'object') {
+      // Copy all keys from backend response into USER_DATA
+      Object.keys(profile).forEach(key => {
+        USER_DATA[key] = profile[key];
+      }); 
+
       // Update header avatar
       DOMUtils.getElementById('header-avatar').src = USER_DATA.avatar;
 
