@@ -9,6 +9,8 @@ const APP_CONFIG = {
    currentPage: 'home'
 };
 
+const STUDENT_DETAILS = {};
+
 const LINKS = {
    home: null,
    "word-of-the-day": null,
