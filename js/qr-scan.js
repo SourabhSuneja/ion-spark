@@ -187,7 +187,7 @@ console.log(student);
         const password =          await uuidToNumericHash(qrContent);
 
         // Set email and password in the form inputs
-        document.getElementById('username').value = username;
+        document.getElementById('username').value = email;
         document.getElementById('password').value = password;
 
     } else {
