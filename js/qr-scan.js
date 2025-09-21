@@ -210,7 +210,7 @@ console.log(student);
              .replace(/\s+/g, "-");        // replace spaces with hyphens
          
            // Step 2: Build email
-           let email = `${cleanName}-${studentClass}-${section.toLowerCase()}@ionspark.com`;
+           let email = `${cleanName}-${studentClass}-${section.toLowerCase()}`;
          
            return email;
          }
