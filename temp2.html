@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" class="custom-scroll">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="theme-color" content="#000" id="theme-color-meta">
+      
+      <!-- PWA Meta Tags -->
+      <meta name="application-name" content="Ion Spark">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="default">
+      <meta name="apple-mobile-web-app-title" content="Ion Spark">
+      <meta name="format-detection" content="telephone=no">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="msapplication-config" content="browserconfig.xml">
+      <meta name="msapplication-TileColor" content="#000000">
+      <meta name="msapplication-tap-highlight" content="no">
+      
+      <!-- PWA Manifest -->
+      <link rel="manifest" href="manifest.json">
+      
+      <!-- Favicons and Icons -->
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
+      <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+      <link rel="apple-touch-icon" href="apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+      
+      <title>Ion Spark | Spark Your Learning</title>
+      <meta name="description" content="Discover the ultimate student learning app crafted by Sourabh sir! Engage with interactive quizzes, fun games, insightful notes, and hands-on projects designed to make learning exciting and effective.">
+      
+      <!-- font awesome icons link -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <!-- ion icons link -->
+      <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="./css/style.css">
+      <link rel="stylesheet" href="./css/dialog.css">
+      <link rel="stylesheet" href="./css/word-card-styles.css">
+      
+      <style>
+         /* Install Popup Styles */
+         .install-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+         }
+
+         .install-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popupSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+         }
+
+         .install-popup-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: pulse 2s infinite;
+         }
+
+         .install-popup h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+         }
+
+         .install-popup p {
+            font-size: 16px;
+            margin: 0 0 30px;
+            line-height: 1.5;
+            opacity: 0.9;
+         }
+
+         .install-popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+         }
+
+         .install-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+         }
+
+         .install-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+         }
+
+         .install-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+         }
+
+         .install-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+         }
+
+         @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+         }
+
+         @keyframes popupSlideIn {
+            from {
+               opacity: 0;
+               transform: translate(-50%, -60%) scale(0.8);
+            }
+            to {
+               opacity: 1;
+               transform: translate(-50%, -50%) scale(1);
+            }
+         }
+
+         @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+         }
+
+         /* Responsive Design */
+         @media (max-width: 480px) {
+            .install-popup {
+               padding: 30px 25px;
+               margin: 20px;
+            }
+            
+            .install-popup h2 {
+               font-size: 24px;
+            }
+            
+            .install-popup-buttons {
+               flex-direction: column;
+            }
+            
+            .install-btn {
+               width: 100%;
+            }
+         }
+
+         /* Dark theme support */
+         .dark-theme .install-popup {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+         }
+      </style>
+   </head>
+   <body class="custom-scroll light-themse">
+      <!-- Beautiful Install Popup -->
+      <div id="install-popup-overlay" class="install-popup-overlay">
+         <div class="install-popup">
+            <div class="install-popup-icon">
+               <ion-icon name="flash"></ion-icon>
+            </div>
+            <h2>Install Ion Spark</h2>
+            <p>Get the full app experience! Install Ion Spark for faster access, offline features, and a native app feel.</p>
+            <div class="install-popup-buttons">
+               <button id="install-app-btn" class="install-btn">
+                  <i class="fas fa-download"></i> Install Now
+               </button>
+               <button id="install-later-btn" class="install-btn secondary">Maybe Later</button>
+            </div>
+         </div>
+      </div>
+      
+      <!-- Overlays -->
+      <div id="overlay" onclick="toggleMenu()"></div>
+      <div id="loading-overlay">
+         <ion-icon class="fading-element" name="flash"></ion-icon>
+         <div class="credits">Crafted by Sourabh Sir</div>
+      </div>
+      <!-- Sidebar Menu -->
+      <div id="sidebar">
+         <!-- Menu items will be added here dynamically-->
+      </div>
+      <!-- Main Container -->
+      <div id="main-container">
+         <!-- Header -->
+         <div id="header">
+            <div class="left-section">
+               <ion-icon id="menu-btn" name="menu-outline" onclick="toggleMenu()"></ion-icon>
+               <ion-icon id="back-btn" name="arrow-back"></ion-icon>
+               <div class="app-name">
+                  <span id="screen-name">Ion Spark </span>
+                  <ion-icon name="flash"></ion-icon>
+               </div>
+            </div>
+            <div class="right-section avatar">
+               <ion-icon class="theme-toggle" name="contrast-outline" onclick="toggleTheme()"></ion-icon>
+               <img id="header-avatar" alt="Avatar">
+               <div class="name">Divya Sharma</div>
+            </div>
+         </div>
+         <!-- Student Profile -->
+         <div id="student-profile">
+            <!-- Student profile will be added here dynamically-->
+         </div>
+         <!-- Content Area -->
+         <div id="content" class="custom-scroll">
+            <!-- Cards will be added here dynamically-->
+         </div>
+      </div>
+      <!-- Dialog Overlay -->
+      <div id="dialog-overlay" class="dialog-overlay">
+         <div class="dialog-box" id="dialog-box">
+            <div class="dialog-header" id="dialog-header">Title</div>
+            <div class="dialog-message" id="dialog-message">Message goes here</div>
+            <div class="dialog-buttons" id="dialog-buttons">
+               <!-- Buttons will be added dynamically -->
+            </div>
+         </div>
+      </div>
+      <!-- Dialog Overlay Ends -->
+      <!-- Sign in Screen Starts -->
+      <div id="sign-in-screen" class="custom-scroll">
+         <div class="sign-in-container">
+            <h1>
+               <ion-icon name="flash"></ion-icon>
+               <br>Ion Spark
+            </h1>
+            <div class="sign-in-text">Sign in to continue</div>
+            <form id="signInForm">
+               <div class="form-group">
+                  <input type="text" id="username" placeholder="Enter your username" >
+                  <ion-icon name="person-outline"></ion-icon>
+               </div>
+               <div class="form-group">
+                  <input type="password" id="password" placeholder="Enter your password" >
+                  <ion-icon name="lock-closed"></ion-icon>
+               </div>
+               <button id="sign-in-btn" type="submit">Sign In</button>
+               <div id="error-message" class="error-message"></div>
+            </form>
+            <div class="credit-text-in-form">Crafted by Sourabh Sir</div>
+         </div>
+      </div>
+      <!-- Sign in Screen Ends -->
+      <!-- Word of the Day Card Starts -->
+      <div class="word-card" id="word-card">
+         <p id="word-text"></p>
+         <p id="pronunciation-text"></p>
+         <p id="meaning-text"><span>Meaning:</span> </p>
+         <p id="synonym-text"><span>Synonym:</span> </p>
+         <p id="antonym-text"><span>Antonym:</span> </p>
+         <p id="sentence-text"><span>Sentence:</span> </p>
+         <button id="new-word">More</button>
+         <button id="close-word-card">Close</button>
+      </div>
+      <!-- Word of the Day Card Ends -->
+      
+      <!-- PWA Scripts -->
+      <script>
+         // Register Service Worker
+         if ('serviceWorker' in navigator) {
+           window.addEventListener('load', () => {
+             navigator.serviceWorker.register('sw.js')
+               .then((registration) => {
+                 console.log('SW registered: ', registration);
+               })
+               .catch((registrationError) => {
+                 console.log('SW registration failed: ', registrationError);
+               });
+           });
+         }
+
+         // PWA Install Prompt - Beautiful Popup Version
+         let deferredPrompt;
+         const installPopupOverlay = document.getElementById('install-popup-overlay');
+         const installAppBtn = document.getElementById('install-app-btn');
+         const installLaterBtn = document.getElementById('install-later-btn');
+
+         // Show popup when install prompt is available
+         window.addEventListener('beforeinstallprompt', (e) => {
+           // Prevent the mini-infobar from appearing on mobile
+           e.preventDefault();
+           // Stash the event so it can be triggered later
+           deferredPrompt = e;
+           
+           // Show the beautiful popup after a short delay
+           setTimeout(() => {
+             showInstallPopup();
+           }, 2000); // Show after 2 seconds
+         });
+
+         function showInstallPopup() {
+           installPopupOverlay.style.display = 'block';
+           document.body.style.overflow = 'hidden'; // Prevent background scrolling
+         }
+
+         function hideInstallPopup() {
+           installPopupOverlay.style.display = 'none';
+           document.body.style.overflow = ''; // Restore scrolling
+         }
+
+         // Install button click handler
+         installAppBtn.addEventListener('click', async () => {
+           if (deferredPrompt) {
+             // Show the install prompt
+             deferredPrompt.prompt();
+             // Wait for the user to respond to the prompt
+             const { outcome } = await deferredPrompt.userChoice;
+             console.log(`User response to the install prompt: ${outcome}`);
+             
+             if (outcome === 'accepted') {
+               console.log('User accepted the install prompt');
+             } else {
+               console.log('User dismissed the install prompt');
+             }
+             
+             // Clear the deferredPrompt variable
+             deferredPrompt = null;
+           }
+           // Hide the popup regardless of outcome
+           hideInstallPopup();
+         });
+
+         // Maybe later button click handler
+         installLaterBtn.addEventListener('click', () => {
+           hideInstallPopup();
+           // Show again after 24 hours (optional)
+           localStorage.setItem('installPromptDismissed', Date.now());
+         });
+
+         // Hide popup when clicking outside
+         installPopupOverlay.addEventListener('click', (e) => {
+           if (e.target === installPopupOverlay) {
+             hideInstallPopup();
+           }
+         });
+
+         // Hide install popup if app is already installed
+         window.addEventListener('appinstalled', () => {
+           hideInstallPopup();
+           deferredPrompt = null;
+           console.log('PWA was installed');
+         });
+
+         // Check if app is running in standalone mode
+         if (window.matchMedia('(display-mode: standalone)').matches) {
+           console.log('App is running in standalone mode');
+         }
+
+         // Optional: Check if user previously dismissed and don't show for 24 hours
+         function shouldShowInstallPrompt() {
+           const dismissed = localStorage.getItem('installPromptDismissed');
+           if (dismissed) {
+             const dismissedTime = parseInt(dismissed);
+             const oneDayInMs = 24 * 60 * 60 * 1000;
+             return (Date.now() - dismissedTime) > oneDayInMs;
+           }
+           return true;
+         }
+
+         // Modify the beforeinstallprompt handler to respect user preferences
+         window.addEventListener('beforeinstallprompt', (e) => {
+           e.preventDefault();
+           deferredPrompt = e;
+           
+           if (shouldShowInstallPrompt()) {
+             setTimeout(() => {
+               showInstallPopup();
+             }, 2000);
+           }
+         });
+      </script>
+      
+      <script type="module" src="./js/supabase-crud.js"></script>
+      <script src="./js/dialog.js"></script>
+      <script src="./js/script.js"></script>
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <script type="module" src="./js/word-card.js"></script>
+   </body>
+</html>
