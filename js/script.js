@@ -9,8 +9,6 @@ const APP_CONFIG = {
    currentPage: 'home'
 };
 
-const STUDENT_DETAILS = {};
-
 const LINKS = {
    home: null,
    "word-of-the-day": null,
@@ -24,8 +22,9 @@ const PAGE_MIN_WIDTH_CONFIG = {
 };
 
 const USER_DATA = {
-   name: 'Divya Sharma',
-   grade: '8',
+   name: '',
+   grade: '',
+   section: '',
    accountType: 'Student',
    avatar: 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight2&hairColor=BrownDark&clotheType=BlazerSweater&eyeType=Happy&mouthType=Smile&skinColor=Light&facialHairType=Blank&accessoriesType=Blank'
 };
