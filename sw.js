@@ -1,11 +1,7 @@
 const CACHE_NAME = 'ion-spark-v1.0.0';
 const urlsToCache = [
-  '/ion-spark/',
-  '/ion-spark/index.html',
-  '/ion-spark/css/style.css',
   '/ion-spark/css/dialog.css',
   '/ion-spark/css/word-card-styles.css',
-  '/ion-spark/js/script.js',
   '/ion-spark/js/dialog.js',
   '/ion-spark/js/supabase-crud.js',
   '/ion-spark/js/word-card.js',
