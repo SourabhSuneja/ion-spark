@@ -192,6 +192,9 @@ console.log(student);
         document.getElementById('username').value = email;
         document.getElementById('password').value = password;
 
+       // Programmatically click the sign in button
+       document.getElementById('sign-in-btn').click();
+
        // Hide loading
         hideProcessingDialog();
 
