@@ -2,7 +2,6 @@
 let html5QrCode;
 const qrScannerContainer = document.getElementById('qr-scanner-container');
 const qrScannerActions = document.getElementById('qr-scanner-actions');
-const qrLoading = document.getElementById('qr-loading');
 
 // Function to start the QR scanner
 function startQRScanner() {
@@ -35,18 +34,18 @@ function handleQRFileSelect(event) {
     if (!file) return;
 
     qrScannerActions.style.display = 'none';
-    qrLoading.style.display = 'flex';
+    showProcessingDialog();
     clearError();
 
     html5QrCode = new Html5Qrcode("qr-reader");
 
     html5QrCode.scanFile(file, true)
         .then(decodedText => {
-            qrLoading.style.display = 'none';
+            hideProcessingDialog();
             processQRCode(decodedText);
         })
         .catch(err => {
-            qrLoading.style.display = 'none';
+            hideProcessingDialog();
             console.error("Error scanning QR file:", err);
             showError("Could not read QR code from image. Please try another image or use camera scanning.");
             resetQRScanner();
@@ -81,11 +80,11 @@ function processQRCode(decodedText) {
     const qrContent = extractTokenOrReturn(decodedText);
     
     // Show loading
-    qrLoading.style.display = 'flex';
+    showProcessingDialog();
     
     // Simulate processing delay and call your function
     setTimeout(() => {
-        qrLoading.style.display = 'none';
+        hideProcessingDialog();
         closeQRScanner();
         
         // Call your loginWithQR function
@@ -145,7 +144,7 @@ function closeQRScanner() {
 function resetUI() {
     qrScannerContainer.style.display = 'none';
     qrScannerActions.style.display = 'flex';
-    qrLoading.style.display = 'none';
+    hideProcessingDialog();
 }
 
 // Reset QR scanner without closing (for retrying)
@@ -177,7 +176,7 @@ async function loginWithQR(qrContent) {
         showError(''); 
 
        // Show loading
-        qrLoading.style.display = 'flex';
+        showProcessingDialog();
 
         // Fetch student details using the access token
         const student = await invokeFunction('get_student_by_access_token', {'access_token_param': qrContent}, true);
@@ -194,7 +193,7 @@ console.log(student);
         document.getElementById('password').value = password;
 
        // Hide loading
-        qrLoading.style.display = 'none';
+        hideProcessingDialog();
 
     } else {
         showError('Invalid QR code. Please try again.');
