@@ -38,12 +38,206 @@
       <link rel="stylesheet" href="./css/style.css">
       <link rel="stylesheet" href="./css/dialog.css">
       <link rel="stylesheet" href="./css/word-card-styles.css">
+      
+      <style>
+         /* Install Popup Styles */
+         .install-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+         }
+
+         .install-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: #333;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popupSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+         }
+
+         .install-popup-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: pulse 2s infinite;
+         }
+
+         .install-popup h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 15px;
+            color: #333;
+         }
+
+         .install-popup p {
+            font-size: 16px;
+            margin: 0 0 30px;
+            line-height: 1.5;
+            color: #666;
+         }
+
+         .install-popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+         }
+
+         .install-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+         }
+
+         .install-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+         }
+
+         .install-btn.secondary {
+            background: transparent;
+            color: #666;
+            border: 2px solid #ddd;
+            box-shadow: none;
+         }
+
+         .install-btn.secondary:hover {
+            background: #f8f9fa;
+            border-color: #bbb;
+            color: #333;
+         }
+
+         @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+         }
+
+         @keyframes popupSlideIn {
+            from {
+               opacity: 0;
+               transform: translate(-50%, -60%) scale(0.8);
+            }
+            to {
+               opacity: 1;
+               transform: translate(-50%, -50%) scale(1);
+            }
+         }
+
+         @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+         }
+
+         /* Dark theme support */
+         body:not(.light-theme) .install-popup-overlay {
+            background: rgba(0, 0, 0, 0.8);
+         }
+
+         body:not(.light-theme) .install-popup {
+            background: #2d3748;
+            color: #e2e8f0;
+         }
+
+         body:not(.light-theme) .install-popup-icon {
+            background: #4299e1;
+         }
+
+         body:not(.light-theme) .install-popup h2 {
+            color: #e2e8f0;
+         }
+
+         body:not(.light-theme) .install-popup p {
+            color: #a0aec0;
+         }
+
+         body:not(.light-theme) .install-btn {
+            background: #4299e1;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+         }
+
+         body:not(.light-theme) .install-btn:hover {
+            background: #3182ce;
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.4);
+         }
+
+         body:not(.light-theme) .install-btn.secondary {
+            color: #a0aec0;
+            border-color: #4a5568;
+         }
+
+         body:not(.light-theme) .install-btn.secondary:hover {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e2e8f0;
+         }
+
+         /* Responsive Design */
+         @media (max-width: 480px) {
+            .install-popup {
+               padding: 30px 25px;
+               margin: 20px;
+            }
+            
+            .install-popup h2 {
+               font-size: 24px;
+            }
+            
+            .install-popup-buttons {
+               flex-direction: column;
+            }
+            
+            .install-btn {
+               width: 100%;
+            }
+         }
+      </style>
    </head>
    <body class="custom-scroll light-themse">
-      <!-- PWA Install Button (optional - will be hidden by default) -->
-      <button id="install-button" style="display: none; position: fixed; top: 10px; right: 10px; z-index: 9999; background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
-         <i class="fas fa-download"></i> Install App
-      </button>
+      <!-- Beautiful Install Popup -->
+      <div id="install-popup-overlay" class="install-popup-overlay">
+         <div class="install-popup">
+            <div class="install-popup-icon">
+               <ion-icon name="flash"></ion-icon>
+            </div>
+            <h2>Install Ion Spark</h2>
+            <p>Get the full app experience! Install Ion Spark for faster access, offline features, and a native app feel.</p>
+            <div class="install-popup-buttons">
+               <button id="install-app-btn" class="install-btn">
+                  <i class="fas fa-download"></i> Install Now
+               </button>
+               <button id="install-later-btn" class="install-btn secondary">Maybe Later</button>
+            </div>
+         </div>
+      </div>
       
       <!-- Overlays -->
       <div id="overlay" onclick="toggleMenu()"></div>
@@ -145,36 +339,73 @@
            });
          }
 
-         // PWA Install Prompt
+         // PWA Install Prompt - Beautiful Popup Version
          let deferredPrompt;
-         const installButton = document.getElementById('install-button');
+         const installPopupOverlay = document.getElementById('install-popup-overlay');
+         const installAppBtn = document.getElementById('install-app-btn');
+         const installLaterBtn = document.getElementById('install-later-btn');
 
+         // Show popup when install prompt is available
          window.addEventListener('beforeinstallprompt', (e) => {
            // Prevent the mini-infobar from appearing on mobile
            e.preventDefault();
            // Stash the event so it can be triggered later
            deferredPrompt = e;
-           // Show the install button
-           installButton.style.display = 'block';
+           
+           // Always show the popup (every time if app isn't installed)
+           setTimeout(() => {
+             showInstallPopup();
+           }, 500); // Show after 500 ms
          });
 
-         installButton.addEventListener('click', async () => {
+         function showInstallPopup() {
+           installPopupOverlay.style.display = 'block';
+           document.body.style.overflow = 'hidden'; // Prevent background scrolling
+         }
+
+         function hideInstallPopup() {
+           installPopupOverlay.style.display = 'none';
+           document.body.style.overflow = ''; // Restore scrolling
+         }
+
+         // Install button click handler
+         installAppBtn.addEventListener('click', async () => {
            if (deferredPrompt) {
              // Show the install prompt
              deferredPrompt.prompt();
              // Wait for the user to respond to the prompt
              const { outcome } = await deferredPrompt.userChoice;
              console.log(`User response to the install prompt: ${outcome}`);
+             
+             if (outcome === 'accepted') {
+               console.log('User accepted the install prompt');
+             } else {
+               console.log('User dismissed the install prompt');
+             }
+             
              // Clear the deferredPrompt variable
              deferredPrompt = null;
-             // Hide the install button
-             installButton.style.display = 'none';
+           }
+           // Hide the popup regardless of outcome
+           hideInstallPopup();
+         });
+
+         // Maybe later button click handler
+         installLaterBtn.addEventListener('click', () => {
+           hideInstallPopup();
+           // No longer saving dismissal state - popup will show again next time
+         });
+
+         // Hide popup when clicking outside
+         installPopupOverlay.addEventListener('click', (e) => {
+           if (e.target === installPopupOverlay) {
+             hideInstallPopup();
            }
          });
 
-         // Hide install button if app is already installed
+         // Hide install popup if app is already installed
          window.addEventListener('appinstalled', () => {
-           installButton.style.display = 'none';
+           hideInstallPopup();
            deferredPrompt = null;
            console.log('PWA was installed');
          });
