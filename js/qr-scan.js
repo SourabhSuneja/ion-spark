@@ -176,6 +176,9 @@ async function loginWithQR(qrContent) {
         // Clear any errors
         showError(''); 
 
+       // Show loading
+        qrLoading.style.display = 'flex';
+
         // Fetch student details using the access token
         const student = await invokeFunction('get_student_by_access_token', {'access_token_param': qrContent}, true);
 console.log(student);
@@ -189,6 +192,9 @@ console.log(student);
         // Set email and password in the form inputs
         document.getElementById('username').value = email;
         document.getElementById('password').value = password;
+
+       // Hide loading
+        qrLoading.style.display = 'none';
 
     } else {
         showError('Invalid QR code. Please try again.');
