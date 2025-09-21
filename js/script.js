@@ -217,7 +217,11 @@ const UIComponents = {
       // Create profile info section
       const profileInfoDiv = DOMUtils.createElement('div', 'profile-info');
       const nameHeading = DOMUtils.createElement('h2', 'student-name', StringUtils.capitalizeFirstLetter(USER_DATA.name));
-      const gradeParagraph = DOMUtils.createElement('p', 'student-grade', `Grade: ${USER_DATA.grade}`);
+      const gradeParagraph = DOMUtils.createElement(
+  'p',
+  'student-grade',
+  `Grade: ${USER_DATA.grade}${USER_DATA.section ? '-' + USER_DATA.section : ''}`
+);
       const descriptionParagraph = DOMUtils.createElement('p', 'student-description', `${USER_DATA.accountType} Account`);
 
       profileInfoDiv.append(nameHeading, gradeParagraph, descriptionParagraph);
