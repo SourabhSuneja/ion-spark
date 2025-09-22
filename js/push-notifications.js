@@ -66,4 +66,32 @@ async function initializePushNotifications(studentId) {
 }
 
 
-// initializePushNotifications(window.userId);
+// Add this to your script.js file
+
+// Listen for messages from the service worker
+navigator.serviceWorker.addEventListener('message', event => {
+    if (event.data && event.data.type === 'NOTIFICATION_CLICK') {
+        console.log(`Notification clicked with ID: ${event.data.id}`);
+        // Now you can call your custom function
+        if (typeof showNotification === 'function') {
+            showNotification(event.data.id);
+        }
+    }
+});
+
+// Also, check for the query parameter when the app loads
+window.addEventListener('load', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const notificationId = urlParams.get('notification_id');
+    if (notificationId) {
+        console.log(`App opened from notification with ID: ${notificationId}`);
+        if (typeof showNotification === 'function') {
+            showNotification(notificationId);
+        }
+    }
+});
+
+
+function showNotification(notificationId) {
+  alert(('Notification received: ' + notificationId));
+}
