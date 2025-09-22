@@ -41,6 +41,18 @@ CREATE TABLE push_subscriptions (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Notifications table
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    body TEXT,
+    data JSONB, -- To store custom data like your notificationID
+    sent_by UUID REFERENCES public.teachers(id) ON DELETE SET NULL, -- Links to the teacher who sent it
+    target_criteria JSONB NOT NULL, -- Stores the target object, e.g., { "type": "grade-section", "value": "6-A1" }
+    recipient_count INTEGER NOT NULL DEFAULT 0, -- How many devices were targeted
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- Table creation ends
 
 -- Function creation starts
