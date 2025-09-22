@@ -437,17 +437,45 @@ async function sendPushNotification(target, payload) {
   try {
     // Get the current session from Supabase
     const { data: { session } } = await supabase.auth.getSession();
-    
+
     if (!session) {
       throw new Error('User not authenticated');
     }
 
-    // Call your CloudFlare function
-    const response = await fetch('https://cloudflare-serverless.pages.dev/sendNotification', {
+    // Generate a unique callback name for JSONP
+    const callbackName = `pushCallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    // Create a promise that will be resolved by the JSONP callback
+    const responsePromise = new Promise((resolve, reject) => {
+      // Set up the global callback function
+      window[callbackName] = function(data) {
+        // Clean up
+        delete window[callbackName];
+        
+        // Check if the response indicates an error
+        if (data.error) {
+          reject(new Error(data.error + (data.details ? ': ' + data.details : '')));
+        } else {
+          resolve(data);
+        }
+      };
+
+      // Set a timeout to prevent hanging
+      setTimeout(() => {
+        if (window[callbackName]) {
+          delete window[callbackName];
+          reject(new Error('Request timeout'));
+        }
+      }, 30000); // 30 second timeout
+    });
+
+    // Since we need to send POST data but use JSONP, we'll use a different approach
+    // We'll send the data via fetch but include the callback parameter
+    const response = await fetch('https://cloudflare-serverless.pages.dev/sendNotification?callback=' + encodeURIComponent(callbackName), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}` // This is key!
+        'Authorization': `Bearer ${session.access_token}`
       },
       body: JSON.stringify({
         target: target,    // e.g., { type: 'grade', value: '6' }
@@ -455,13 +483,22 @@ async function sendPushNotification(target, payload) {
       })
     });
 
-    const result = await response.json();
+    // The response will be JSONP, so we need to evaluate it
+    const responseText = await response.text();
     
-    if (!response.ok) {
-      throw new Error(result.error || 'Failed to send notification');
+    // Execute the JSONP response
+    try {
+      eval(responseText);
+    } catch (evalError) {
+      // If eval fails, try to parse as regular JSON (fallback)
+      const jsonData = JSON.parse(responseText);
+      window[callbackName](jsonData);
     }
 
+    // Wait for the callback to be executed
+    const result = await responsePromise;
     return result;
+
   } catch (error) {
     console.error('Error sending push notification:', error);
     throw error;
