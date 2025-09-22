@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ion-spark-v1.0.0-temp1';
+const CACHE_NAME = 'ion-spark-v1.0.0-temp2';
 const urlsToCache = [
   '/ion-spark/css/dialog.css',
   '/ion-spark/css/word-card-styles.css',
@@ -93,40 +93,60 @@ self.addEventListener('sync', event => {
   }
 });
 
-// Handle push notifications (optional)
+// Handle push notifications
 self.addEventListener('push', event => {
+  let data;
+  try {
+    data = event.data.json();
+  } catch (e) {
+    data = {
+      title: 'Ion Spark',
+      body: event.data.text(),
+      data: { notificationID: 'default' }
+    };
+  }
+
   const options = {
-    body: event.data ? event.data.text() : 'New update available!',
+    body: data.body || 'New update available!',
     icon: '/ion-spark/android-chrome-192x192.png',
     badge: '/ion-spark/favicon-32x32.png',
     vibrate: [200, 100, 200],
-    tag: 'ion-spark-notification',
-    actions: [
-      {
-        action: 'open',
-        title: 'Open App'
-      },
-      {
-        action: 'close',
-        title: 'Close'
-      }
-    ]
+    data: data.data // Pass along custom data like notificationID
   };
-  
+
   event.waitUntil(
-    self.registration.showNotification('Ion Spark', options)
+    self.registration.showNotification(data.title || 'Ion Spark', options)
   );
 });
 
 // Handle notification clicks
 self.addEventListener('notificationclick', event => {
-  event.notification.close();
-  
-  if (event.action === 'open') {
-    event.waitUntil(
-      clients.openWindow('/ion-spark/')
-    );
-  }
+  event.notification.close(); // Close the notification
+
+  const notificationID = event.notification.data ? event.notification.data.notificationID : null;
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      // Check if there's a window already open
+      for (const client of clientList) {
+        if (client.url.includes('/ion-spark/') && 'focus' in client) {
+          client.focus(); // Focus the existing window
+          // Send a message to the client to trigger your function
+          if (notificationID) {
+            client.postMessage({ type: 'NOTIFICATION_CLICK', id: notificationID });
+          }
+          return;
+        }
+      }
+      
+      // If no window is open, open a new one
+      if (clients.openWindow) {
+        // You can pass the ID as a query parameter if you want
+        const urlToOpen = notificationID ? `/ion-spark/?notification_id=${notificationID}` : '/ion-spark/';
+        return clients.openWindow(urlToOpen);
+      }
+    })
+  );
 });
 
 function doBackgroundSync() {
