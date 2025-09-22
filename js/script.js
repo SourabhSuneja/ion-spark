@@ -420,7 +420,7 @@ const AuthManager = {
       AuthManager.clearUserSession();
       AuthManager.showSignInScreen();
 
-      DOMUtils.hide(loadingOverlay);
+      await handleStudentLogout();      DOMUtils.hide(loadingOverlay);
    },
 
    setLoadingState: (btn, errorField, isLoading) => {
