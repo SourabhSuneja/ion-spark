@@ -59,5 +59,52 @@ BEGIN
 END;
 $$;
 
+-- Function to get student profile (name, class, school etc) along with account settings (theme, avatar etc)
+CREATE OR REPLACE FUNCTION get_student_profile(p_student_id UUID)
+RETURNS TABLE (
+  name TEXT,
+  grade INT,
+  section TEXT,
+  gender TEXT,
+  school TEXT,
+  house TEXT,
+  dob DATE,
+  father_name TEXT,
+  phone TEXT,
+  address TEXT,
+  city TEXT,
+  access_token UUID,
+  theme SMALLINT,
+  avatar TEXT,
+  nickname TEXT
+)
+SECURITY INVOKER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    s.name::TEXT,
+    s.grade::INT,
+    s.section::TEXT,
+    s.gender::TEXT,
+    s.school::TEXT,
+    s.house::TEXT,
+    s.dob::DATE,
+    s.father_name::TEXT,
+    s.phone::TEXT,
+    s.address::TEXT,
+    s.city::TEXT,
+    s.access_token::UUID,
+    COALESCE(st.theme, 0::SMALLINT)::SMALLINT,
+    COALESCE(st.avatar, 'avatarStyle=Circle&topType=ShortHairShortCurly&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Happy&eyebrowType=Default&mouthType=Smile&skinColor=Light'::TEXT)::TEXT,
+    st.nickname::TEXT
+  FROM students s
+  LEFT JOIN settings st ON s.id = st.student_id
+  WHERE s.id = p_student_id;
+END;
+$$;
+
+
 
 -- Function creation ends
