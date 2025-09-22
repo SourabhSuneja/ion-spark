@@ -339,6 +339,21 @@ async function invokeFunction(functionName, functionArgs = {}, fetchSingle = fal
    }
 }
 
+// invoke an Edge function
+async function invokeEdgeFunction(functionName, payload = {}) {
+   try {
+      const { data, error } = await supabase.functions.invoke(functionName, {
+         body: payload,
+      });
+
+      if (error) throw error;
+      return data;
+   } catch (error) {
+      console.error(`Error invoking edge function ${functionName}:`, error.message);
+      return null;
+   }
+}
+
 // subscribe to a webhook on table
 async function subscribeToTable(tableName, callback) {
    try {
@@ -422,5 +437,6 @@ window.selectData = selectData;
 window.deleteRow = deleteRow;
 window.updateRow = updateRow;
 window.invokeFunction = invokeFunction;
+window.invokeEdgeFunction = invokeEdgeFunction;
 window.subscribeToTable = subscribeToTable;
 window.createUserWithoutSession = createUserWithoutSession;
