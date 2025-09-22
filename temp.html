@@ -580,7 +580,7 @@ window.sendPushNotification = sendPushNotification;
       <script>         
               async function sendNotification() {
                // Sign in first
-               await signInUser('sourabh@ionspark.com', 'something');
+               await signInUser('guest@ionspark.com', '123456');
                // Send to all grade 6 students
                const result = await sendPushNotification(
   { type: 'grade', value: 6 },
