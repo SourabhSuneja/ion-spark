@@ -534,6 +534,7 @@ const AppManager = {
       UIComponents.createUserProfile();
       AppManager.renderDashboardCards();
       MenuManager.initialize();
+      initializePushNotifications(window.userId);
    },
 
    renderDashboardCards: () => {
