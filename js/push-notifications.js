@@ -16,10 +16,15 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
-// Function to initialize push notifications
-async function initializePushNotifications(studentId) {
+/**
+ * Call this function immediately AFTER a student successfully logs in.
+ * It handles everything: requests permission if needed, gets the device's
+ * subscription, and ensures it's associated with the current student in the database.
+ * * @param {string} studentId The unique UUID of the logged-in student.
+ */
+async function handleStudentLogin(studentId) {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        console.warn('Push messaging is not supported');
+        console.warn('Push messaging is not supported.');
         return;
     }
 
@@ -27,43 +32,77 @@ async function initializePushNotifications(studentId) {
         const registration = await navigator.serviceWorker.ready;
         let subscription = await registration.pushManager.getSubscription();
 
+        // 1. If no subscription exists, create one.
         if (subscription === null) {
             console.log('User is not subscribed. Requesting permission...');
             const permission = await Notification.requestPermission();
 
             if (permission !== 'granted') {
-                console.log('Permission not granted for Notification');
+                console.log('Permission not granted for Notification.');
                 return;
             }
 
-            // VAPID Public Key
-            const VAPID_PUBLIC_KEY = 'BPvblgABlUE65S4s3LylAy4MMbcVl4Kwv0_N0XK2uquDqgLLHwlyxEUu-pEutatYgSb5ZohVw5pq9HiyJ41L-wM'; 
+            // Replace with your VAPID Public Key
+            const VAPID_PUBLIC_KEY = 'BPvblgABlUE65S4s3LylAy4MMbcVl4Kwv0_N0XK2uquDqgLLHwlyxEUu-pEutatYgSb5ZohVw5pq9HiyJ41L-wM';
 
             subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
             });
-
-            console.log('User subscribed:', subscription);
-
-            // Send the new subscription to your Supabase backend
-            const result = await insertData('push_subscriptions', { 
-                    student_id: studentId, 
-                    subscription_object: subscription 
-                });
-
-            if (result) {
-                console.log('Subscription saved successfully.');
-            } else {
-                console.error('Error saving subscription:', error);
-            }
+            console.log('New subscription created.');
         } else {
-            console.log('User is already subscribed.');
+            console.log('User is already subscribed on this device.');
         }
+
+        // 2. UPSERT: Ensure the subscription is associated with the current student.
+        // This handles new subscriptions, and also re-associates an existing
+        // subscription if a different student logs into the same device.
+        console.log('Associating subscription with student:', studentId);
+        const subscriptionData = {
+            student_id: studentId,
+            subscription_object: subscription,
+            endpoint: subscription.endpoint // The unique identifier for the device/browser
+        };
+
+        const result = await upsertData('push_subscriptions', subscriptionData, ['endpoint']);
+
+        if (result) {
+            console.log('Subscription successfully associated with current student.');
+        } else {
+            console.error('Failed to associate subscription.');
+        }
+
     } catch (error) {
-        console.error('Error during push notification initialization:', error);
+        console.error('Error during subscription handling:', error);
     }
 }
+
+
+/**
+ * Call this function immediately BEFORE logging a student out.
+ * It removes the subscription record from the database, ensuring the logged-out
+ * student no longer receives notifications on this device.
+ */
+async function handleStudentLogout() {
+    try {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+
+        if (subscription) {
+            // Find and delete the subscription record for this device using its endpoint
+            const deleted = await deleteRow('push_subscriptions', ['endpoint'], [subscription.endpoint]);
+
+            if (deleted) {
+                console.log('Device subscription disassociated on logout.');
+            } else {
+                console.error('Error deleting subscription on logout:', error);
+            }
+        }
+    } catch (error) {
+        console.error('Error during logout subscription handling:', error);
+    }
+}
+
 
 
 // Add this to your script.js file
