@@ -1,5 +1,12 @@
 -- Table creation starts
 
+-- Create teachers table
+CREATE TABLE teachers (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL
+);
+
 -- Students table
 create table students (
   id uuid primary key references auth.users(id) on delete cascade,
