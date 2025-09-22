@@ -33,6 +33,14 @@ create table settings (
   nickname text
 );
 
+-- Push subscriptions table
+CREATE TABLE push_subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    subscription_object JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 -- Table creation ends
 
 -- Function creation starts
