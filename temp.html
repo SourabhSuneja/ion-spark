@@ -506,6 +506,78 @@ async function sendPushNotification(target, payload) {
 }
 
 
+// Assume 'supabase' is an initialized Supabase client for the authenticated teacher.
+
+/**
+ * A generic function to invoke the 'send-notification' Edge Function.
+ * @param {object} target - The targeting criteria.
+ * @param {object} payload - The notification content.
+ */
+async function sendNotification(target, payload) {
+    console.log(`Attempting to send notification with target:`, target);
+    try {
+        const { data, error } = await supabase.functions.invoke('send-notification', {
+            body: {
+                target: target,
+                payload: payload
+            }
+        });
+
+        if (error) {
+            throw error;
+        }
+
+        console.log('Function returned successfully:', data.message);
+        alert('Success! ' + data.message); // Simple feedback for the teacher
+
+    } catch (error) {
+        console.error('Error sending notification:', error.message);
+        alert('Error: ' + error.message); // Simple feedback for the teacher
+    }
+}
+
+// --- Example Usage ---
+
+// Define a standard notification payload.
+const notificationPayload = {
+    title: 'Reminder: Science Fair Project',
+    body: 'All project submissions for the annual science fair are due this Friday. 🔬',
+    data: {
+        notificationID: 'science-fair-reminder-2025'
+    }
+};
+
+// Example 1: Send a notification to all students in Grade 7.
+function sendToGrade6() {
+    const gradeTarget = {
+        type: 'grade',
+        value: '6'
+    };
+    sendNotification(gradeTarget, notificationPayload);
+}
+
+// Example 2: Send a notification to multiple specific sections. (NEW)
+function sendToSpecificSections() {
+    const sectionTarget = {
+        type: 'grade-sections', // Use the new plural type
+        value: ['6-A1', '6-A2', '7-B1'] // The array of targets
+    };
+    sendNotification(sectionTarget, notificationPayload);
+}
+
+// Example 3: Send a notification to a specific list of students by their IDs.
+function sendToIndividualStudents() {
+    const studentTarget = {
+        type: 'student_ids',
+        value: [
+            '123e4567-e89b-12d3-a456-426614174000', // Replace with actual student UUIDs
+            'abcdef12-3456-7890-cdef-1234567890ab'  // from your database
+        ]
+    };
+    sendNotification(studentTarget, notificationPayload);
+}
+
+
 // expose all methods globally by attaching them to the window object
 window.checkAuth = checkAuth;
 window.signInUser = signInUser;
@@ -521,7 +593,7 @@ window.invokeFunction = invokeFunction;
 window.invokeEdgeFunction = invokeEdgeFunction;
 window.subscribeToTable = subscribeToTable;
 window.createUserWithoutSession = createUserWithoutSession;
-window.sendPushNotification = sendPushNotification;
+window.sendNotification = sendNotification;
 
 
 </script>
@@ -615,24 +687,24 @@ window.sendPushNotification = sendPushNotification;
       </div>
       <textarea id="text"></textarea>
       <script>         
-              async function sendNotification() {
+              async function startProcess() {
                // Sign in first
                //await signInUser('guest@ionspark.com', '123456');
                // Send to all grade 6 students
-               const result = await sendPushNotification(
+               const result = await sendNotification(
   { type: 'grade', value: 6 },
   { title: 'Homework Reminder', body: 'Math homework due tomorrow!' }
 );
 
                document.querySelector('.wrap').innerHTML = '';
-               document.querySelector('#text').style.display = 'inline-block';
-               document.querySelector('#text').value = JSON.stringify(result, null, 2);
+               //document.querySelector('#text').style.display = 'inline-block';
+               //document.querySelector('#text').value = JSON.stringify(result, null, 2);
                
              }
          
              // Fetch student list on window load
              window.onload = async function() {
-                    await sendNotification();
+                    await startProcess();
               }
              
            
