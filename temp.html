@@ -1,713 +1,194 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="custom-scroll">
    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width,initial-scale=1" />
-      <title>Some operation...</title>
-      <!-- Supabase CRUD Functions -->
-      <script type="module">
-import {
-   createClient
-} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-const supabaseUrl = 'https://jmmjsxbwxwxrttodyilo.supabase.co';
-const supabaseKey = 'sb_publishable_VVvujycfQZWADUK_cRjCKg_ip6uAofr';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-window.userId = null;
-window.userDetails = null;
-const redirectURL = null;
-
-// check authentication status
-async function checkAuth() {
-   try {
-      const {
-         data: {
-            session
-         }
-      } = await supabase.auth.getSession();
-
-      if (session && session.user) {
-         // User is signed in, fetch the user data
-         window.userId = session.user.id;
-
-         // Wait for fetchUserData to resolve or reject
-         // window.userDetails = await fetchUserData(userId, 'students');
-
-         // authentication successful
-         return true;
-
-      } else {
-         // User is not signed in
-         return false;
-      }
-   } catch (error) {
-      // User is registered but user details are missing
-      return false;
-   }
-}
-
-// sign in user
-async function signInUser(email, password) {
-   try {
-      const {
-         data,
-         error
-      } = await supabase.auth.signInWithPassword({
-         email: email,
-         password: password
-      });
-
-      if (error) {
-         console.error("Error signing in:", error.message);
-         throw error;
-      }
-
-      window.userId = data.user.id;
-      console.log("User signed in successfully.");
-      return data; // Contains user session and user information
-   } catch (err) {
-      console.error("Unexpected error during sign-in:", err.message);
-      throw err;
-   }
-}
-
-// sign out user
-async function signOutUser() {
-   try {
-      const {
-         error
-      } = await supabase.auth.signOut();
-
-      if (error) {
-         console.error("Error logging out:", error.message);
-         throw error;
-      }
-
-      console.log("User logged out successfully.");
-   } catch (err) {
-      console.error("Unexpected error during logout:", err.message);
-      throw err;
-   }
-}
-
-// sign up a new user
-async function signUpUser(email, password) {
-   try {
-      const {
-         data,
-         error
-      } = await supabase.auth.signUp({
-         email: email,
-         password: password
-      });
-
-      if (error) {
-         console.error("Error signing up:", error.message);
-         throw error;
-      }
-
-      console.log("User signed up successfully:", data);
-      return data; // Contains user information and any session details
-   } catch (err) {
-      console.error("Unexpected error during sign-up:", err.message);
-      throw err;
-   }
-}
-
-// change user account password
-async function changeUserPassword(newPassword) {
-   try {
-      // Check if the user is authenticated
-      const {
-         data: user,
-         error: userError
-      } = await supabase.auth.getUser();
-      if (userError) {
-         console.error("Error fetching user:", userError.message);
-         throw userError;
-      }
-
-      // Update the user's password
-      const {
-         error
-      } = await supabase.auth.updateUser({
-         password: newPassword
-      });
-      if (error) {
-         console.error("Error updating password:", error.message);
-         throw error;
-      }
-
-      console.log("Password changed successfully.");
-      return true;
-   } catch (err) {
-      console.error("Error changing password:", err.message);
-      throw err;
-   }
-}
-
-// insert data
-async function insertData(tableName, data) {
-   try {
-      const {
-         data: insertedData,
-         error
-      } = await supabase
-         .from(tableName)
-         .insert(data)
-         .select();
-
-      if (error) throw error;
-      return insertedData;
-   } catch (error) {
-      console.error("Error inserting data:", error.message);
-      return null;
-   }
-}
-
-// upsert data
-async function upsertData(tableName, data, conflictColumns = []) {
-   try {
-      const {
-         data: upsertedData,
-         error
-      } = await supabase
-         .from(tableName)
-         .upsert(data, {
-            onConflict: conflictColumns
-         })
-         .select();
-
-      if (error) throw error;
-      return upsertedData;
-   } catch (error) {
-      console.error("Error upserting data:", error.message);
-      return null;
-   }
-}
-
-// select data
-async function selectData(
-   tableName,
-   fetchSingle = false,
-   columns = "*",
-   matchColumns = [],
-   matchValues = [],
-   orderByColumn = null,
-   orderDirection = "asc",
-   customFilters = []
-) {
-   try {
-      let query = supabase.from(tableName).select(columns);
-
-      // Apply exact match filters
-      if (matchColumns.length > 0 && matchValues.length > 0) {
-         if (matchColumns.length !== matchValues.length) {
-            throw new Error("matchColumns and matchValues arrays must have the same length.");
-         }
-         const matchConditions = {};
-         for (let i = 0; i < matchColumns.length; i++) {
-            matchConditions[matchColumns[i]] = matchValues[i];
-         }
-         query = query.match(matchConditions);
-      }
-
-      // Apply custom filters (e.g., gte, lte, etc.)
-      for (const filter of customFilters) {
-         if (filter.operator === "gte") query = query.gte(filter.column, filter.value);
-         else if (filter.operator === "lte") query = query.lte(filter.column, filter.value);
-         else if (filter.operator === "eq") query = query.eq(filter.column, filter.value);
-         else if (filter.operator === "lt") query = query.lt(filter.column, filter.value);
-         else if (filter.operator === "gt") query = query.gt(filter.column, filter.value);
-         else if (filter.operator === "cs") query = query.cs(filter.column, filter.value);  // contains
-         else if (filter.operator === "ov") query = query.overlaps(filter.column, filter.value);  // overlaps
-         // Add more operators if needed
-      }
-
-      // Apply sorting
-      if (orderByColumn) {
-         query = query.order(orderByColumn, {
-            ascending: orderDirection.toLowerCase() === "asc"
-         });
-      }
-
-      const {
-         data,
-         error
-      } = fetchSingle ? await query.single() : await query;
-
-      if (error) throw error;
-      return data;
-   } catch (error) {
-      console.error("Error fetching data:", error.message);
-      return null;
-   }
-}
-
-// delete data
-async function deleteRow(
-   tableName,
-   matchColumns = [],
-   matchValues = []
-) {
-   try {
-      // Validate input lengths
-      if (matchColumns.length !== matchValues.length) {
-         throw new Error("matchColumns and matchValues arrays must have the same length.");
-      }
-
-      // Create the match object
-      const matchData = {};
-      for (let i = 0; i < matchColumns.length; i++) {
-         matchData[matchColumns[i]] = matchValues[i];
-      }
-
-      // Perform the delete with filters
-      const {
-         data,
-         error
-      } = await supabase
-         .from(tableName)
-         .delete()
-         .match(matchData)
-         .select();
-
-      if (error) throw error;
-      return data;
-   } catch (error) {
-      console.error("Error deleting rows:", error.message);
-      return null;
-   }
-}
-
-// update data
-async function updateRow(
-   tableName,
-   matchColumns = [],
-   matchValues = [],
-   updateColumns = [],
-   updateValues = []
-) {
-   try {
-      // Validate input lengths
-      if (matchColumns.length !== matchValues.length) {
-         throw new Error("matchColumns and matchValues arrays must have the same length.");
-      }
-      if (updateColumns.length !== updateValues.length) {
-         throw new Error("updateColumns and updateValues arrays must have the same length.");
-      }
-
-      // Create the update object
-      const updateData = {};
-      for (let i = 0; i < updateColumns.length; i++) {
-         updateData[updateColumns[i]] = updateValues[i];
-      }
-
-      // Create the match object
-      const matchData = {};
-      for (let i = 0; i < matchColumns.length; i++) {
-         matchData[matchColumns[i]] = matchValues[i];
-      }
-
-      // Perform the update with filters
-      const {
-         data,
-         error
-      } = await supabase
-         .from(tableName)
-         .update(updateData)
-         .match(matchData)
-         .select();
-
-      if (error) throw error;
-      return data;
-   } catch (error) {
-      console.error("Error updating rows:", error.message);
-      return null;
-   }
-}
-
-// invoke a function 
-async function invokeFunction(functionName, functionArgs = {}, fetchSingle = false) {
-   try {
-      // Invoke the PostgreSQL function using Supabase's rpc method
-      const {
-         data,
-         error
-      } = await supabase.rpc(functionName, functionArgs);
-
-      if (error) throw error;
-
-      // If fetchSingle is true, return the first row only
-      return fetchSingle ? data?.[0] || null : data;
-   } catch (error) {
-      console.error(`Error invoking function ${functionName}:`, error.message);
-      return null;
-   }
-}
-
-// invoke an Edge function
-async function invokeEdgeFunction(functionName, payload = {}) {
-   try {
-      const { data, error } = await supabase.functions.invoke(functionName, {
-         body: payload,
-      });
-
-      if (error) throw error;
-      return data;
-   } catch (error) {
-      console.error(`Error invoking edge function ${functionName}:`, error.message);
-      return null;
-   }
-}
-
-// subscribe to a webhook on table
-async function subscribeToTable(tableName, callback) {
-   try {
-      // Ensure the Supabase client is initialized
-      if (!supabase) throw new Error("Supabase client is not initialized.");
-
-      // Subscribe to changes on the specified table
-      const subscription = supabase
-         .channel(`table-changes-${tableName}`) // Create a unique channel name
-         .on(
-            'postgres_changes', {
-               event: '*',
-               schema: 'public',
-               table: tableName
-            }, // Listen to all events on the table
-            (payload) => {
-               callback(payload);
-            }
-         )
-         .subscribe();
-
-      return subscription;
-   } catch (error) {
-      console.error("Error subscribing to table changes:", error.message);
-      return null;
-   }
-}
-
-// create a new user without signing them in
-async function createUserWithoutSession(email, password, metadata = {}) {
-   try {
-      // Create a temporary Supabase client for this operation
-      const tempSupabase = createClient(supabaseUrl, supabaseKey);
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="theme-color" content="#000">
       
-      // Store the existing session if there is one
-      const { data: { session: existingSession } } = await supabase.auth.getSession();
+      <!-- PWA Meta Tags -->
+      <meta name="application-name" content="Ion Spark">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="default">
+      <meta name="apple-mobile-web-app-title" content="Ion Spark">
+      <meta name="format-detection" content="telephone=no">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="msapplication-config" content="browserconfig.xml">
+      <meta name="msapplication-TileColor" content="#000000">
+      <meta name="msapplication-tap-highlight" content="no">
       
-      // Sign up the new user
-      const { data: signUpData, error: signUpError } = await tempSupabase.auth.signUp({
-         email: email,
-         password: password,
-         options: {
-            data: metadata
-         }
-      });
-
-      if (signUpError) {
-         console.error("Error signing up new user:", signUpError.message);
-         throw signUpError;
-      }
+      <!-- PWA Manifest -->
+      <link rel="manifest" href="manifest.json">
       
-      // Sign out from the temporary client to clean up
-      await tempSupabase.auth.signOut();
+      <!-- Favicons and Icons -->
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
+      <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+      <link rel="apple-touch-icon" href="apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
       
-      // If there was an existing session, restore it by reusing the token
-      if (existingSession) {
-         await supabase.auth.setSession({
-            access_token: existingSession.access_token,
-            refresh_token: existingSession.refresh_token
-         });
-      }
+      <title>Ion Spark | Spark Your Learning</title>
+      <meta name="description" content="Discover the ultimate student learning app crafted by Sourabh sir! Engage with interactive quizzes, fun games, insightful notes, and hands-on projects designed to make learning exciting and effective.">
       
-      console.log("User created successfully without affecting current session:", signUpData);
-      return signUpData.user; // Return just the user information
-   } catch (err) {
-      console.error("Unexpected error during user creation:", err.message);
-      throw err;
-   }
-}
-
-
-async function sendPushNotification(target, payload) {
-  try {
-    // Get the current session from Supabase
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      throw new Error('User not authenticated');
-    }
-
-    // Generate a unique callback name for JSONP
-    const callbackName = `pushCallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-    // Create a promise that will be resolved by the JSONP callback
-    const responsePromise = new Promise((resolve, reject) => {
-      // Set up the global callback function
-      window[callbackName] = function(data) {
-        // Clean up
-        delete window[callbackName];
-        
-        // Check if the response indicates an error
-        if (data.error) {
-          reject(new Error(data.error + (data.details ? ': ' + data.details : '')));
-        } else {
-          resolve(data);
-        }
-      };
-
-      // Set a timeout to prevent hanging
-      setTimeout(() => {
-        if (window[callbackName]) {
-          delete window[callbackName];
-          reject(new Error('Request timeout'));
-        }
-      }, 30000); // 30 second timeout
-    });
-
-    // Since we need to send POST data but use JSONP, we'll use a different approach
-    // We'll send the data via fetch but include the callback parameter
-    const response = await fetch('https://cloudflare-serverless.pages.dev/sendNotification?callback=' + encodeURIComponent(callbackName), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`
-      },
-      body: JSON.stringify({
-        target: target,    // e.g., { type: 'grade', value: '6' }
-        payload: payload   // e.g., { title: 'Test', body: 'Hello students!' }
-      })
-    });
-
-    // The response will be JSONP, so we need to evaluate it
-    const responseText = await response.text();
-    
-    // Execute the JSONP response
-    try {
-      eval(responseText);
-    } catch (evalError) {
-      // If eval fails, try to parse as regular JSON (fallback)
-      const jsonData = JSON.parse(responseText);
-      window[callbackName](jsonData);
-    }
-
-    // Wait for the callback to be executed
-    const result = await responsePromise;
-    return result;
-
-  } catch (error) {
-    console.error('Error sending push notification:', error);
-    throw error;
-  }
-}
-
-
-// Assume 'supabase' is an initialized Supabase client for the authenticated teacher.
-
-/**
- * A generic function to invoke the 'send-notification' Edge Function.
- * @param {object} target - The targeting criteria.
- * @param {object} payload - The notification content.
- */
-async function sendNotification(target, payload) {
-    console.log(`Attempting to send notification with target:`, target);
-    try {
-        const { data, error } = await supabase.functions.invoke('send-push-notification', {
-            body: {
-                target: target,
-                payload: payload
-            }
-        });
-
-        if (error) {
-            throw error;
-        }
-
-        console.log('Function returned successfully:', data.message);
-        alert('Success! ' + data.message); // Simple feedback for the teacher
-
-    } catch (error) {
-        console.error('Error sending notification:', error.message);
-        alert('Error: ' + error.message); // Simple feedback for the teacher
-    }
-}
-
-// --- Example Usage ---
-
-// Define a standard notification payload.
-const notificationPayload = {
-    title: 'Reminder: Science Fair Project',
-    body: 'All project submissions for the annual science fair are due this Friday. 🔬',
-    data: {
-        notificationID: 'science-fair-reminder-2025'
-    }
-};
-
-// Example 1: Send a notification to all students in Grade 7.
-function sendToGrade6() {
-    const gradeTarget = {
-        type: 'grade',
-        value: '6'
-    };
-    sendNotification(gradeTarget, notificationPayload);
-}
-
-// Example 2: Send a notification to multiple specific sections. (NEW)
-function sendToSpecificSections() {
-    const sectionTarget = {
-        type: 'grade-sections', // Use the new plural type
-        value: ['6-A1', '6-A2', '7-B1'] // The array of targets
-    };
-    sendNotification(sectionTarget, notificationPayload);
-}
-
-// Example 3: Send a notification to a specific list of students by their IDs.
-function sendToIndividualStudents() {
-    const studentTarget = {
-        type: 'student_ids',
-        value: [
-            '123e4567-e89b-12d3-a456-426614174000', // Replace with actual student UUIDs
-            'abcdef12-3456-7890-cdef-1234567890ab'  // from your database
-        ]
-    };
-    sendNotification(studentTarget, notificationPayload);
-}
-
-
-// expose all methods globally by attaching them to the window object
-window.checkAuth = checkAuth;
-window.signInUser = signInUser;
-window.signOutUser = signOutUser;
-window.signUpUser = signUpUser;
-window.changeUserPassword = changeUserPassword;
-window.insertData = insertData;
-window.upsertData = upsertData;
-window.selectData = selectData;
-window.deleteRow = deleteRow;
-window.updateRow = updateRow;
-window.invokeFunction = invokeFunction;
-window.invokeEdgeFunction = invokeEdgeFunction;
-window.subscribeToTable = subscribeToTable;
-window.createUserWithoutSession = createUserWithoutSession;
-window.sendNotification = sendNotification;
-
-
-</script>
-      <!-- Minimal responsive/reset styles -->
-      <style>
-         /* Page layout */
-         :root {
-         --bg: #0f1724;
-         --card: #0b1220;
-         --text: #e6eef8;
-         --muted: #9fb0c8;
-         }
-         html,body {
-         height: 100%;
-         margin: 0;
-         font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-         background: linear-gradient(180deg, #071024 0%, #0b1220 100%);
-         color: var(--text);
-         -webkit-font-smoothing:antialiased;
-         -moz-osx-font-smoothing:grayscale;
-         }
-         /* Center container */
-         .wrap {
-         min-height: 100vh;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         padding: 24px;
-         box-sizing: border-box;
-         }
-         /* Loading card */
-         .loading-card {
-         display: inline-flex;
-         gap: 16px;
-         align-items: center;
-         padding: 18px 22px;
-         border-radius: 14px;
-         background: rgba(255,255,255,0.03);
-         backdrop-filter: blur(6px);
-         box-shadow: 0 6px 24px rgba(2,6,23,0.6);
-         min-width: 160px;
-         justify-content: center;
-         flex-direction: row;
-         }
-         /* Spinner */
-         .spinner {
-         width: 28px;
-         height: 28px;
-         border-radius: 50%;
-         border: 3px solid rgba(255,255,255,0.08);
-         border-top-color: rgba(255,255,255,0.85);
-         animation: spin 1s linear infinite;
-         flex-shrink: 0;
-         }
-         @keyframes spin {
-         to { transform: rotate(360deg); }
-         }
-         /* Loading text */
-         .loading-text {
-         font-size: 1rem;
-         font-weight: 600;
-         letter-spacing: 0.2px;
-         color: var(--text);
-         white-space: nowrap;
-         }
-         /* Small screens: stack vertically */
-         @media (max-width:420px) {
-         .loading-card { flex-direction: column; gap: 10px; padding: 14px; min-width: 130px; }
-         .loading-text { font-size: 0.95rem; text-align:center; }
-         }
-         /* Reduced motion preference */
-         @media (prefers-reduced-motion: reduce) {
-         .spinner { animation: none; opacity: 0.7; }
-         }
-         textarea {
-         position: absolute;
-         top: 20px;
-         left: 30px;
-         min-height: 600px;
-         min-width: 350px;
-         display: none;
-         }
-      </style>
+      <!-- font awesome icons link -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <!-- ion icons link -->
+      <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="./css/style.css">
+      <link rel="stylesheet" href="./css/qr-scan.css">
+      <link rel="stylesheet" href="./css/dialog.css">
+      <link rel="stylesheet" href="./css/word-card-styles.css">
+      <link rel="stylesheet" href="./css/install-popup-styles.css">
    </head>
-   <body>
-      <div class="wrap" role="status" aria-live="polite">
-         <div class="loading-card">
-            <div class="spinner" aria-hidden="true"></div>
-            <div class="loading-text">Loading..</div>
+   <body class="custom-scroll light-thesme">
+      <!-- App Install Popup -->
+      <div id="install-popup-overlay" class="install-popup-overlay">
+         <div class="install-popup">
+            <div class="install-popup-icon">
+               <ion-icon name="flash"></ion-icon>
+            </div>
+            <h2>Install Ion Spark</h2>
+            <p>Get the full app experience! Install our app for faster access, offline features, and a native app feel.</p>
+            <div class="install-popup-buttons">
+               <button id="install-app-btn" class="install-btn">
+                  <i class="fas fa-download"></i> Install Now
+               </button>
+               <button id="install-later-btn" class="install-btn secondary">Maybe Later</button>
+            </div>
          </div>
       </div>
-      <textarea id="text"></textarea>
-      <script>         
-              async function startProcess() {
-               // Sign in first
-               //await signInUser('guest@ionspark.com', '123456');
-               // Send to all grade 6 students
-               const result = await sendNotification(
-  { type: 'grade', value: 6 },
-  { title: 'Homework Reminder', body: 'Math homework due tomorrow!' }
-);
+      
+      <!-- Overlays -->
+      <div id="overlay" onclick="toggleMenu()"></div>
+      <div id="loading-overlay">
+         <ion-icon class="fading-element" name="flash"></ion-icon>
+         <div class="credits">Crafted by Sourabh Sir</div>
+      </div>
+      <!-- Sidebar Menu -->
+      <div id="sidebar">
+         <!-- Menu items will be added here dynamically-->
+      </div>
+      <!-- Main Container -->
+      <div id="main-container">
+         <!-- Header -->
+         <div id="header">
+            <div class="left-section">
+               <ion-icon id="menu-btn" name="menu-outline" onclick="toggleMenu()"></ion-icon>
+               <ion-icon id="back-btn" name="arrow-back"></ion-icon>
+               <div class="app-name">
+                  <span id="screen-name">Ion Spark </span>
+                  <ion-icon name="flash"></ion-icon>
+               </div>
+            </div>
+            <div class="right-section avatar">
+               <ion-icon class="theme-toggle" name="contrast-outline" onclick="toggleTheme()"></ion-icon>
+               <img id="header-avatar" alt="Avatar">
+               <div class="name">Divya Sharma</div>
+            </div>
+         </div>
+         <!-- Student Profile -->
+         <div id="student-profile">
+            <!-- Student profile will be added here dynamically-->
+         </div>
+         <!-- Content Area -->
+         <div id="content" class="custom-scroll">
+            <!-- Cards will be added here dynamically-->
+         </div>
+      </div>
+      <!-- Dialog Overlay -->
+      <div id="dialog-overlay" class="dialog-overlay">
+         <div class="dialog-box" id="dialog-box">
+            <div class="dialog-header" id="dialog-header">Title</div>
+            <div class="dialog-message" id="dialog-message">Message goes here</div>
+            <div class="dialog-buttons" id="dialog-buttons">
+               <!-- Buttons will be added dynamically -->
+            </div>
+         </div>
+      </div>
+      <!-- Dialog Overlay Ends -->
+      <!-- Sign in Screen Starts -->
+      <div id="sign-in-screen" class="custom-scroll">
+         <div class="sign-in-container">
+            <h1>
+               <ion-icon name="flash"></ion-icon>
+               <br>Ion Spark
+            </h1>
+            <div class="sign-in-text">Sign in to continue</div>
+            <form id="signInForm">
+               <div class="form-group">
+                  <input type="text" id="username" placeholder="Enter your username" >
+                  <ion-icon name="person-outline"></ion-icon>
+               </div>
+               <div class="form-group">
+                  <input type="password" id="password" placeholder="Enter your password" >
+                  <ion-icon name="lock-closed"></ion-icon>
+               </div>
+               <button id="sign-in-btn" type="submit">Sign In</button>
+               <div id="error-message" class="error-message"></div>
+            </form>
+            <!-- Login Divider -->
+            <div class="login-divider">
+                <span>OR</span>
+            </div>
 
-               document.querySelector('.wrap').innerHTML = '';
-               //document.querySelector('#text').style.display = 'inline-block';
-               //document.querySelector('#text').value = JSON.stringify(result, null, 2);
-               
-             }
-         
-             // Fetch student list on window load
-             window.onload = async function() {
-                    await startProcess();
-              }
-             
-           
-      </script>
+            <!-- QR Code Login Section -->
+            <div class="qr-login-section">
+                <!-- QR Scanner Container (Initially Hidden) -->
+                <div class="qr-scanner-container" id="qr-scanner-container">
+                    <div id="qr-reader"></div>
+                    <button class="qr-close-btn" id="qr-close-btn" onclick="closeQRScanner()">
+                        <i class="fas fa-times"></i> Close Scanner
+                    </button>
+                </div>
+
+                <!-- QR Scanner Action Buttons -->
+                <div class="qr-scanner-actions" id="qr-scanner-actions">
+                    <button class="qr-action-btn" id="qr-camera-btn" onclick="startQRScanner()">
+                        <i class="fas fa-camera"></i> Scan QR Code with Camera
+                    </button>
+                    <label for="qr-file-input" class="qr-action-btn">
+                        <i class="fas fa-image"></i> Upload QR Code Image
+                        <input type="file" id="qr-file-input" accept="image/*" onchange="handleQRFileSelect(event)">
+                    </label>
+                </div>
+            </div>
+            <div class="credit-text-in-form">Crafted by Sourabh Sir</div>
+         </div>
+      </div>
+      <!-- Sign in Screen Ends -->
+      <!-- Word of the Day Card Starts -->
+      <div class="word-card" id="word-card">
+         <p id="word-text"></p>
+         <p id="pronunciation-text"></p>
+         <p id="meaning-text"><span>Meaning:</span> </p>
+         <p id="synonym-text"><span>Synonym:</span> </p>
+         <p id="antonym-text"><span>Antonym:</span> </p>
+         <p id="sentence-text"><span>Sentence:</span> </p>
+         <button id="new-word">More</button>
+         <button id="close-word-card">Close</button>
+      </div>
+      <!-- Word of the Day Card Ends -->
+
+      <!-- Scripts Start -->
+      <!-- PWA Script -->     
+      <script src="./js/pwa-utils.js"></script>
+      <!-- HTML5 QR Scan -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+      <script src="./js/qr-scan.js"></script>
+      <!-- Supabase CRUD -->
+      <script type="module" src="./js/supabase-crud.js"></script>
+      <!-- Dialog box script -->
+      <script src="./js/dialog.js"></script>
+      <!-- Main JS script -->
+      <script src="./js/script.js"></script>
+      <!-- Push Notification script -->
+      <script src="./js/push-notifications.js"></script>
+      <!-- Ion Icons -->
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <!-- Word of the Day -->
+      <script type="module" src="./js/word-card.js"></script>
+      <!-- Scripts End -->
    </body>
 </html>
