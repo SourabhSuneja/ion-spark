@@ -516,7 +516,7 @@ async function sendPushNotification(target, payload) {
 async function sendNotification(target, payload) {
     console.log(`Attempting to send notification with target:`, target);
     try {
-        const { data, error } = await supabase.functions.invoke('send-notification', {
+        const { data, error } = await supabase.functions.invoke('send-push-notification', {
             body: {
                 target: target,
                 payload: payload
