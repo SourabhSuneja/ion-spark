@@ -1,9 +1,23 @@
+// Save student info in SW
+async function saveStudentForSW(student) {
+  if (navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'SAVE_STUDENT',
+      student
+    });
+  }
+}
+
+
          // Register Service Worker
          if ('serviceWorker' in navigator) {
            window.addEventListener('load', () => {
              navigator.serviceWorker.register('/ion-spark/sw-temp.js')
                .then((registration) => {
                  console.log('SW registered: ', registration);
+                 // Example: call after login
+                saveStudentForSW({ id: 'student123', grade: 6, section: 'A1' });
+console.log('Student saved');
                })
                .catch((registrationError) => {
                  console.log('SW registration failed: ', registrationError);
