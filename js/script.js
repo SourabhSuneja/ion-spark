@@ -420,7 +420,7 @@ const AuthManager = {
       AuthManager.clearUserSession();
       AuthManager.showSignInScreen();
 
-      await handleStudentLogout();      DOMUtils.hide(loadingOverlay);
+      DOMUtils.hide(loadingOverlay);
    },
 
    setLoadingState: (btn, errorField, isLoading) => {
@@ -534,7 +534,6 @@ const AppManager = {
       UIComponents.createUserProfile();
       AppManager.renderDashboardCards();
       MenuManager.initialize();
-      handleStudentLogin(window.userId);
    },
 
    renderDashboardCards: () => {
