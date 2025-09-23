@@ -43,7 +43,7 @@ async function handleStudentLogin(studentId) {
             }
 
             // Replace with your VAPID Public Key
-            const VAPID_PUBLIC_KEY = 'BPvblgABlUE65S4s3LylAy4MMbcVl4Kwv0_N0XK2uquDqgLLHwlyxEUu-pEutatYgSb5ZohVw5pq9HiyJ41L-wM';
+            const VAPID_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZR5ho2zAinlW5pyrmUfvaaZuCIN0QTd9TBO0VbUqgrfAfVBs80cfxIme9XwFkOeO7YvUk15i6QOOCwaqXCH8mg';
 
             subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
