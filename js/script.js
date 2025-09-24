@@ -115,15 +115,17 @@ const MENU_ITEMS = [{
 // =============================================================================
 
 const BackendManager = {
-  getStudentProfile: async (student_id) => {
-    try {
-      const student = await invokeFunction('get_student_profile', { p_student_id: student_id }, true);
-      return student;
-    } catch (err) {
-      console.error("Error fetching student profile:", err);
-      return null;
-    }
-  }
+   getStudentProfile: async (student_id) => {
+      try {
+         const student = await invokeFunction('get_student_profile', {
+            p_student_id: student_id
+         }, true);
+         return student;
+      } catch (err) {
+         console.error("Error fetching student profile:", err);
+         return null;
+      }
+   }
 };
 
 // =============================================================================
@@ -196,12 +198,12 @@ const UIComponents = {
       // Fetch student profile from backend
       const profile = await BackendManager.getStudentProfile(window.userId);
 
-    if (profile && typeof profile === 'object') {
-      // Copy all keys from backend response into USER_DATA
-      Object.keys(profile).forEach(key => {
-        USER_DATA[key] = profile[key];
-      }); 
-    }
+      if (profile && typeof profile === 'object') {
+         // Copy all keys from backend response into USER_DATA
+         Object.keys(profile).forEach(key => {
+            USER_DATA[key] = profile[key];
+         });
+      }
 
       // Update header avatar
       DOMUtils.getElementById('header-avatar').src = `https://avataaars.io/?${USER_DATA.avatar}`;
@@ -220,10 +222,10 @@ const UIComponents = {
       const profileInfoDiv = DOMUtils.createElement('div', 'profile-info');
       const nameHeading = DOMUtils.createElement('h2', 'student-name', StringUtils.capitalizeFirstLetter(USER_DATA.name));
       const gradeParagraph = DOMUtils.createElement(
-  'p',
-  'student-grade',
-  `Grade: ${USER_DATA.grade}${USER_DATA.section ? '-' + USER_DATA.section : ''}`
-);
+         'p',
+         'student-grade',
+         `Grade: ${USER_DATA.grade}${USER_DATA.section ? '-' + USER_DATA.section : ''}`
+      );
       const descriptionParagraph = DOMUtils.createElement('p', 'student-description', `${USER_DATA.accountType} Account`);
 
       profileInfoDiv.append(nameHeading, gradeParagraph, descriptionParagraph);
@@ -251,6 +253,22 @@ const UIComponents = {
       iframe.addEventListener('load', function () {
          hideProcessingDialog();
          this.style.opacity = '1';
+
+         // Sync current theme to the newly loaded iframe
+         try {
+            if (this.contentDocument && this.contentDocument.body) {
+               const isLightTheme = APP_CONFIG.theme === 'light' ? true : false;
+               const iframeBody = this.contentDocument.body;
+
+               if (isLightTheme) {
+                  iframeBody.classList.add('light-theme');
+               } else {
+                  iframeBody.classList.remove('light-theme');
+               }
+            }
+         } catch (error) {
+            console.warn('Cannot sync theme to iframe:', error);
+         }
       });
 
       return iframe;
@@ -311,8 +329,8 @@ const PageManager = {
 
       // Show a relevant card or do nothing if the page has null link
       if ((!(page in LINKS) || LINKS[page] === null) && page !== 'home') {
-         if(page === 'word-of-the-day') {
-             showRandomWord();
+         if (page === 'word-of-the-day') {
+            showRandomWord();
          }
          hideProcessingDialog();
          return;
@@ -497,52 +515,52 @@ const AuthManager = {
 // =============================================================================
 
 const ThemeManager = {
-  toggle: () => {
-    const body = document.body;
-    const metaThemeColor = document.querySelector("meta[name=theme-color]");
+   toggle: () => {
+      const body = document.body;
+      const metaThemeColor = document.querySelector("meta[name=theme-color]");
 
-    // Toggle the theme class
-    body.classList.toggle("light-theme");
+      // Toggle the theme class
+      body.classList.toggle("light-theme");
 
 
-    // If body has light-theme → set status bar to white and also store theme state in the APP_CONFIG
-    if (body.classList.contains("light-theme")) {
-      metaThemeColor.setAttribute("content", "#ffffff") // light mode
-      APP_CONFIG.theme = "light";
-      // Propagate theme to iframes
-      ThemeManager.syncThemeToIframes(true);
-    } else {
-      metaThemeColor.setAttribute("content", "#000000"); // dark mode
-      APP_CONFIG.theme = "dark";
-      // Propagate theme to iframes
-      ThemeManager.syncThemeToIframes(false);
-    }
-  },
-
-syncThemeToIframes: (isLightTheme) => {
-   // Find all iframes in the document
-   const iframes = document.querySelectorAll('iframe');
-   
-   iframes.forEach(iframe => {
-      try {
-         // Check if iframe is loaded and accessible (same domain)
-         if (iframe.contentDocument && iframe.contentDocument.body) {
-            const iframeBody = iframe.contentDocument.body;
-            
-            if (isLightTheme) {
-               // Add light-theme class
-               iframeBody.classList.add('light-theme');
-            } else {
-               // Remove light-theme class (dark theme)
-               iframeBody.classList.remove('light-theme');
-            }
-         }
-      } catch (error) {
-         // Handle cross-origin or other access errors silently
-         console.warn('Cannot access iframe content (likely cross-origin):', error);
+      // If body has light-theme → set status bar to white and also store theme state in the APP_CONFIG
+      if (body.classList.contains("light-theme")) {
+         metaThemeColor.setAttribute("content", "#ffffff") // light mode
+         APP_CONFIG.theme = "light";
+         // Propagate theme to iframes
+         ThemeManager.syncThemeToIframes(true);
+      } else {
+         metaThemeColor.setAttribute("content", "#000000"); // dark mode
+         APP_CONFIG.theme = "dark";
+         // Propagate theme to iframes
+         ThemeManager.syncThemeToIframes(false);
       }
-   });
-}
+   },
+
+   syncThemeToIframes: (isLightTheme) => {
+      // Find all iframes in the document
+      const iframes = document.querySelectorAll('iframe');
+
+      iframes.forEach(iframe => {
+         try {
+            // Check if iframe is loaded and accessible (same domain)
+            if (iframe.contentDocument && iframe.contentDocument.body) {
+               const iframeBody = iframe.contentDocument.body;
+
+               if (isLightTheme) {
+                  // Add light-theme class
+                  iframeBody.classList.add('light-theme');
+               } else {
+                  // Remove light-theme class (dark theme)
+                  iframeBody.classList.remove('light-theme');
+               }
+            }
+         } catch (error) {
+            // Handle cross-origin or other access errors silently
+            console.warn('Cannot access iframe content (likely cross-origin):', error);
+         }
+      });
+   }
 };
 
 // =============================================================================
@@ -667,9 +685,9 @@ PageManager.loadPage = (page) => {
    originalLoadPage(page);
 
    // If the page does not have an external link, do not push it to the history
-    if (!(page in LINKS) || LINKS[page] === null) {
-       return;
-}
+   if (!(page in LINKS) || LINKS[page] === null) {
+      return;
+   }
 
    // Push state only if not already on this page
    if (window.history.state?.page !== page) {
