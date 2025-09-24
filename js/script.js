@@ -6,7 +6,8 @@ const APP_CONFIG = {
    name: 'Ion Spark',
    loadingDelay: 1000,
    iframeTransitionDuration: '2s',
-   currentPage: 'home'
+   currentPage: 'home',
+   theme: 'dark'
 };
 
 const LINKS = {
@@ -503,13 +504,45 @@ const ThemeManager = {
     // Toggle the theme class
     body.classList.toggle("light-theme");
 
-    // If body has light-theme → set status bar to white
+
+    // If body has light-theme → set status bar to white and also store theme state in the APP_CONFIG
     if (body.classList.contains("light-theme")) {
-      metaThemeColor.setAttribute("content", "#ffffff"); // light mode
+      metaThemeColor.setAttribute("content", "#ffffff") // light mode
+      APP_CONFIG.theme = "light";
+      // Propagate theme to iframes
+      ThemeManager.syncThemeToIframes(true);
     } else {
       metaThemeColor.setAttribute("content", "#000000"); // dark mode
+      APP_CONFIG.theme = "dark";
+      // Propagate theme to iframes
+      ThemeManager.syncThemeToIframes(false);
     }
-  }
+  },
+
+syncThemeToIframes: (isLightTheme) => {
+   // Find all iframes in the document
+   const iframes = document.querySelectorAll('iframe');
+   
+   iframes.forEach(iframe => {
+      try {
+         // Check if iframe is loaded and accessible (same domain)
+         if (iframe.contentDocument && iframe.contentDocument.body) {
+            const iframeBody = iframe.contentDocument.body;
+            
+            if (isLightTheme) {
+               // Add light-theme class
+               iframeBody.classList.add('light-theme');
+            } else {
+               // Remove light-theme class (dark theme)
+               iframeBody.classList.remove('light-theme');
+            }
+         }
+      } catch (error) {
+         // Handle cross-origin or other access errors silently
+         console.warn('Cannot access iframe content (likely cross-origin):', error);
+      }
+   });
+}
 };
 
 // =============================================================================
