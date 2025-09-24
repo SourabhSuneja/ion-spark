@@ -111,7 +111,7 @@
                  // Pre-load custom exams for this class
                  await preloadCustomExams(globalClassValue);
                  // Also log student visit on server
-                 logActivity(`${firstRecord.name} (${firstRecord.class})`, 'MARKS_VIEW');
+                 //logActivity(`${firstRecord.name} (${firstRecord.class})`, 'MARKS_VIEW');
              }
              
              // Create exam sections
