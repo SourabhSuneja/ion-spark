@@ -14,546 +14,564 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="Scan QR codes to access your exam scores across subjects">
       <title>Student Marks Viewer</title>
-      <!-- Google Fonts -->
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+      
+      <!-- font awesome icons link -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <!-- ion icons link -->
+      <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+      
       <!-- Supabase CRUD Functions -->
       <script type="module" src="https://myjvp.in/commons/supabase-crud.js"></script>
       <!-- Common JS Functions -->
       <script src="https://myjvp.in/marks-management/common.js"></script>
-      <!-- Font Awesome -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-      <!-- HTML5 QR Code Scanner -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+      
       <style>
          :root {
-         --primary: #4361ee;
-         --secondary: #3a0ca3;
-         --success: #4cc9f0;
-         --light: #f8f9fa;
-         --dark: #212529;
-         --error: #ef476f;
-         --success-bg: #d1fae5;
-         --warning-bg: #fef3c7;
-         --danger-bg: #fee2e2;
+           /* Colors - Dark Theme */
+           --bg-primary: #121212;
+           --bg-secondary: #1f1f1f;
+           --bg-tertiary: #333333;
+           --bg-gradient-dark: linear-gradient(145deg, #1e1e1e, #333333);
+           --bg-input: #2c2c2c;
+           --bg-profile: rgb(25, 25, 25);
+
+           /* Text Colors - Dark Theme */
+           --text-primary: #fff;
+           --text-secondary: #ddd;
+           --text-tertiary: #b0bec5;
+           --text-muted: rgb(230, 230, 230);
+           --text-light-gray: rgb(240, 240, 240);
+           --text-dark-gray: rgb(220, 220, 220);
+
+           /* Accent Colors */
+           --accent-primary: #ffc107;
+           --accent-hover: #e0a800;
+           --accent-focus: #ffd54f;
+           --accent-button-text: black;
+
+           /* Status Colors */
+           --error-color: #FF3333;
+           --error-bg: #e53935;
+           --error-hover: #d32f2f;
+
+           /* Additional Colors for Marks */
+           --success-color: #4cc9f0;
+           --excellent-color: #10b981;
+           --good-color: #3b82f6;
+           --average-color: #f59e0b;
+           --poor-color: #ef4444;
+           --absent-color: #6d28d9;
+
+           /* Overlay Colors */
+           --overlay-bg: rgba(0, 0, 0, 0.5);
+           --loading-overlay-bg: black;
+           --loading-credits-color: rgb(245, 245, 245);
+
+           /* Scrollbar Colors */
+           --scrollbar-thumb: rgb(50, 50, 50);
+           --scrollbar-track: transparent;
+
+           /* Shadow Colors */
+           --shadow-dark: rgba(0, 0, 0, 0.5);
+           --shadow-medium: rgba(0, 0, 0, 0.6);
+           --shadow-light: rgba(0, 0, 0, 0.4);
+
+           /* Spacing Values */
+           --spacing-xs: 4px;
+           --spacing-sm: 8px;
+           --spacing-md: 12px;
+           --spacing-lg: 16px;
+           --spacing-xl: 20px;
+           --spacing-xxl: 25px;
+           --spacing-xxxl: 30px;
+
+           /* Border Radius */
+           --radius-sm: 5px;
+           --radius-md: 8px;
+           --radius-lg: 10px;
+           --radius-xl: 12px;
+           --radius-full: 50%;
+
+           /* Font Sizes */
+           --font-sm: 0.9rem;
+           --font-base: 1rem;
+           --font-md: 1.1rem;
+           --font-lg: 1.2rem;
+           --font-xl: 1.6rem;
+           --font-xxl: 1.7rem;
+           --font-xxxl: 1.8rem;
+           --font-icon-sm: 1.2rem;
+           --font-icon-md: 1.8rem;
+           --font-icon-lg: 2.1rem;
+           --font-icon-xl: 64px;
+
+           /* Transitions */
+           --transition-fast: 0.2s ease;
+           --transition-base: 0.3s ease;
+           --transition-slow: 0.4s all;
+           --transition-slower: 0.5s;
+
+           /* Z-index */
+           --z-overlay: 1;
+           --z-header: 10;
+           --z-sidebar: 20;
+           --z-signin: 99999;
+           --z-loading: 500000;
+
+           /* Dimensions */
+           --sidebar-width: 260px;
+           --avatar-sm: 40px;
+           --avatar-md: 70px;
+           --avatar-lg: 80px;
+           --scrollbar-width: 6px;
          }
+
+         /* Light theme overrides */
+         body.light-theme {
+           --bg-primary: #ffffff;
+           --bg-secondary: rgb(253, 253, 253);
+           --bg-tertiary: rgb(240, 240, 240);
+           --bg-gradient-dark: linear-gradient(145deg, #ffffff, #f0f0f0);
+           --bg-input: #ffffff;
+           --bg-profile: rgb(253, 253, 253);
+
+           --text-primary: #333;
+           --text-secondary: rgb(50, 50, 50);
+           --text-tertiary: rgb(80, 80, 80);
+           --text-muted: #333;
+           --text-light-gray: rgb(50, 50, 50);
+           --text-dark-gray: rgb(90, 90, 90);
+
+           --accent-button-text: rgb(30, 30, 30);
+
+           --error-color: #d32f2f;
+           --error-bg: #ff6666;
+           --error-hover: #ff4d4d;
+
+           --loading-overlay-bg: rgb(253, 253, 253);
+           --loading-credits-color: rgb(50, 50, 50);
+
+           --scrollbar-thumb: rgb(170, 170, 170);
+
+           --shadow-dark: rgba(0, 0, 0, 0.1);
+           --shadow-medium: rgba(0, 0, 0, 0.1);
+           --shadow-light: rgba(0, 0, 0, 0.1);
+         }
+
          * {
-         margin: 0;
-         padding: 0;
-         box-sizing: border-box;
-         max-height: 99999999px;
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+           font-family: 'Roboto', sans-serif;
+           max-height: 999999px;
+           transition: var(--transition-base) all;
          }
+
          body {
-         font-family: 'Nunito', sans-serif;
-         background-color: #f5f7ff;
-         color: var(--dark);
-         line-height: 1.6;
-         display: flex;
-         flex-direction: column;
-         min-height: 100vh;
+           display: flex;
+           flex-direction: column;
+           min-height: 100vh;
+           background-color: var(--bg-primary);
+           color: var(--text-primary);
+           margin: 0;
+           padding-top: env(safe-area-inset-top);
+           padding-left: env(safe-area-inset-left);
+           padding-right: env(safe-area-inset-right);
+           padding-bottom: env(safe-area-inset-bottom);
+           transition: var(--transition-base) all;
          }
-         header {
-         background: linear-gradient(135deg, var(--primary), var(--secondary));
-         color: white;
-         text-align: center;
-         padding: 2rem 1rem;
-         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-         }
+
          h1 {
-         font-family: 'Poppins', sans-serif;
-         font-weight: 700;
-         margin-bottom: 0.5rem;
-         font-size: 2.5rem;
+           font-weight: 700;
+           margin-bottom: var(--spacing-md);
+           font-size: 2.5rem;
+           color: var(--text-primary);
          }
+
          p {
-         font-size: 1.1rem;
-         max-width: 800px;
-         margin: 0 auto;
-         font-weight: bold;
+           font-size: var(--font-md);
+           max-width: 800px;
+           margin: 0 auto;
+           font-weight: 400;
+           color: var(--text-secondary);
          }
+
          main {
-         flex: 1;
-         padding: 2rem 1rem;
-         max-width: 900px;
-         margin: 0 auto;
-         width: 100%;
-         display: flex;
-         flex-direction: column;
-         align-items: center;
+           flex: 1;
+           padding: var(--spacing-xxxl) var(--spacing-lg);
+           max-width: 900px;
+           margin: 0 auto;
+           width: 100%;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
          }
-         .scanner-container {
-         width: 100%;
-         max-width: 500px;
-         margin: 1rem auto;
-         border-radius: 12px;
-         overflow: hidden;
-         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-         background: white;
-         }
-         #qr-reader {
-         width: 100%;
-         border: none !important;
-         border-radius: 12px !important;
-         overflow: hidden;
-         }
-         #qr-reader__scan_region {
-         background: var(--light);
-         }
-         #qr-reader__dashboard_section_csr span {
-         display: none; /* Hide html5qrcode select camera text */
-         }
-         #qr-reader__camera_selection {
-         padding: 8px;
-         border-radius: 6px;
-         border: 1px solid #ddd;
-         width: 100%;
-         margin-bottom: 10px;
-         }
-         .scanner-actions {
-         display: flex;
-         flex-direction: column;
-         gap: 1rem;
-         width: 100%;
-         max-width: 500px;
-         margin: 1.5rem 0;
-         }
+
          .action-btn {
-         background-color: var(--primary);
-         color: white;
-         border: none;
-         padding: 1rem;
-         font-size: 1.2rem;
-         font-weight: 600;
-         border-radius: 8px;
-         cursor: pointer;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         transition: all 0.3s ease;
-         box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+           background-color: var(--accent-primary);
+           color: var(--accent-button-text);
+           border: none;
+           padding: var(--spacing-lg);
+           font-size: var(--font-lg);
+           font-weight: 600;
+           border-radius: var(--radius-md);
+           cursor: pointer;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           transition: var(--transition-base);
+           box-shadow: 0 4px 8px var(--shadow-light);
          }
+
          .action-btn:hover {
-         background-color: var(--secondary);
-         transform: translateY(-2px);
-         box-shadow: 0 6px 12px rgba(67, 97, 238, 0.4);
+           background-color: var(--accent-hover);
+           transform: translateY(-2px);
+           box-shadow: 0 6px 12px var(--shadow-medium);
          }
+
          .action-btn i {
-         margin-right: 10px;
+           margin-right: var(--spacing-sm);
          }
-         #file-input {
-         display: none;
-         }
-         .qr-example {
-         margin-top: 2rem;
-         text-align: center;
-         }
-         .qr-example h3 {
-         font-family: 'Poppins', sans-serif;
-         margin-bottom: 1rem;
-         color: var(--secondary);
-         }
-         .qr-image {
-         width: 180px;
-         height: 180px;
-         margin: 0 auto;
-         margin-bottom: 20px;
-         background-color: white;
-         padding: 10px;
-         border-radius: 8px;
-         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-         }
-         .qr-image img {
-         width: 100%;
-         display: block;
-         margin: auto;
-         }
-         footer {
-         text-align: center;
-         padding: 1.5rem;
-         background-color: white;
-         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-         margin-top: 2rem;
-         }
+
          /* Modal styles */
          .modal {
-         display: none;
-         position: fixed;
-         top: 0;
-         left: 0;
-         width: 100%;
-         height: 100%;
-         background-color: rgba(0, 0, 0, 0.5);
-         z-index: 1000;
-         align-items: center;
-         justify-content: center;
+           display: none;
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background-color: var(--overlay-bg);
+           z-index: var(--z-signin);
+           align-items: center;
+           justify-content: center;
          }
+
          .modal-content {
-         background-color: white;
-         padding: 2rem;
-         border-radius: 12px;
-         max-width: 90%;
-         width: 400px;
-         text-align: center;
-         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-         animation: modalAppear 0.3s ease-out forwards;
+           background-color: var(--bg-secondary);
+           padding: var(--spacing-xxxl);
+           border-radius: var(--radius-xl);
+           max-width: 90%;
+           width: 400px;
+           text-align: center;
+           box-shadow: 0 10px 25px var(--shadow-medium);
+           animation: modalAppear 0.3s ease-out forwards;
          }
+
          @keyframes modalAppear {
-         from {
-         opacity: 0;
-         transform: translateY(-20px);
+           from {
+             opacity: 0;
+             transform: translateY(-20px);
+           }
+           to {
+             opacity: 1;
+             transform: translateY(0);
+           }
          }
-         to {
-         opacity: 1;
-         transform: translateY(0);
-         }
-         }
+
          .modal-icon {
-         font-size: 3.5rem;
-         color: var(--error);
-         margin-bottom: 1rem;
+           font-size: 3.5rem;
+           color: var(--error-color);
+           margin-bottom: var(--spacing-lg);
          }
+
          .modal-icon.success {
-         color: #10b981;
+           color: var(--success-color);
          }
+
          .modal h2 {
-         color: var(--dark);
-         margin-bottom: 1rem;
-         font-family: 'Poppins', sans-serif;
+           color: var(--text-primary);
+           margin-bottom: var(--spacing-lg);
+           font-weight: 700;
          }
+
          .modal p {
-         margin-bottom: 1.5rem;
+           margin-bottom: var(--spacing-xl);
+           color: var(--text-secondary);
          }
+
          .retry-btn {
-         background-color: var(--primary);
-         color: white;
-         border: none;
-         padding: 0.75rem 1.5rem;
-         font-size: 1rem;
-         font-weight: 600;
-         border-radius: 6px;
-         cursor: pointer;
-         transition: all 0.3s ease;
+           background-color: var(--accent-primary);
+           color: var(--accent-button-text);
+           border: none;
+           padding: var(--spacing-md) var(--spacing-xl);
+           font-size: var(--font-base);
+           font-weight: 600;
+           border-radius: var(--radius-sm);
+           cursor: pointer;
+           transition: var(--transition-base);
          }
+
          .retry-btn:hover {
-         background-color: var(--secondary);
+           background-color: var(--accent-hover);
          }
-         /* Hide html5-qrcode bottom buttons */
-         #qr-reader__scan_region ~ div:last-child {
-         display: none !important;
-         }
+
          /* Results container styles */
          #results-container {
-         display: none;
-         width: 100%;
-         margin-top: 2rem;
+           display: none;
+           width: 100%;
+           margin-top: var(--spacing-xxxl);
          }
+
          .student-info {
-         background-color: white;
-         border-radius: 12px;
-         padding: 1.5rem;
-         margin-bottom: 2rem;
-         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-         text-align: center;
+           background-color: var(--bg-secondary);
+           border-radius: var(--radius-xl);
+           padding: var(--spacing-xl);
+           margin-bottom: var(--spacing-xxxl);
+           box-shadow: 0 4px 12px var(--shadow-light);
+           text-align: center;
          }
+
          .student-info h2 {
-         color: var(--secondary);
-         margin-bottom: 0.5rem;
-         font-family: 'Poppins', sans-serif;
+           color: var(--accent-primary);
+           margin-bottom: var(--spacing-sm);
+           font-weight: 700;
          }
+
          .student-info p {
-         font-size: 1.2rem;
-         margin-bottom: 0.25rem;
+           font-size: var(--font-lg);
+           margin-bottom: var(--spacing-xs);
+           color: var(--text-secondary);
          }
+
          .exam-container {
-         margin-bottom: 2.5rem;
+           margin-bottom: var(--spacing-xxxl);
          }
+
          .exam-heading {
-         display: flex;
-         align-items: center;
-         justify-content: space-between;
-         margin-bottom: 1rem;
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           margin-bottom: var(--spacing-lg);
          }
+
          .exam-title {
-         font-family: 'Poppins', sans-serif;
-         font-size: 1.5rem;
-         color: var(--primary);
-         margin: 0;
+           font-size: var(--font-xl);
+           color: var(--accent-primary);
+           margin: 0;
+           font-weight: 700;
          }
+
          .exam-summary {
-         background-color: white;
-         border-radius: 12px;
-         padding: 1rem;
-         margin-bottom: 1rem;
-         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-         display: flex;
-         flex-wrap: wrap;
-         justify-content: space-around;
-         gap: 1rem;
+           background-color: var(--bg-secondary);
+           border-radius: var(--radius-xl);
+           padding: var(--spacing-lg);
+           margin-bottom: var(--spacing-lg);
+           box-shadow: 0 4px 12px var(--shadow-light);
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: space-around;
+           gap: var(--spacing-lg);
          }
+
          .summary-item {
-         text-align: center;
-         padding: 0.5rem;
-         flex: 1;
-         min-width: 120px;
+           text-align: center;
+           padding: var(--spacing-sm);
+           flex: 1;
+           min-width: 120px;
          }
+
          .summary-label {
-         font-size: 0.9rem;
-         color: #6b7280;
-         margin-bottom: 0.25rem;
+           font-size: var(--font-sm);
+           color: var(--text-tertiary);
+           margin-bottom: var(--spacing-xs);
          }
+
          .summary-value {
-         font-size: 1.5rem;
-         font-weight: 700;
-         color: var(--dark);
+           font-size: var(--font-xl);
+           font-weight: 700;
+           color: var(--text-primary);
          }
+
          .summary-remark {
-         font-size: 1rem;
-         font-weight: 600;
-         margin-top: 0.25rem;
+           font-size: var(--font-base);
+           font-weight: 600;
+           margin-top: var(--spacing-xs);
          }
+
          .remark-excellent,
          .remark-good,
          .remark-average,
          .remark-poor,
          .remark-absent {
-         padding-left: 22px; /* Increase left padding */
-         white-space: nowrap; /* Fix 3: Prevent text wrapping */
-         position: relative;
-         font-weight: 600;
-         color: black;
+           padding-left: 22px;
+           white-space: nowrap;
+           position: relative;
+           font-weight: 600;
+           color: var(--text-primary);
          }
-         /* Improve dot positioning */
+
          .remark-excellent::before,
          .remark-good::before,
          .remark-average::before,
          .remark-poor::before,
          .remark-absent::before {
-         content: "•";
-         position: absolute;
-         left: 8px; /* Increase space between dot and text */
-         top: 50%;
-         transform: translateY(-50%); /* Better vertical alignment */
-         font-size: 20px;
+           content: "•";
+           position: absolute;
+           left: 8px;
+           top: 50%;
+           transform: translateY(-50%);
+           font-size: 20px;
          }
-         /* Keep existing colors */
-         .remark-excellent::before { color: #10b981; } /* Bright green */
-         .remark-good::before { color: #3b82f6; }      /* Bright blue */
-         .remark-average::before { color: #f59e0b; }    /* Amber/orange */
-         .remark-poor::before { color: #ef4444; }       /* Bright red */
-         .remark-absent::before { color: #6d28d9; }     /* Purple */
+
+         .remark-excellent::before { color: var(--excellent-color); }
+         .remark-good::before { color: var(--good-color); }
+         .remark-average::before { color: var(--average-color); }
+         .remark-poor::before { color: var(--poor-color); }
+         .remark-absent::before { color: var(--absent-color); }
+
          .table-container {
-         width: 100%;
-         overflow-x: auto;
-         border-radius: 12px; /* Keep the rounded corners */
-         margin-bottom: 1.5rem;
+           width: 100%;
+           overflow-x: auto;
+           border-radius: var(--radius-xl);
+           margin-bottom: var(--spacing-xl);
          }
+
          table {
-         width: 100%;
-         border-collapse: collapse;
-         background-color: white;
-         border-radius: 12px;
-         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-         min-width: 500px;
+           width: 100%;
+           border-collapse: collapse;
+           background-color: var(--bg-secondary);
+           border-radius: var(--radius-xl);
+           box-shadow: 0 4px 12px var(--shadow-light);
+           min-width: 500px;
          }
+
          thead {
-         background-color: var(--primary);
-         color: white;
+           background-color: var(--accent-primary);
+           color: var(--accent-button-text);
          }
+
          th, td {
-         padding: 0.75rem 1rem;
-         text-align: left;
+           padding: var(--spacing-md) var(--spacing-lg);
+           text-align: left;
          }
+
          th {
-         font-weight: 600;
-         font-family: 'Poppins', sans-serif;
+           font-weight: 600;
          }
+
          tbody tr:nth-child(even) {
-         background-color: #f8fafc;
+           background-color: var(--bg-tertiary);
          }
+
          tbody tr:hover {
-         background-color: #f1f5f9;
+           background-color: var(--bg-input);
          }
+
+         td {
+           color: var(--text-secondary);
+         }
+
          .marks-value {
-         font-weight: 700;
+           font-weight: 700;
+           color: var(--text-primary);
          }
+
          .percent-value {
-         font-weight: 600;
+           font-weight: 600;
+           color: var(--text-primary);
          }
+
          .back-btn {
-         background-color: var(--secondary);
-         color: white;
-         border: none;
-         padding: 0.75rem 1.5rem;
-         font-size: 1rem;
-         font-weight: 600;
-         border-radius: 6px;
-         cursor: pointer;
-         transition: all 0.3s ease;
-         margin-top: 2rem;
-         display: inline-flex;
-         align-items: center;
+           background-color: var(--accent-primary);
+           color: var(--accent-button-text);
+           border: none;
+           padding: var(--spacing-md) var(--spacing-xl);
+           font-size: var(--font-base);
+           font-weight: 600;
+           border-radius: var(--radius-sm);
+           cursor: pointer;
+           transition: var(--transition-base);
+           margin-top: var(--spacing-xxxl);
+           display: inline-flex;
+           align-items: center;
          }
+
          .back-btn:hover {
-         background-color: #2d0a82;
-         transform: translateY(-2px);
+           background-color: var(--accent-hover);
+           transform: translateY(-2px);
          }
+
          .back-btn i {
-         margin-right: 8px;
+           margin-right: var(--spacing-sm);
          }
+
          .spinner {
-         display: none;
-         margin: 2rem auto;
-         width: 50px;
-         height: 50px;
-         border: 5px solid rgba(67, 97, 238, 0.2);
-         border-radius: 50%;
-         border-top-color: var(--primary);
-         animation: spin 1s ease-in-out infinite;
+           display: none;
+           margin: var(--spacing-xxxl) auto;
+           width: 50px;
+           height: 50px;
+           border: 5px solid var(--bg-tertiary);
+           border-radius: var(--radius-full);
+           border-top-color: var(--accent-primary);
+           animation: spin 1s ease-in-out infinite;
          }
+
          @keyframes spin {
-         to { transform: rotate(360deg); }
+           to { transform: rotate(360deg); }
          }
+
+         /* Theme toggle button for demo purposes */
+         .theme-toggle {
+           position: fixed;
+           top: var(--spacing-xl);
+           right: var(--spacing-xl);
+           background-color: var(--bg-secondary);
+           color: var(--text-primary);
+           border: 2px solid var(--accent-primary);
+           padding: var(--spacing-sm) var(--spacing-md);
+           border-radius: var(--radius-full);
+           cursor: pointer;
+           transition: var(--transition-base);
+           z-index: var(--z-header);
+         }
+
+         .theme-toggle:hover {
+           background-color: var(--accent-primary);
+           color: var(--accent-button-text);
+         }
+
          @media (max-width: 768px) {
-         h1 {
-         font-size: 2rem;
-         }
-         p {
-         font-size: 1rem;
-         }
-         .action-btn {
-         padding: 0.8rem 1.5rem;
-         font-size: 1.1rem;
-         }
-         th, td {
-         padding: 0.5rem;
-         font-size: 0.9rem;
-         }
-         .exam-title {
-         font-size: 1.3rem;
-         }
-         .summary-value {
-         font-size: 1.3rem;
-         }
-         }
-         .manual-entry-toggle {
-         display: flex;
-         justify-content: center;
-         margin-top: 1rem;
-         }
-         .toggle-btn {
-         background: none;
-         border: none;
-         color: var(--primary);
-         font-size: 1rem;
-         font-weight: 600;
-         cursor: pointer;
-         display: flex;
-         align-items: center;
-         gap: 0.5rem;
-         padding: 0.5rem 1rem;
-         border-radius: 6px;
-         transition: all 0.2s ease;
-         }
-         .toggle-btn:hover {
-         color: var(--secondary);
-         background-color: rgba(67, 97, 238, 0.1);
-         }
-         .manual-entry-container {
-         width: 100%;
-         max-width: 500px;
-         margin: 1rem auto;
-         padding: 1.5rem;
-         background-color: white;
-         border-radius: 12px;
-         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-         }
-         .manual-entry-form h3 {
-         color: var(--secondary);
-         margin-bottom: 0.5rem;
-         font-family: 'Poppins', sans-serif;
-         text-align: center;
-         }
-         .manual-entry-form p {
-         text-align: center;
-         margin-bottom: 1rem;
-         font-size: 1rem;
-         }
-         .input-group {
-         display: flex;
-         margin-bottom: 0.5rem;
-         }
-         .input-group input {
-         flex: 1;
-         padding: 0.75rem 1rem;
-         font-size: 1rem;
-         border: 1px solid #ddd;
-         border-radius: 6px 0 0 6px;
-         font-family: 'Nunito', sans-serif;
-         }
-         .input-group input:focus {
-         outline: none;
-         border-color: var(--primary);
-         box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-         }
-         .submit-btn {
-         background-color: var(--primary);
-         color: white;
-         border: none;
-         padding: 0 1.25rem;
-         font-size: 1.2rem;
-         border-radius: 0 6px 6px 0;
-         cursor: pointer;
-         transition: all 0.3s ease;
-         }
-         .submit-btn:hover {
-         background-color: var(--secondary);
-         }
-         .helper-text {
-         font-size: 0.85rem;
-         color: #6b7280;
-         margin-top: 0.5rem;
-         text-align: center;
+           h1 {
+             font-size: 2rem;
+           }
+
+           p {
+             font-size: var(--font-base);
+           }
+
+           .action-btn {
+             padding: var(--spacing-md) var(--spacing-xl);
+             font-size: var(--font-md);
+           }
+
+           th, td {
+             padding: var(--spacing-sm);
+             font-size: var(--font-sm);
+           }
+
+           .exam-title {
+             font-size: var(--font-lg);
+           }
+
+           .summary-value {
+             font-size: var(--font-lg);
+           }
+
+           main {
+             padding: var(--spacing-xl) var(--spacing-md);
+           }
          }
       </style>
    </head>
    <body>
-      <!-- <iframe src="https://myjvp.in/access-blocked.html" style="position:fixed;top:0;left:0;width:100vw;height:100vh;border:none;z-index:9999999;" allowfullscreen></iframe> -->
-      <header>
-         <h1><i class="fas fa-graduation-cap"></i> Student Marks Portal</h1>
-         <p>Scan your QR code or upload a QR image to view your exam scores</p>
-      </header>
-      <main>
-         <div class="scanner-container" id="scanner-container" style="display: none;">
-            <div id="qr-reader"></div>
-         </div>
-         <div class="scanner-actions" id="scanner-actions">
-            <button class="action-btn" id="camera-btn" onclick="startScanner()">
-            <i class="fas fa-camera"></i> Scan with Camera
-            </button>
-            <label for="file-input" class="action-btn">
-            <i class="fas fa-image"></i> Upload QR Image
-            <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
-            </label>
-         </div>
-         <div class="manual-entry-toggle">
-            <button class="toggle-btn" id="toggle-manual-entry">
-            <i class="fas fa-keyboard"></i> Enter Access Token Manually
-            </button>
-         </div>
-         <div class="manual-entry-container" id="manual-entry-container" style="display: none;">
-            <div class="manual-entry-form">
-               <h3>Enter Access Token</h3>
-               <p>Please enter the access token provided to you:</p>
-               <div class="input-group">
-                  <input type="text" id="manual-token-input" placeholder="Access token (UUID format)" autocomplete="off">
-                  <button class="submit-btn" id="submit-token-btn">
-                  <i class="fas fa-arrow-right"></i>
-                  </button>
-               </div>
-               <div class="helper-text">Example format: 123e4567-e89b-12d3-a456-426614174000</div>
-            </div>
-         </div>
+      <!-- Theme toggle button -->
+      <button style="display: nonhe" class="theme-toggle" onclick="toggleTheme()">
+         <i class="fas fa-moon"></i>
+      </button>
+
+      <main>         
          <div class="spinner" id="spinner"></div>
          <div id="results-container">
             <div class="student-info">
@@ -563,18 +581,12 @@
             <div id="exams-results">
                <!-- Exam results will be inserted here -->
             </div>
-            <button class="back-btn" onclick="resetApp()">
+            <button style="display: none;" class="back-btn" onclick="resetApp()">
             <i class="fas fa-arrow-left"></i> Scan Another QR Code
             </button>
-         </div>
-         <div class="qr-example">
-            <h3>Scan Your Access QR Code</h3>
-            <div class="qr-image" onclick="startScanner()">
-               <img src="https://sourabhsuneja.github.io/academic-resources/images/sample-qr.png" alt="Example QR Code">
-            </div>
-            <p>Scan the QR code provided to you to view your exam scores.</p>
-         </div>
+         </div>        
       </main>
+      
       <div class="modal" id="error-modal">
          <div class="modal-content">
             <div class="modal-icon">
@@ -585,6 +597,7 @@
             <button class="retry-btn" onclick="closeModal()">Try Again</button>
          </div>
       </div>
+      
       <div class="modal" id="loading-modal">
          <div class="modal-content">
             <div class="modal-icon success">
@@ -594,488 +607,33 @@
             <p>Please wait while we fetch your marks.</p>
          </div>
       </div>
-      <footer>
-         <p>Crafted by Sourabh Sir with ♥️</p>
-      </footer>
+
       <script>
-         let html5QrCode;
-         const errorModal = document.getElementById('error-modal');
-         const loadingModal = document.getElementById('loading-modal');
-         const scannerContainer = document.getElementById('scanner-container');
-         const scannerActions = document.getElementById('scanner-actions');
-         const resultsContainer = document.getElementById('results-container');
-         const spinner = document.getElementById('spinner');
+         // Theme toggle function for demo purposes
+         function toggleTheme() {
+            const body = document.body;
+            const icon = document.querySelector('.theme-toggle i');
+            
+            if (body.classList.contains('light-theme')) {
+               body.classList.remove('light-theme');
+               icon.className = 'fas fa-moon';
+            } else {
+               body.classList.add('light-theme');
+               icon.className = 'fas fa-sun';
+            }
+         }
 
-         // Array to hold custom class-subject specific exams
-         let customExams = [];
-         
-         // Function to start the QR scanner
-         function startScanner() {
-             scannerContainer.style.display = 'block';
-             scannerActions.style.display = 'none';
-             document.querySelector('.qr-example').style.display = 'none';
-             
-             html5QrCode = new Html5Qrcode("qr-reader");
-             const qrConfig = { fps: 20, qrbox: { width: 250, height: 250 } };
-             
-             html5QrCode.start(
-                 { facingMode: "environment" }, 
-                 qrConfig, 
-                 onScanSuccess, 
-                 onScanFailure
-             ).catch((err) => {
-                 console.error("Error starting scanner:", err);
-                 showErrorModal("We couldn't access your camera. Please make sure you've given permission and try again.");
-                 resetScanner();
-             });
-         }
-         
-         // Handle file selection for QR code from gallery
-         function handleFileSelect(event) {
-             const file = event.target.files[0];
-             if (!file) return;
-             
-             scannerActions.style.display = 'none';
-             document.querySelector('.qr-example').style.display = 'none';
-             spinner.style.display = 'block';
-             
-             html5QrCode = new Html5Qrcode("qr-reader");
-             
-             html5QrCode.scanFile(file, true)
-                 .then(decodedText => {
-                     spinner.style.display = 'none';
-                     processQRCode(decodedText);
-                 })
-                 .catch(err => {
-                     spinner.style.display = 'none';
-                     console.error("Error scanning file:", err);
-                     showErrorModal("Could not read QR code from image. Please try another image or use camera scanning.");
-                     resetScanner();
-                 });
-         }
-         
-         // Handle successful QR code scan
-         function onScanSuccess(decodedText, decodedResult) {
-             // Stop scanning
-             html5QrCode.stop().then(() => {
-                 console.log("QR Code scanning stopped");
-                 processQRCode(decodedText);
-             }).catch((err) => {
-                 console.error("Error stopping scanner:", err);
-             });
-         }
-         
-         // Process the QR code data
-         function processQRCode(decodedText) {
-             decodedText = extractTokenOrReturn(decodedText); 
-             
-             // Check if it's a valid UUID format
-             if (isValidUUID(decodedText)) {
-                 // Valid token - fetch marks
-                 showLoadingModal();
-                 fetchStudentMarks(decodedText);
-             } else {
-                 // Invalid token - show error
-                 console.log("Invalid access token format:", decodedText);
-                 showErrorModal("This doesn't look like a valid access token. Please try with a valid QR code.");
-                 resetScanner();
-             }
-         }
-         
-         // Handle scan failure (silently - normal when no QR in view)
-         function onScanFailure(error) {
-             console.debug(`QR scanning ongoing, no QR detected`);
-         }
-         
-         // Check if string is a valid UUID format
-         function isValidUUID(str) {
-             const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-             return uuidRegex.test(str);
-         }
-         
-         // Function to extract token value
-         function extractTokenOrReturn(input) {
-         try {
-         const url = new URL(input);
-         const token = url.searchParams.get("token");
-         return token !== null ? token : input;
-         } catch (error) {
-         // Not a valid URL, return the input as is
-         return input;
-         }
-         }
-         
-         
-         // Fetch marks from server
-         async function getStudentMarks(accessToken) {
-         const functionArgs = {
-         table1: 'students',
-         table2: 'marks',
-         match_column1: 'id',
-         match_column2: 'student_id',
-         columns_table1: ['name', 'class'],
-         columns_table2: ['exam', 'subject', 'marks'],
-         access_token: accessToken
-         };
-         
-         // Invoke the secure_join
-         const studentMarks = await invokeFunction('secure_join_tables', functionArgs, false);
-         
-         // Process the results
-         if (studentMarks) {
-         return studentMarks;
-         } else {
-         console.error('Failed to retrieve student marks');
-         return [];
-         }
-         }
-               
-         // Fetch student marks using the access token
-         function fetchStudentMarks(accessToken) {
-         getStudentMarks(accessToken)
-         .then(data => {
-             hideLoadingModal();
-             if (data && data.length > 0) {
-                 // Group the flat array by exam before displaying
-                 const groupedData = groupByExam(data);
-                 displayResults(groupedData);
-             } else {
-                 showErrorModal("No marks data found for this access token. Please contact your school administration.");
-                 resetScanner();
-             }
-         })
-         .catch(error => {
-             hideLoadingModal();
-             console.error("Error fetching marks:", error);
-             showErrorModal("There was a problem fetching your marks. Please try again later.");
-             resetScanner();
-         });
-         }
-         
-         // Helper function to group marks by exam
-         function groupByExam(flatData) {
-         const examGroups = {};
-         
-         flatData.forEach(item => {
-         if (!examGroups[item.exam]) {
-             examGroups[item.exam] = [];
-         }
-         examGroups[item.exam].push(item);
-         });
-         
-         // Convert to array of arrays format
-         return Object.values(examGroups);
-         }
-         
-         // Display the results in the UI
-         async function displayResults(marksData) {
-             const examsContainer = document.getElementById('exams-results');
-             examsContainer.innerHTML = '';
-             
-             // Group marks by exam
-             const examGroups = {};
-             
-             marksData.forEach(examGroup => {
-                 if (examGroup && examGroup.length > 0) {
-                     const examName = examGroup[0].exam;
-                     examGroups[examName] = examGroup;
-                 }
-             });
-             
-             // Set student info
-             if (marksData[0] && marksData[0].length > 0) {
-                 const firstRecord = marksData[0][0];
-                 document.getElementById('student-name').textContent = firstRecord.name;
-                 document.getElementById('student-class').textContent = `Class: ${firstRecord.class}`;
-                 // Also store class in a global variable
-                 globalClassValue = firstRecord.class;
-                 // Pre-load custom exams for this class
-                 await preloadCustomExams(globalClassValue);
-                 // Also log student visit on server
-                 logActivity(`${firstRecord.name} (${firstRecord.class})`, 'MARKS_VIEW');
-             }
-             
-             // Create exam sections
-             for (const examName in examGroups) {
-                 const examData = examGroups[examName];
-
-                 // If exam name is not present in common exams (e.g. PT-1), the examSummary has to be kept hidden
-                 let hideSummary = false;
-                 if (!exams.find(e => e.name === examName)) {
-                       hideSummary = true;
-                 }
-                 
-                 
-                 // Calculate total marks and percentage for this exam
-                 let totalMarks = 0;
-                 let totalMaxMarks = 0;
-                 
-                 examData.forEach(subject => {
-                     globalSubjectValue = subject.subject;
-                     const maxMarks = getMaxMarks(examName);
-                     if (subject.marks !== null) {
-                         totalMarks += subject.marks;
-                     }
-                     totalMaxMarks += maxMarks;
-                 });
-                 
-                 const examPercentage = (totalMarks / totalMaxMarks) * 100;
-                 const examRemark = getPerformanceRemark(totalMarks, examName, examPercentage); 
-                 
-                 // Create exam container
-                 const examContainer = document.createElement('div');
-                 examContainer.className = 'exam-container';
-                 
-                 // Create exam header
-                 const examHeader = document.createElement('div');
-                 examHeader.className = 'exam-heading';
-                 examHeader.innerHTML = `<h3 class="exam-title">${examName}:</h3>`;
-                 
-                 // Create exam summary
-                 const examSummary = document.createElement('div');
-                 examSummary.className = 'exam-summary';
-                 
-                 // Total marks summary
-                 const totalMarksDiv = document.createElement('div');
-                 totalMarksDiv.className = 'summary-item';
-                 totalMarksDiv.innerHTML = `
-                     <div class="summary-label">Total Marks</div>
-                     <div class="summary-value">${totalMarks}/${totalMaxMarks}</div>
-                 `;
-                 
-                 // Percentage summary
-                 const percentageDiv = document.createElement('div');
-                 percentageDiv.className = 'summary-item';
-                 percentageDiv.innerHTML = `
-                     <div class="summary-label">Overall Percentage</div>
-                     <div class="summary-value">${examPercentage.toFixed(1)}%</div>
-                 `;
-                 
-                 // Remark summary
-                 const remarkDiv = document.createElement('div');
-                 remarkDiv.className = 'summary-item';
-                 remarkDiv.innerHTML = `
-                     <div class="summary-label">Overall Performance</div>
-                     <div class="summary-remark ${getRemarkClass(examRemark)}">${examRemark}</div>
-                 `;
-                 
-                 examSummary.appendChild(totalMarksDiv);
-                 examSummary.appendChild(percentageDiv);
-                 examSummary.appendChild(remarkDiv);
-
-                  if(hideSummary) {
-                        examSummary.style.display = 'none';
-                  }
-         
-                 // Create table container
-                 const tableContainer = document.createElement('div');
-                 tableContainer.className = 'table-container';
-                 
-                 // Create subjects table
-                 const table = document.createElement('table');
-                 
-                 // Table header
-                 const tableHead = document.createElement('thead');
-                 tableHead.innerHTML = `
-                     <tr>
-                         <th>Subject</th>
-                         <th>Marks</th>
-                         <th>Percentage</th>
-                         <th>Remark</th>
-                     </tr>
-                 `;
-                 
-                 // Table body
-                 const tableBody = document.createElement('tbody');
-                 
-                 // Add subject rows
-                 examData.forEach(subject => {
-                     const row = document.createElement('tr');
-                     globalSubjectValue = subject.subject;
-                     const maxMarks = getMaxMarks(examName);
-                    
-                     // Calculate percentage
-                     let percentageText = '-';
-                     let remarkHtml = '-';
-                     
-                     if (subject.marks !== null) {
-                         const subjectPercentage = (subject.marks / maxMarks) * 100;
-                         percentageText = `${subjectPercentage.toFixed(1)}%`;
-                         
-                         const remark = getPerformanceRemark(subject.marks, null, subjectPercentage);
-                         remarkHtml = `<span class="${getRemarkClass(remark)}">${remark}</span>`;
-                     }
-                     
-                     row.innerHTML = `
-                         <td>${subject.subject}</td>
-                         <td class="marks-value">${subject.marks !== null ? (subject.marks + '/'+ maxMarks) : 'Absent'}</td>
-                         <td class="percent-value">${percentageText}</td>
-                         <td>${remarkHtml}</td>
-                     `;
-                     
-                     tableBody.appendChild(row);
-                 });
-                 
-                 table.appendChild(tableHead);
-                 table.appendChild(tableBody);
-                 tableContainer.appendChild(table);
-                 
-                 // Add all elements to exam container
-                 examContainer.appendChild(examHeader);
-                 examContainer.appendChild(examSummary);
-                 examContainer.appendChild(tableContainer);
-                 
-                 // Add exam container to exams results
-                 examsContainer.appendChild(examContainer);
-             }
-             
-             // Hide scanner elements and show results
-             scannerContainer.style.display = 'none';
-             scannerActions.style.display = 'none';
-             document.querySelector('.qr-example').style.display = 'none';
-             resultsContainer.style.display = 'block';
-         }
-         
-         // Show error modal
-         function showErrorModal(message) {
-             document.getElementById('error-message').textContent = message || "Invalid QR code. Please try again.";
-             errorModal.style.display = 'flex';
-         }
-         
-         // Show loading modal
-         function showLoadingModal() {
-             loadingModal.style.display = 'flex';
-         }
-         
-         // Hide loading modal
-         function hideLoadingModal() {
-             loadingModal.style.display = 'none';
-         }
-         
-         // Reset the application to the initial state
+         // Placeholder functions - replace with your actual implementation
          function resetApp() {
-         resultsContainer.style.display = 'none';
-         scannerContainer.style.display = 'none';
-         scannerActions.style.display = 'flex';
-         document.querySelector('.qr-example').style.display = 'block';
-         
-         // Reset manual entry form
-         document.getElementById('manual-entry-container').style.display = 'none';
-         document.getElementById('toggle-manual-entry').style.display = 'block';
-         document.getElementById('toggle-manual-entry').innerHTML = '<i class="fas fa-keyboard"></i> Enter Access Token Manually';
-         document.getElementById('manual-token-input').value = '';
-         
-         if (html5QrCode && html5QrCode.getState() === Html5QrcodeScannerState.SCANNING) {
-         html5QrCode.stop().catch(err => console.error("Error stopping scanner on reset:", err));
-         }
-         if (document.getElementById("qr-reader")) {
-         document.getElementById("qr-reader").innerHTML = '';
-         }
-         }
-         
-         // Close the error modal
-         function closeModal() {
-         errorModal.style.display = 'none';
-         resetApp();
-         
-         // Make sure the manual entry toggle is visible
-         document.getElementById('toggle-manual-entry').style.display = 'block';
-         }
-         
-         // Reset the scanner if it was started
-         function resetScanner() {
-             if (html5QrCode) {
-                 html5QrCode.stop().then(() => {
-                     if (document.getElementById("qr-reader")) {
-                         document.getElementById("qr-reader").innerHTML = '';
-                     }
-                     scannerContainer.style.display = 'none';
-                     scannerActions.style.display = 'flex';
-                     document.querySelector('.qr-example').style.display = 'block';
-                 }).catch((err) => {
-                     console.error("Error stopping scanner:", err);
-                     scannerContainer.style.display = 'none';
-                     scannerActions.style.display = 'flex';
-                     document.querySelector('.qr-example').style.display = 'block';
-                 });
-             } else {
-                 scannerContainer.style.display = 'none';
-                 scannerActions.style.display = 'flex';
-                 document.querySelector('.qr-example').style.display = 'block';
-             }
-         }
-         // Toggle manual entry form
-         document.getElementById('toggle-manual-entry').addEventListener('click', function() {
-         const manualEntryContainer = document.getElementById('manual-entry-container');
-         if (manualEntryContainer.style.display === 'none') {
-         manualEntryContainer.style.display = 'block';
-         this.innerHTML = '<i class="fas fa-times"></i> Hide Manual Entry';
-         } else {
-         manualEntryContainer.style.display = 'none';
-         this.innerHTML = '<i class="fas fa-keyboard"></i> Enter Access Token Manually';
-         }
-         });
-         
-         // Handle manual token submission
-         document.getElementById('submit-token-btn').addEventListener('click', submitManualToken);
-         document.getElementById('manual-token-input').addEventListener('keypress', function(e) {
-         if (e.key === 'Enter') {
-         submitManualToken();
-         }
-         });
-         
-         function submitManualToken() {
-         const tokenInput = document.getElementById('manual-token-input');
-         const accessToken = tokenInput.value.trim();
-         
-         if (!accessToken) {
-         showErrorModal("Please enter an access token.");
-         return;
-         }
-         
-         if (!isValidUUID(accessToken)) {
-         showErrorModal("Please enter a valid access token in UUID format.");
-         return;
-         }
-         
-         // Hide manual entry and show loading
-         document.getElementById('manual-entry-container').style.display = 'none';
-         document.getElementById('toggle-manual-entry').innerHTML = '<i class="fas fa-keyboard"></i> Enter Access Token Manually';
-         document.getElementById('toggle-manual-entry').style.display = 'none';
-         
-         // Process the token
-         showLoadingModal();
-         fetchStudentMarks(accessToken);
+            console.log('Reset app function called');
          }
 
-         // Function to pre-load all custom exams
-         async function preloadCustomExams(classVal='') {
-         // Pre-load all custom exams
-         customExams = await selectData(
-                       'custom_exams',
-                       fetchSingle = false,
-                       columns = "*",
-                       matchColumns = ['class'],
-                       matchValues = [classVal]
-                       ) || [];
+         function closeModal() {
+            document.getElementById('error-modal').style.display = 'none';
+            document.getElementById('loading-modal').style.display = 'none';
          }
-         
-         window.addEventListener("load", function () {
-         // Helper to get URL parameters
-         function getQueryParam(param) {
-         const urlParams = new URLSearchParams(window.location.search);
-         return urlParams.get(param);
-         }
-         
-         // Get the "token" parameter
-         const accessToken = getQueryParam("token");
-         
-         // Check if token exists and is a valid UUID
-         if (accessToken && isValidUUID(accessToken)) {
-         showLoadingModal();
-         fetchStudentMarks(accessToken);
-         }
-         });
       </script>
+      
+      <script src="script.js"></script>
    </body>
 </html>
