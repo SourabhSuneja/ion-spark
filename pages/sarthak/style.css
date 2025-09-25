@@ -416,7 +416,7 @@ body {
          .get-started-btn {
             display: inline-block;
             margin-top: var(--spacing-xl);
-            padding: var(--spacing-md) var(--spacing-xxl);
+            padding: var(--spacing-sm) var(--spacing-xxl);
             font-size: var(--font-lg);
             color: var(--accent-button-text);
             background: var(--accent-primary);
