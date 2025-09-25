@@ -683,6 +683,6 @@ div#content.externalPage {
     flex: 1 1 200px;
   }
   .subject-btn {
-    min-width: 120px;
+    min-width: 200px;
   }
 }
