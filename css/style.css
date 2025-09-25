@@ -20,6 +20,11 @@
   --accent-hover: #e0a800;
   --accent-focus: #ffd54f;
   --accent-button-text: black;
+
+  /* Logout button specific — remain same for light and dark themes */
+  --logout-bg: #e53935;
+  --logout-text: #fff;
+  --logout-hover: #d32f2f;
   
   /* Status Colors */
   --error-color: #FF3333;
@@ -129,6 +134,17 @@ body.light-theme {
   font-family: 'Roboto', sans-serif;
   max-height: 999999px;
   transition: var(--transition-base) all;
+}
+
+.noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -356,6 +372,7 @@ body.light-theme #sidebar .close-btn {
 #sidebar .menu-item:hover {
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
+  padding-left: 28px;
 }
 
 body.light-theme #sidebar .menu-item {
@@ -370,8 +387,8 @@ body.light-theme #sidebar .menu-item:hover {
 
 #sidebar .logout-btn {
   padding: 10px var(--spacing-lg);
-  background-color: var(--error-bg);
-  color: var(--text-primary);
+  background-color: var(--logout-bg);
+  color: var(--logout-text);
   border: none;
   width: 85%;
   margin-left: auto;
@@ -384,7 +401,7 @@ body.light-theme #sidebar .menu-item:hover {
 }
 
 #sidebar .logout-btn:hover {
-  background-color: var(--error-hover);
+  background-color: var(--logout-hover);
 }
 
 /* Main Container */
@@ -591,6 +608,39 @@ div#content.externalPage {
   margin-top: var(--spacing-sm);
 }
 
+/* Subject switcher interface */
+#subject-switcher {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-xl);
+    flex-wrap: wrap; 
+}
+
+.subject-btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    margin: var(--spacing-xs);
+    border: 1px solid var(--bg-tertiary);
+    background-color: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all var(--transition-slower);
+}
+
+.subject-btn:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.subject-btn.active {
+    background-color: var(--accent-primary);
+    color: var(--accent-button-text);
+    border-color: var(--accent-primary);
+    font-weight: bold;
+}
+
 /* Responsive Design for Small Screens */
 @media (max-width: 768px) {
   #header .name {
@@ -604,6 +654,9 @@ div#content.externalPage {
   }
   .student-name {
     font-size: var(--font-md);
+  }
+  .subject-btn {
+    min-width: 25%;
   }
   .student-grade, .student-description {
     font-size: var(--font-base);
@@ -628,5 +681,8 @@ div#content.externalPage {
   }
   .card {
     flex: 1 1 200px;
+  }
+  .subject-btn {
+    min-width: 120px;
   }
 }
