@@ -460,8 +460,8 @@ body.light-theme #header {
   vertical-align: middle;
 }
 
-/* Theme Toggle Button */
-#header .theme-toggle {
+/* Header Buttons (Theme toggle & notification) */
+#header .header-btn {
   cursor: pointer;
   font-size: var(--font-icon-md);
   color: var(--accent-primary);
@@ -671,6 +671,9 @@ div#content.externalPage {
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+  #header .header-btn {
+    margin-right: var(--spacing-xs);
   }
 }
 
