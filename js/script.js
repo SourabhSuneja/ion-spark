@@ -32,7 +32,9 @@ const USER_DATA = {
    avatar: ''
 };
 
-const DASHBOARD_CARDS = [{
+// MODIFIED: Replaced DASHBOARD_CARDS with a subject-based object structure.
+const subjectCardsTemplate = [
+   {
       icon: 'podium-outline',
       title: 'My Result',
       page: 'result'
@@ -88,6 +90,15 @@ const DASHBOARD_CARDS = [{
       page: 'feedback'
    }
 ];
+
+const SUBJECT_DASHBOARDS = {
+   'Computer': JSON.parse(JSON.stringify(subjectCardsTemplate)),
+   'Science': JSON.parse(JSON.stringify(subjectCardsTemplate)),
+   'Mathematics': JSON.parse(JSON.stringify(subjectCardsTemplate))
+};
+
+// NEW: Variable to track the currently selected subject.
+let currentSubject = 'Computer';
 
 const MENU_ITEMS = [{
       icon: 'home',
@@ -154,15 +165,15 @@ const DOMUtils = {
    },
 
    show: (element) => {
-      element.style.display = 'revert';
+      if (element) element.style.display = 'revert';
    },
 
    hide: (element) => {
-      element.style.display = 'none';
+      if (element) element.style.display = 'none';
    },
 
    setDisplay: (element, display) => {
-      element.style.display = display;
+      if (element) element.style.display = display;
    }
 };
 
@@ -321,6 +332,48 @@ const MenuManager = {
 };
 
 // =============================================================================
+// NEW: DASHBOARD & SUBJECT SWITCHER FUNCTIONS
+// =============================================================================
+
+function renderDashboard(subject) {
+   const content = DOMUtils.getElementById('content');
+   content.innerHTML = ''; // Clear existing cards
+
+   const cards = SUBJECT_DASHBOARDS[subject];
+   if (cards) {
+      cards.forEach(cardData => {
+         const cardElement = UIComponents.createCard(cardData);
+         content.appendChild(cardElement);
+      });
+   }
+}
+
+function setupSubjectSwitcher() {
+   const switcher = DOMUtils.getElementById('subject-switcher');
+   if (!switcher) return;
+   switcher.innerHTML = ''; // Clear old buttons
+
+   Object.keys(SUBJECT_DASHBOARDS).forEach(subject => {
+      const button = document.createElement('button');
+      button.className = 'subject-btn';
+      button.textContent = StringUtils.capitalizeFirstLetter(subject);
+      button.dataset.subject = subject;
+
+      if (subject === currentSubject) {
+         button.classList.add('active');
+      }
+
+      button.onclick = () => {
+         currentSubject = subject;
+         document.querySelectorAll('.subject-btn').forEach(btn => btn.classList.remove('active'));
+         button.classList.add('active');
+         renderDashboard(subject);
+      };
+      switcher.appendChild(button);
+   });
+}
+
+// =============================================================================
 // PAGE MANAGEMENT
 // =============================================================================
 
@@ -328,7 +381,6 @@ const PageManager = {
    loadPage: (page) => {
       showProcessingDialog();
 
-      // Show a relevant card or do nothing if the page has null link
       if ((!(page in LINKS) || LINKS[page] === null) && page !== 'home') {
          if (page === 'word-of-the-day') {
             showRandomWord();
@@ -344,7 +396,8 @@ const PageManager = {
          screenName: DOMUtils.getElementById('screen-name'),
          studentProfile: DOMUtils.getElementById('student-profile'),
          menuBtn: DOMUtils.getElementById('menu-btn'),
-         backBtn: DOMUtils.getElementById('back-btn')
+         backBtn: DOMUtils.getElementById('back-btn'),
+         subjectSwitcher: DOMUtils.getElementById('subject-switcher') // NEW: Get switcher element
       };
 
       elements.content.innerHTML = '';
@@ -357,11 +410,13 @@ const PageManager = {
    },
 
    loadExternalPage: (page, elements) => {
-
+      // MODIFIED: Hide subject switcher on external pages
+      DOMUtils.hide(elements.subjectSwitcher);
       elements.content.classList.add('externalPage');
 
-      // Find the card object with matching page property
-      const cardData = DASHBOARD_CARDS.find(card => card.page === page);
+      // MODIFIED: Find card data from the new SUBJECT_DASHBOARDS object
+      const allCards = Object.values(SUBJECT_DASHBOARDS).flat();
+      const cardData = allCards.find(card => card.page === page);
       const displayTitle = cardData ? cardData.title : StringUtils.capitalizeFirstLetter(page);
 
       elements.screenName.innerText = `${displayTitle} `;
@@ -378,11 +433,17 @@ const PageManager = {
       DOMUtils.show(elements.menuBtn);
       DOMUtils.hide(elements.backBtn);
       DOMUtils.setDisplay(elements.studentProfile, 'flex');
+      DOMUtils.show(elements.subjectSwitcher); // MODIFIED: Show subject switcher
 
       elements.screenName.innerText = `${APP_CONFIG.name} `;
       elements.content.classList.remove('externalPage');
 
-      AppManager.initialize();
+      AppManager.initialize(); // This still handles profile and menu setup
+
+      // MODIFIED: Setup switcher and render the dashboard for the current subject
+      setupSubjectSwitcher();
+      renderDashboard(currentSubject);
+
       hideProcessingDialog();
    }
 };
@@ -418,7 +479,7 @@ const AuthManager = {
          window.userId = data.user.id;
 
          DOMUtils.hide(elements.signInScreen);
-         AppManager.initialize();
+         PageManager.loadPage('home'); // MODIFIED: Load home page to trigger correct setup
       } catch (error) {
          AuthManager.showError(elements, errorIcon, error.message);
       }
@@ -497,7 +558,7 @@ const AuthManager = {
 
          if (isAuthenticated) {
             DOMUtils.hide(signInScreen);
-            AppManager.initialize();
+            PageManager.loadPage('home'); // MODIFIED: Load home page to trigger correct setup
          } else {
             DOMUtils.setDisplay(signInScreen, 'flex');
          }
@@ -520,44 +581,32 @@ const ThemeManager = {
       const body = document.body;
       const metaThemeColor = document.querySelector("meta[name=theme-color]");
 
-      // Toggle the theme class
       body.classList.toggle("light-theme");
 
-
-      // If body has light-theme → set status bar to white and also store theme state in the APP_CONFIG
       if (body.classList.contains("light-theme")) {
-         metaThemeColor.setAttribute("content", "#ffffff") // light mode
+         metaThemeColor.setAttribute("content", "#ffffff")
          APP_CONFIG.theme = "light";
-         // Propagate theme to iframes
          ThemeManager.syncThemeToIframes(true);
       } else {
-         metaThemeColor.setAttribute("content", "#000000"); // dark mode
+         metaThemeColor.setAttribute("content", "#000000");
          APP_CONFIG.theme = "dark";
-         // Propagate theme to iframes
          ThemeManager.syncThemeToIframes(false);
       }
    },
 
    syncThemeToIframes: (isLightTheme) => {
-      // Find all iframes in the document
       const iframes = document.querySelectorAll('iframe');
-
       iframes.forEach(iframe => {
          try {
-            // Check if iframe is loaded and accessible (same domain)
             if (iframe.contentDocument && iframe.contentDocument.body) {
                const iframeBody = iframe.contentDocument.body;
-
                if (isLightTheme) {
-                  // Add light-theme class
                   iframeBody.classList.add('light-theme');
                } else {
-                  // Remove light-theme class (dark theme)
                   iframeBody.classList.remove('light-theme');
                }
             }
          } catch (error) {
-            // Handle cross-origin or other access errors silently
             console.warn('Cannot access iframe content (likely cross-origin):', error);
          }
       });
@@ -573,7 +622,7 @@ const StringUtils = {
       if (!str || str.length === 0) return str;
       return str
          .toLowerCase()
-         .split(/\s+/) // split by spaces (or multiple spaces)
+         .split(/\s+/)
          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
          .join(" ");
    }
@@ -586,25 +635,18 @@ const StringUtils = {
 const AppManager = {
    initialize: () => {
       UIComponents.createUserProfile();
-      AppManager.renderDashboardCards();
       MenuManager.initialize();
+      // MODIFIED: Removed renderDashboardCards() call from here. It's now handled by PageManager.loadHomePage
    },
 
-   renderDashboardCards: () => {
-      const content = DOMUtils.getElementById('content');
-      content.innerHTML = '';
-
-      DASHBOARD_CARDS.forEach(card => {
-         content.appendChild(UIComponents.createCard(card));
-      });
-   }
+   // MODIFIED: This function is no longer needed as renderDashboard(subject) handles its logic.
+   // renderDashboardCards: () => { ... }
 };
 
 // =============================================================================
 // GLOBAL FUNCTIONS (for backward compatibility)
 // =============================================================================
 
-// These functions maintain the original API for external calls
 function toggleMenu() {
    MenuManager.toggle();
 }
@@ -626,7 +668,7 @@ async function login() {
 }
 
 function init() {
-   AppManager.initialize();
+   PageManager.loadPage('home'); // MODIFIED: Point init to loadPage for consistency
 }
 
 function capitalizeFirstLetter(str) {
@@ -638,7 +680,8 @@ function createUserProfile() {
 }
 
 function createAndAppendCards() {
-   AppManager.renderDashboardCards();
+   // MODIFIED: Now renders the dashboard for the currently active subject
+   renderDashboard(currentSubject);
 }
 
 function createAndAppendMenuItems() {
@@ -654,43 +697,33 @@ function addIframeToContent(src, contentDiv, page) {
 // EVENT LISTENERS
 // =============================================================================
 
-// Sign in button event listener
 document.getElementById('sign-in-btn').addEventListener('click', (event) => {
    event.preventDefault();
    AuthManager.login();
 });
 
-// Window load event listener
 window.addEventListener('load', () => {
    AuthManager.checkAuthenticationStatus();
 });
 
-// Simulate back button when user clicks on the custom back button
 document.getElementById('back-btn').addEventListener('click', () => {
-   window.history.back(); // This will trigger popstate handler
+   window.history.back();
 });
-
 
 // =============================================================================
 // BROWSER BACK BUTTON HANDLING
 // =============================================================================
 
-// Push an initial state so back button events can be detected
 window.history.replaceState({
    page: APP_CONFIG.currentPage
 }, "");
 
-// Whenever a new page is loaded, push it to the history
 const originalLoadPage = PageManager.loadPage;
 PageManager.loadPage = (page) => {
    originalLoadPage(page);
-
-   // If the page does not have an external link, do not push it to the history
    if (!(page in LINKS) || LINKS[page] === null) {
       return;
    }
-
-   // Push state only if not already on this page
    if (window.history.state?.page !== page) {
       window.history.pushState({
          page
@@ -698,12 +731,9 @@ PageManager.loadPage = (page) => {
    }
 };
 
-// Handle back/forward navigation
 window.addEventListener("popstate", (event) => {
    const statePage = event.state?.page;
-
    if (!statePage || statePage === "home") {
-      // Always go to home if back is pressed from any other page
       PageManager.loadPage("home");
    } else {
       PageManager.loadPage(statePage);
