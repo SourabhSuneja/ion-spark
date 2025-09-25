@@ -17,7 +17,17 @@ const loadingPhrases = [
     "Charging up the experience...",
     "Loading wonders...",
     "Your experience is brewing...",
-    "Optimizing pixels for you..."
+    "Optimizing pixels for you...",
+    "Painting the digital canvas...",
+    "Polishing things up for you...",
+    "Stirring imagination soup...",
+    "Aligning the stars...",
+    "Weaving some digital magic...",
+    "Cooking up something fun...",
+    "Brewing ideas into reality...",
+    "Stretching the possibilities...",
+    "Tuning the final notes...",
+    "Almost unwrapping the surprise..."
 ];
 
 // Function to select a random phrase
