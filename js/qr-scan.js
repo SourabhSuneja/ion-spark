@@ -73,23 +73,25 @@ function onQRScanFailure(error) {
 }
 
 // Process the scanned QR code
-function processQRCode(decodedText) {
+async function processQRCode(decodedText) {
     console.log("QR Code detected:", decodedText);
     
     // Extract token if it's a URL with token parameter
     const qrContent = extractTokenOrReturn(decodedText);
-    
+
     // Show loading
     showProcessingDialog();
+
+    const studentDetails = await handleJVPStudentRegistration(qrContent);
+
+    closeQRScanner();
     
-    // Simulate processing delay and call your function
-    setTimeout(() => {
-        hideProcessingDialog();
-        closeQRScanner();
-        
-        // Call your loginWithQR function
-        loginWithQR(qrContent);
-    }, 1000);
+    if(!studentDetails) {
+        showError('Invalid QR code. Please try again.');
+         return;
+    }
+
+    loginWithQR(qrContent, studentDetails);
 }
 
 // Extract token from URL or return original content
@@ -169,18 +171,14 @@ function clearError() {
 }
 
 // Login with QR functionality
-async function loginWithQR(qrContent) {
+async function loginWithQR(qrContent, student) {
 
-    if (qrContent && qrContent.length > 0) {
+    if (student && qrContent && qrContent.length > 0) {
         // Clear any errors
         showError(''); 
 
        // Show loading
         showProcessingDialog();
-
-        // Fetch student details using the access token
-        const student = await invokeFunction('get_student_by_access_token', {'access_token_param': qrContent}, true);
-console.log(student);
 
         // Generate email by using the student details
         const email = generateEmail(student['name'], student['grade'], student['section']);
@@ -256,3 +254,44 @@ document.addEventListener('visibilitychange', function() {
         }
     }
 });
+
+// Handle student registration for JVP students (if not already registered, port info from My JVP, and sign them up)
+async function handleJVPStudentRegistration(token) {
+        // Attempt to fetch student details using the provided access token
+        let student = await invokeFunction('get_student_by_access_token', {'access_token_param': token}, true);
+
+        // If no details found, port from My JVP Portal
+        if(!student) {
+           const portedDetails = await invokeFunctionJVP('get_student_profile', {'p_access_token': token}, true);
+
+            if(!portedDetails) {
+                 return null;
+            }
+
+            // Generate email by using the student details
+            const email = generateEmail(portedDetails['name'], portedDetails['grade'], portedDetails['section']) + '@ionspark.com';
+
+            // Generate password by hashing the access token
+             const password =          await uuidToNumericHash(token);
+
+             // Sign up
+             const data = await signUpUser(email, password);
+
+              if(!data) {
+                   return null;
+              }
+
+             // Insert new student information in the database
+              const inserted = await insertData('students', {...portedDetails, city: 'Jaipur', school: 'Jamna Vidyapeeth', id: data.user.id, access_token: token});
+
+              if(!inserted) {
+                  return null;
+              }
+
+              return portedDetails;
+
+        } else {
+           return student;
+        }
+
+}
