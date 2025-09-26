@@ -217,6 +217,9 @@ const UIComponents = {
          });
       }
 
+      // Update name in header (visible only on desktop screens)
+      DOMUtils.getElementById('name-in-header').innerText = StringUtils.capitalizeFirstLetter(USER_DATA.name)
+
       // Update header avatar
       DOMUtils.getElementById('header-avatar').src = `https://avataaars.io/?${USER_DATA.avatar}`;
 
@@ -636,11 +639,7 @@ const AppManager = {
    initialize: () => {
       UIComponents.createUserProfile();
       MenuManager.initialize();
-      // MODIFIED: Removed renderDashboardCards() call from here. It's now handled by PageManager.loadHomePage
-   },
-
-   // MODIFIED: This function is no longer needed as renderDashboard(subject) handles its logic.
-   // renderDashboardCards: () => { ... }
+   }
 };
 
 // =============================================================================
