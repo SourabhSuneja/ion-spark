@@ -239,7 +239,7 @@ const UIComponents = {
       const gradeParagraph = DOMUtils.createElement(
          'p',
          'student-grade',
-         `Grade: ${USER_DATA.grade}${USER_DATA.section ? '-' + USER_DATA.section : ''}`
+         `Class: ${USER_DATA.grade}${USER_DATA.section ? '-' + USER_DATA.section : ''}`
       );
       const descriptionParagraph = DOMUtils.createElement('p', 'student-description', `${USER_DATA.accountType} Account`);
 
