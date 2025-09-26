@@ -29,7 +29,7 @@ create table students (
 create table settings (
   student_id uuid primary key references students(id) on delete cascade,
   theme smallint not null default 0 check (theme in (0,1)), -- 0 = dark, 1 = light
-  avatar text not null default 'avatarStyle=Circle&topType=ShortHairShortCurly&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Happy&eyebrowType=Default&mouthType=Smile&skinColor=Light',
+  avatar text not null,
   nickname text
 );
 
