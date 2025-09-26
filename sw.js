@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ion-spark-v1.0.2'; // bump version when deploying
+const CACHE_NAME = 'ion-spark-v1.0.0-tmp'; // bump version when deploying
 const urlsToCache = [
   '/ion-spark/',
   '/ion-spark/index.html',
