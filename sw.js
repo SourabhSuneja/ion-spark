@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ion-spark-v1.0.0-temp8';
+const CACHE_NAME = 'ion-spark-v1.0.0-temp9';
 const urlsToCache = [
   '/ion-spark/',
   '/ion-spark/index.html',
