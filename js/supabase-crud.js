@@ -6,6 +6,10 @@ const supabaseUrl = 'https://jmmjsxbwxwxrttodyilo.supabase.co';
 const supabaseKey = 'sb_publishable_VVvujycfQZWADUK_cRjCKg_ip6uAofr';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Another Supabase client credentials just for connecting with My JVP backend
+const supabaseUrlJVP = 'https://ckltcwampaagyzneaznt.supabase.co';
+const supabaseKeyJVP = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrbHRjd2FtcGFhZ3l6bmVhem50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1MDI2NjgsImV4cCI6MjA0ODA3ODY2OH0.pUT2kngS0nkzFBjI-P6g8azU5E3tZzGDQGL68-AUWFc';
+
 window.userId = null;
 window.userDetails = null;
 const redirectURL = null;
@@ -339,6 +343,27 @@ async function invokeFunction(functionName, functionArgs = {}, fetchSingle = fal
    }
 }
 
+// invoke a function on My JVP Supabase backend
+async function invokeFunctionJVP(functionName, functionArgs = {}, fetchSingle = false) {
+   // Create a separate client for JVP
+   const supabaseJVP = createClient(supabaseUrlJVP, supabaseKeyJVP);
+   try {
+      // Invoke the PostgreSQL function using Supabase's rpc method
+      const {
+         data,
+         error
+      } = await supabaseJVP.rpc(functionName, functionArgs);
+
+      if (error) throw error;
+
+      // If fetchSingle is true, return the first row only
+      return fetchSingle ? data?.[0] || null : data;
+   } catch (error) {
+      console.error(`Error invoking function ${functionName}:`, error.message);
+      return null;
+   }
+}
+
 // invoke an Edge function
 async function invokeEdgeFunction(functionName, payload = {}) {
    try {
@@ -440,3 +465,4 @@ window.invokeFunction = invokeFunction;
 window.invokeEdgeFunction = invokeEdgeFunction;
 window.subscribeToTable = subscribeToTable;
 window.createUserWithoutSession = createUserWithoutSession;
+window.invokeFunctionJVP = invokeFunctionJVP;
