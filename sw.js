@@ -1,5 +1,5 @@
-// Remember to bump the version number when you deploy a new service worker
-const CACHE_NAME = 'ion-spark-v1.0.0.temp.1';
+// Bump the version number when you deploy a new service worker
+const CACHE_NAME = 'ion-spark-v1.0.0.temp.2';
 const urlsToCache = [
   '/ion-spark/',
   '/ion-spark/index.html',
@@ -56,7 +56,12 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
 
-  // ⭐ NEW LOGIC HERE ⭐
+  // Only handle GET requests. Ignore all others (like POST, PUT, DELETE, etc.)
+  // and let the browser handle them normally.
+  if (request.method !== 'GET') {
+    return;
+  }
+
   // Apply Network First for top-level navigations AND iframe documents.
   // This ensures both the main page and its embedded pages are always fresh when online.
   if (request.mode === 'navigate' || request.destination === 'iframe' || request.destination === 'document') {
