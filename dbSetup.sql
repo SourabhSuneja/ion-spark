@@ -134,5 +134,61 @@ END;
 $$;
 
 
+-- Trigger functions start
+
+-- Trigger function to auto-create settings for a new student
+create or replace function create_settings_for_student()
+returns trigger as $$
+begin
+  insert into settings (student_id)
+  values (new.id);
+  return new;
+end;
+$$ language plpgsql;
+
+-- Trigger function to set default user avatar
+CREATE OR REPLACE FUNCTION set_default_avatar()
+RETURNS TRIGGER AS $$
+DECLARE
+    student_gender text;
+BEGIN
+    -- Only set avatar if not provided
+    IF NEW.avatar IS NULL THEN
+        -- Look up gender from students table
+        SELECT gender INTO student_gender
+        FROM students
+        WHERE id = NEW.student_id;
+
+        -- Assign avatar: Female only if gender='F', otherwise male version
+        IF student_gender = 'F' THEN
+            NEW.avatar := 'avatarStyle=Circle&topType=LongHairStraight&hairColor=BrownDark&clotheType=BlazerSweater&eyeType=Happy&mouthType=Smile&skinColor=Light&facialHairType=Blank&accessoriesType=Blank';
+        ELSE
+            NEW.avatar := 'avatarStyle=Circle&topType=ShortHairShortCurly&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Happy&eyebrowType=Default&mouthType=Smile&skinColor=Light';
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger functions end
 
 -- Function creation ends
+
+
+
+-- Triggers start
+
+-- After-insert trigger on students
+create trigger after_student_insert
+after insert on students
+for each row
+execute function create_settings_for_student();
+
+-- Before-insert trigger on settings
+CREATE TRIGGER trg_set_default_avatar
+BEFORE INSERT ON settings
+FOR EACH ROW
+EXECUTE FUNCTION set_default_avatar();
+
+-- Triggers end
