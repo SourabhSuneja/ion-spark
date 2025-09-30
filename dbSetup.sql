@@ -182,6 +182,15 @@ BEGIN
     -- Proceed only if the student's school is 'Jamna Vidyapeeth'
     IF NEW.school = 'Jamna Vidyapeeth' THEN
 
+        -- Insert 'General' subscription only if it doesn't already exist
+        IF NOT EXISTS (
+            SELECT 1 FROM subscriptions 
+            WHERE student_id = NEW.id AND subject = 'General'
+        ) THEN
+            INSERT INTO subscriptions (student_id, grade, subject)
+            VALUES (NEW.id, NEW.grade, 'General');
+        END IF;
+
         -- Determine the list of subjects based on grade and section
         subjects := CASE NEW.grade
             WHEN 1 THEN ARRAY['English', 'Hindi', 'Maths', 'EVS', 'Computer', 'GK']
