@@ -192,3 +192,53 @@ FOR EACH ROW
 EXECUTE FUNCTION set_default_avatar();
 
 -- Triggers end
+
+
+
+
+-- RLS Policies start
+
+-- Enable RLS on the teachers table
+ALTER TABLE teachers ENABLE ROW LEVEL SECURITY;
+
+-- Enable RLS on the students table
+ALTER TABLE students ENABLE ROW LEVEL SECURITY;
+
+-- Create policy for students to manage their own data
+CREATE POLICY "Students can manage their own data"
+ON students
+FOR ALL -- Applies to SELECT, INSERT, UPDATE, DELETE
+USING (auth.uid() = id)
+WITH CHECK (auth.uid() = id);
+
+
+-- Enable RLS on the settings table
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
+
+-- Create policy for students to manage their own settings
+CREATE POLICY "Students can manage their own settings"
+ON settings
+FOR ALL
+USING (auth.uid() = student_id)
+WITH CHECK (auth.uid() = student_id);
+
+
+-- Enable RLS on the subscriptions table
+ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+
+-- Create policy for students to read their own subscriptions
+CREATE POLICY "Students can read their own subscriptions"
+ON subscriptions
+FOR SELECT
+USING (auth.uid() = student_id);
+
+-- Create policy for students to insert their own subscriptions
+CREATE POLICY "Students can insert their own subscriptions"
+ON subscriptions
+FOR INSERT
+WITH CHECK (auth.uid() = student_id);
+
+
+-- RLS Policies end
+
+
