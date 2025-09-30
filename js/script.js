@@ -10,19 +10,6 @@ const APP_CONFIG = {
    theme: 'dark'
 };
 
-const LINKS = {
-   home: null,
-   "word-of-the-day": null,
-   result: 'https://sourabhsuneja.github.io/ion-spark/pages/result/',
-   sarthak: 'https://sourabhsuneja.github.io/ion-spark/pages/sarthak/',
-   worksheet: 'https://sourabhsuneja.github.io/question-paper/?ed=%7B%22schoolName%22%3A%22Jamna%20Vidyapeeth%22%2C%22examName%22%3A%22Practice%20Worksheet%22%2C%22subject%22%3A%22Computer%22%2C%22duration%22%3A60%2C%22grade%22%3A%22VI%22%7D&qpm=%7B%22avartan-6-ch-1%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%2C%22avartan-6-ch-2%22%3A%7B%22MCQ%22%3A5%2C%22Fill%20up%22%3A5%2C%22True%2FFalse%22%3A5%2C%22Short%20Answer%20Type%22%3A5%2C%22Match%20items%22%3A0%2C%22image%22%3Afalse%2C%22audio%22%3Afalse%2C%22video%22%3Afalse%7D%7D&qc=%7B%22headings%22%3A%5B%22%22%2C%22%22%2C%22%22%2C%22%22%5D%2C%22qTypes%22%3A%5B%7B%22MCQ%22%3A5%7D%2C%7B%22Fill%20up%22%3A5%7D%2C%7B%22True%2FFalse%22%3A5%7D%2C%7B%22Short%20Answer%20Type%22%3A5%7D%5D%2C%22weightPerQ%22%3A%5B%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%5D%2C%22mustInclude%22%3A%5B%7B%7D%2C%7B%7D%2C%7B%7D%2C%7B%7D%5D%2C%22settings%22%3A%7B%22provideAnsOrSpace%22%3A%22space%22%2C%22randomiseSelection%22%3Atrue%2C%22strictChapterWiseDistribution%22%3Afalse%2C%22editable%22%3Afalse%2C%22showAIBtns%22%3Afalse%2C%22hideWeightage%22%3Atrue%2C%22showStudentDetails%22%3Afalse%2C%22border%22%3Afalse%2C%22shuffleMCQOptions%22%3Afalse%2C%22useDotPatternInBlanks%22%3Atrue%2C%22showHelpBoxInFillUp%22%3Afalse%2C%22mergeMatchItems%22%3Atrue%2C%22convertQForm%22%3A%7B%22MCQ%22%3A%7B%22toFillUp%22%3A0%2C%22toTF%22%3A0%2C%22toVSA%22%3A0%7D%2C%22flipTF%22%3Afalse%7D%2C%22spaceForAns%22%3A%7B%22Very%20Short%20Answer%20Type%22%3A1%2C%22Short%20Answer%20Type%22%3A3%2C%22Long%20Answer%20Type%22%3A5%2C%22Very%20Long%20Answer%20Type%22%3A8%2C%22Diagram%2FPicture%2FMap%20Based%22%3A6%7D%2C%22qTypesAllowedInImageQ%22%3A%5B%22Short%20Answer%20Type%22%2C%22Long%20Answer%20Type%22%2C%22Very%20Long%20Answer%20Type%22%2C%22Diagram%2FPicture%2FMap%20Based%22%5D%7D%7D&files=avartan-6-ch-1%2Bavartan-6-ch-2&diff=easy',
-   quiz: 'https://sourabhsuneja.github.io/quiz/play/?title=Data+Science+Quiz&quizType=individual&s=&q=kips-8-ch-3%2Bbetween-8-ch-3&allowMCQ=y&allowTF=y&m=random&shuffle=n&qshuffle=y&qproceed=click&maxchances=3&countdown=0&volume=100&customselect=y&usecards=n&useteam=n&teammap=%7B%7D&absent=%5B%5D&killPrevSession=y&quizID=Class+8+Quiz+Visit+from+Portal'
-};
-
-const PAGE_MIN_WIDTH_CONFIG = {
-   classwork: 750,
-   worksheet: 750
-};
 
 const USER_DATA = {
    name: '',
@@ -32,73 +19,14 @@ const USER_DATA = {
    avatar: ''
 };
 
-// MODIFIED: Replaced DASHBOARD_CARDS with a subject-based object structure.
-const subjectCardsTemplate = [
-   {
-      icon: 'podium-outline',
-      title: 'My Result',
-      page: 'result'
-   },
-   {
-      icon: 'book-outline',
-      title: 'Classwork',
-      page: 'classwork'
-   },
-   {
-      icon: 'document-outline',
-      title: 'Worksheet',
-      page: 'worksheet'
-   },
-   {
-      icon: 'clipboard-outline',
-      title: 'PT-3 Blueprint',
-      page: 'pt3blueprint'
-   },
-   {
-      icon: 'bulb-outline',
-      title: 'Knowledge Dose',
-      page: 'knowledgedose'
-   },
-   {
-      icon: 'help-outline',
-      title: 'Quiz',
-      page: 'quiz'
-   },
-   {
-      icon: 'language',
-      title: 'Word of the Day',
-      page: 'word-of-the-day'
-   },
-   {
-      icon: 'trophy-outline',
-      title: 'Our Champions',
-      page: 'stars'
-   },
-   {
-      icon: 'chatbubble-outline',
-      title: 'Sarthak AI',
-      page: 'sarthak'
-   },
-   {
-      icon: 'color-wand-outline',
-      title: 'Chatbot Creator',
-      page: 'chatbotcreator'
-   },
-   {
-      icon: 'ribbon-outline',
-      title: 'Favourite Student Certificate',
-      page: 'feedback'
-   }
-];
+// Variable to hold all dashboard data fetched from the backend.
+let DASHBOARD_DATA = {};
 
-const SUBJECT_DASHBOARDS = {
-   'Computer': JSON.parse(JSON.stringify(subjectCardsTemplate)),
-   'Science': JSON.parse(JSON.stringify(subjectCardsTemplate)),
-   'Mathematics': JSON.parse(JSON.stringify(subjectCardsTemplate))
-};
+// Array to hold all unique page keys for each subscribed subject
+let PAGELIST = {};
 
-// NEW: Variable to track the currently selected subject.
-let currentSubject = 'Computer';
+// Variable to track the currently selected subject.
+let currentSubject = 'General';
 
 const MENU_ITEMS = [{
       icon: 'home',
@@ -136,6 +64,17 @@ const BackendManager = {
       } catch (err) {
          console.error("Error fetching student profile:", err);
          return null;
+      }
+   },
+
+   // Function to get all dashboard data for the logged-in user
+   getDashboardData: async () => {
+      try {
+         const data = await invokeFunction('get_student_dashboard_data', {}, false);
+         return data || {}; // Return data or an empty object
+      } catch (err) {
+         console.error("Error fetching dashboard data:", err);
+         return {}; // Return empty object on error
       }
    }
 };
@@ -253,7 +192,7 @@ const UIComponents = {
       profileContainer.append(profileAvatarDiv, profileInfoDiv);
    },
 
-   createIframe: (src, page) => {
+   createIframe: (src, page, minWidth) => {
       const iframe = DOMUtils.createElement('iframe');
 
       Object.assign(iframe.style, {
@@ -265,8 +204,8 @@ const UIComponents = {
          transition: `opacity ${APP_CONFIG.iframeTransitionDuration}`
       });
 
-      if (PAGE_MIN_WIDTH_CONFIG[page]) {
-         iframe.style.minWidth = `${PAGE_MIN_WIDTH_CONFIG[page]}px`;
+      if (minWidth) { // Use the passed argument
+         iframe.style.minWidth = `${minWidth}px`;
       }
 
       iframe.src = `${src}?token=${encodeURIComponent(USER_DATA['access_token'])}&user_id=${encodeURIComponent(window.userId)}`;
@@ -341,16 +280,17 @@ const MenuManager = {
 };
 
 // =============================================================================
-// NEW: DASHBOARD & SUBJECT SWITCHER FUNCTIONS
+// DASHBOARD & SUBJECT SWITCHER FUNCTIONS
 // =============================================================================
 
 function renderDashboard(subject) {
    const content = DOMUtils.getElementById('content');
-   content.innerHTML = ''; // Clear existing cards
+   content.innerHTML = '';
 
-   const cards = SUBJECT_DASHBOARDS[subject];
+   const cards = DASHBOARD_DATA[subject]; // Use the new data source
    if (cards) {
       cards.forEach(cardData => {
+         // The 'page' property is now the page_key
          const cardElement = UIComponents.createCard(cardData);
          content.appendChild(cardElement);
       });
@@ -362,7 +302,21 @@ function setupSubjectSwitcher() {
    if (!switcher) return;
    switcher.innerHTML = ''; // Clear old buttons
 
-   Object.keys(SUBJECT_DASHBOARDS).forEach(subject => {
+   // The keys of DASHBOARD_DATA are the subscribed subjects
+   const subscribedSubjects = Object.keys(DASHBOARD_DATA);
+
+   if (subscribedSubjects.length === 0) {
+      // Optional: Show a message if there are no subscriptions
+      DOMUtils.getElementById('content').innerHTML = '<p class="info-message">You are not subscribed to any subjects yet.</p>';
+      return;
+   }
+   
+   // If currentSubject is not in the new list, default to the first one
+   if (!subscribedSubjects.includes(currentSubject)) {
+      currentSubject = subscribedSubjects[0];
+   }
+
+   subscribedSubjects.forEach(subject => {
       const button = document.createElement('button');
       button.className = 'subject-btn';
       button.textContent = StringUtils.capitalizeFirstLetter(subject);
@@ -382,6 +336,19 @@ function setupSubjectSwitcher() {
    });
 }
 
+function extractPages(obj) {
+  const result = {};
+  
+  for (const [subject, items] of Object.entries(obj)) {
+    result[subject] = items
+      .filter(item => item.link)       // keep only entries with a non-falsy link
+      .map(item => item.page);         // extract the "page" value
+  }
+  
+  return result;
+}
+
+
 // =============================================================================
 // PAGE MANAGEMENT
 // =============================================================================
@@ -390,7 +357,7 @@ const PageManager = {
    loadPage: (page) => {
       showProcessingDialog();
 
-      if ((!(page in LINKS) || LINKS[page] === null) && page !== 'home') {
+      if (!(PAGELIST[currentSubject].includes(page)) && page !== 'home') {
          if (page === 'word-of-the-day') {
             showRandomWord();
          }
@@ -423,9 +390,18 @@ const PageManager = {
       DOMUtils.hide(elements.subjectSwitcher);
       elements.content.classList.add('externalPage');
 
-      // MODIFIED: Find card data from the new SUBJECT_DASHBOARDS object
-      const allCards = Object.values(SUBJECT_DASHBOARDS).flat();
+      // Find card data from the new SUBJECT_DASHBOARDS object
+      const allCards = Object.values(DASHBOARD_DATA).flat();
       const cardData = allCards.find(card => card.page === page);
+
+      if (!cardData) {
+         console.error(`No card data found for page key: ${page}`);
+         hideProcessingDialog();
+         // Optionally show an error message to the user
+         elements.content.innerHTML = '<p class="error-message">Could not load this page.</p>';
+         return;
+      }
+
       const displayTitle = cardData ? cardData.title : StringUtils.capitalizeFirstLetter(page);
 
       elements.screenName.innerText = `${displayTitle} `;
@@ -434,7 +410,7 @@ const PageManager = {
       DOMUtils.hide(elements.menuBtn);
       DOMUtils.show(elements.backBtn);
 
-      const iframe = UIComponents.createIframe(LINKS[page], page);
+      const iframe = UIComponents.createIframe(cardData.link, page, cardData.min_width);
       elements.content.appendChild(iframe);
    },
 
@@ -487,8 +463,11 @@ const AuthManager = {
          const data = await window.signInUser(email, password);
          window.userId = data.user.id;
 
+         // Load profile AND dashboard data before showing the page
+         await AppManager.initialize();
+
          DOMUtils.hide(elements.signInScreen);
-         PageManager.loadPage('home'); // MODIFIED: Load home page to trigger correct setup
+         PageManager.loadPage('home'); // Load home page to trigger correct setup
       } catch (error) {
          AuthManager.showError(elements, errorIcon, error.message);
       }
@@ -566,8 +545,10 @@ const AuthManager = {
          const isAuthenticated = await checkAuth();
 
          if (isAuthenticated) {
+            // Load profile AND dashboard data before showing the page
+            await AppManager.initialize();
             DOMUtils.hide(signInScreen);
-            PageManager.loadPage('home'); // MODIFIED: Load home page to trigger correct setup
+            PageManager.loadPage('home'); // Load home page to trigger correct setup
          } else {
             DOMUtils.setDisplay(signInScreen, 'flex');
          }
@@ -646,8 +627,10 @@ const StringUtils = {
 // =============================================================================
 
 const AppManager = {
-   initialize: () => {
-      UIComponents.createUserProfile();
+   initialize: async () => {
+      await UIComponents.createUserProfile();
+      DASHBOARD_DATA = await BackendManager.getDashboardData(); // Fetch and store dashboard data
+      PAGELIST = extractPages(DASHBOARD_DATA);
       MenuManager.initialize();
    }
 };
@@ -730,7 +713,7 @@ window.history.replaceState({
 const originalLoadPage = PageManager.loadPage;
 PageManager.loadPage = (page) => {
    originalLoadPage(page);
-   if (!(page in LINKS) || LINKS[page] === null) {
+   if (!(PAGELIST[currentSubject].includes(page))) {
       return;
    }
    if (window.history.state?.page !== page) {
