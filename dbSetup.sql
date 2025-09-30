@@ -171,6 +171,61 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+-- Create the function to handle subscription creation for JVP students
+CREATE OR REPLACE FUNCTION handle_new_student_subscriptions()
+RETURNS TRIGGER AS $$
+DECLARE
+    subjects TEXT[];
+    subject_name TEXT;
+BEGIN
+    -- Proceed only if the student's school is 'Jamna Vidyapeeth'
+    IF NEW.school = 'Jamna Vidyapeeth' THEN
+
+        -- Determine the list of subjects based on grade and section
+        subjects := CASE NEW.grade
+            WHEN 1 THEN ARRAY['English', 'Hindi', 'Maths', 'EVS', 'Computer', 'GK']
+            WHEN 2 THEN ARRAY['English', 'Hindi', 'Maths', 'EVS', 'Computer', 'GK']
+            WHEN 3 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Computer', 'GK']
+            WHEN 4 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Computer', 'GK']
+            WHEN 5 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Computer', 'GK']
+            WHEN 6 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Sanskrit', 'Computer', 'GK']
+            WHEN 7 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Sanskrit', 'Computer', 'GK']
+            WHEN 8 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Sanskrit', 'Data Science', 'GK']
+            WHEN 9 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Data Science']
+            WHEN 10 THEN ARRAY['English', 'Hindi', 'Maths', 'Science', 'Social Science', 'Data Science']
+            WHEN 11 THEN
+                CASE NEW.section
+                    WHEN 'SCI' THEN ARRAY['English', 'Physics', 'Chemistry', 'Biology', 'Maths', 'P.E.', 'I.P.', 'Geography', 'Economics', 'Psychology', 'Fine Arts']
+                    WHEN 'COM' THEN ARRAY['English', 'Accountancy', 'B.St.', 'Economics', 'Maths', 'P.E.', 'I.P.', 'Applied Maths', 'Psychology', 'Fine Arts']
+                    WHEN 'HUM' THEN ARRAY['English', 'History', 'Geography', 'Pol. Sci.', 'Maths', 'P.E.', 'I.P.', 'Economics', 'Applied Maths', 'Psychology', 'Fine Arts']
+                    ELSE ARRAY[]::TEXT[]
+                END
+            WHEN 12 THEN
+                CASE NEW.section
+                    WHEN 'SCI' THEN ARRAY['English', 'Physics', 'Chemistry', 'Biology', 'Maths', 'P.E.', 'I.P.', 'Geography', 'Economics']
+                    WHEN 'COM' THEN ARRAY['English', 'Accountancy', 'B.St.', 'Economics', 'Maths', 'P.E.', 'I.P.']
+                    WHEN 'HUM' THEN ARRAY['English', 'History', 'Geography', 'Pol. Sci.', 'Maths', 'P.E.', 'I.P.', 'Economics']
+                    ELSE ARRAY[]::TEXT[]
+                END
+            ELSE ARRAY[]::TEXT[]
+        END;
+
+        -- Loop through the subjects array and insert into subscriptions table
+        IF array_length(subjects, 1) > 0 THEN
+            FOREACH subject_name IN ARRAY subjects
+            LOOP
+                INSERT INTO subscriptions (student_id, grade, subject)
+                VALUES (NEW.id, NEW.grade, subject_name);
+            END LOOP;
+        END IF;
+
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Trigger functions end
 
 -- Function creation ends
@@ -179,17 +234,23 @@ $$ LANGUAGE plpgsql;
 
 -- Triggers start
 
--- After-insert trigger on students
+-- After-insert trigger on students for creating settings
 create trigger after_student_insert
 after insert on students
 for each row
 execute function create_settings_for_student();
 
--- Before-insert trigger on settings
+-- Before-insert trigger on settings to set default avatar
 CREATE TRIGGER trg_set_default_avatar
 BEFORE INSERT ON settings
 FOR EACH ROW
 EXECUTE FUNCTION set_default_avatar();
+
+-- After-insert trigger on students to auto-subscribe JVP students to different subjects
+CREATE TRIGGER on_student_insert_create_subscriptions
+AFTER INSERT ON students
+FOR EACH ROW
+EXECUTE FUNCTION handle_new_student_subscriptions();
 
 -- Triggers end
 
