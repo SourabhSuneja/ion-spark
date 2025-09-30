@@ -100,5 +100,5 @@
         }
         
        
-        // Export for integration
-        window.OfflineManager = OfflineManager;
+        // Initialize offline manager
+        const offlineManager = new OfflineManager();
