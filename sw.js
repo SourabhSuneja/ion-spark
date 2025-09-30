@@ -1,13 +1,19 @@
 // Bump the version number when you deploy a new service worker
-const CACHE_NAME = 'ion-spark-v1.0.0.temp.3';
+const CACHE_NAME = 'ion-spark-v1.0.0.dev.1';
 const urlsToCache = [
   '/ion-spark/',
   '/ion-spark/index.html',
   '/ion-spark/css/style.css',
-  '/ion-spark/js/script.js',
+  '/ion-spark/css/offline-overlay.css',
+  '/ion-spark/css/install-popup-styles.css',
+  '/ion-spark/css/qr-scan.css',
   '/ion-spark/css/dialog.css',
   '/ion-spark/css/word-card-styles.css',
+  '/ion-spark/js/script.js',
   '/ion-spark/js/dialog.js',
+  '/ion-spark/js/offline-manager.js',
+  '/ion-spark/js/pwa-utils.js',
+  '/ion-spark/js/qr-scan.js',
   '/ion-spark/js/supabase-crud.js',
   '/ion-spark/js/word-card.js',
   '/ion-spark/favicon-16x16.png',
@@ -19,7 +25,9 @@ const urlsToCache = [
   // External resources that need to be cached
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
   'https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css',
-  'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap'
+  'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap',
+  'https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js',
+  'https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js'
 ];
 
 // --- EVENT LISTENERS ---
