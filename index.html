@@ -4,7 +4,6 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="theme-color" content="#000">
-      
       <!-- PWA Meta Tags -->
       <meta name="application-name" content="Ion Spark">
       <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,10 +14,8 @@
       <meta name="msapplication-config" content="browserconfig.xml">
       <meta name="msapplication-TileColor" content="#000000">
       <meta name="msapplication-tap-highlight" content="no">
-      
       <!-- PWA Manifest -->
       <link rel="manifest" href="manifest.json">
-      
       <!-- Favicons and Icons -->
       <link rel="icon" type="image/x-icon" href="favicon.ico">
       <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -26,10 +23,8 @@
       <link rel="apple-touch-icon" href="apple-touch-icon.png">
       <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
       <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
-      
       <title>Ion Spark | Spark Your Learning</title>
       <meta name="description" content="Discover the ultimate student learning app crafted by Sourabh sir! Engage with interactive quizzes, fun games, insightful notes, and hands-on projects designed to make learning exciting and effective.">
-      
       <!-- font awesome icons link -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
       <!-- ion icons link -->
@@ -53,13 +48,12 @@
             <p>Get the full app experience! Install our app for faster access, offline features, and a native app feel.</p>
             <div class="install-popup-buttons">
                <button id="install-app-btn" class="install-btn">
-                  <i class="fas fa-download"></i> Install Now
+               <i class="fas fa-download"></i> Install Now
                </button>
                <button id="install-later-btn" class="install-btn secondary">Maybe Later</button>
             </div>
          </div>
       </div>
-      
       <!-- Overlays -->
       <div id="overlay" onclick="toggleMenu()"></div>
       <div id="loading-overlay">
@@ -135,29 +129,27 @@
             </form>
             <!-- Login Divider -->
             <div class="login-divider">
-                <span>OR</span>
+               <span>OR</span>
             </div>
-
             <!-- QR Code Login Section -->
             <div class="qr-login-section">
-                <!-- QR Scanner Container (Initially Hidden) -->
-                <div class="qr-scanner-container" id="qr-scanner-container">
-                    <div id="qr-reader"></div>
-                    <button class="qr-close-btn" id="qr-close-btn" onclick="closeQRScanner()">
-                        <i class="fas fa-times"></i> Close Scanner
-                    </button>
-                </div>
-
-                <!-- QR Scanner Action Buttons -->
-                <div class="qr-scanner-actions" id="qr-scanner-actions">
-                    <button class="qr-action-btn" id="qr-camera-btn" onclick="startQRScanner()">
-                        <i class="fas fa-camera"></i> Scan QR Code with Camera
-                    </button>
-                    <label for="qr-file-input" class="qr-action-btn">
-                        <i class="fas fa-image"></i> Upload QR Code Image
-                        <input type="file" id="qr-file-input" accept="image/*" onchange="handleQRFileSelect(event)">
-                    </label>
-                </div>
+               <!-- QR Scanner Container (Initially Hidden) -->
+               <div class="qr-scanner-container" id="qr-scanner-container">
+                  <div id="qr-reader"></div>
+                  <button class="qr-close-btn" id="qr-close-btn" onclick="closeQRScanner()">
+                  <i class="fas fa-times"></i> Close Scanner
+                  </button>
+               </div>
+               <!-- QR Scanner Action Buttons -->
+               <div class="qr-scanner-actions" id="qr-scanner-actions">
+                  <button class="qr-action-btn" id="qr-camera-btn" onclick="startQRScanner()">
+                  <i class="fas fa-camera"></i> Scan QR Code with Camera
+                  </button>
+                  <label for="qr-file-input" class="qr-action-btn">
+                  <i class="fas fa-image"></i> Upload QR Code Image
+                  <input type="file" id="qr-file-input" accept="image/*" onchange="handleQRFileSelect(event)">
+                  </label>
+               </div>
             </div>
             <div class="credit-text-in-form">Crafted by Sourabh Sir</div>
          </div>
@@ -175,38 +167,33 @@
          <button id="close-word-card">Close</button>
       </div>
       <!-- Word of the Day Card Ends -->
-    <!-- Offline Dialog Overlay Starts -->
-    <div class="offline-overlay" id="offlineOverlay">
-        <div class="offline-content">
+      <!-- Offline Dialog Overlay Starts -->
+      <div class="offline-overlay" id="offlineOverlay">
+         <div class="offline-content">
             <div class="offline-icon-container">
-                <div class="wifi-signal">
-                    <div class="wifi-bar"></div>
-                    <div class="wifi-bar"></div>
-                    <div class="wifi-bar"></div>
-                    <div class="wifi-bar"></div>
-                </div>
-                <i class="fas fa-wifi-slash offline-icon"></i>
+               <div class="wifi-signal">
+                  <div class="wifi-bar"></div>
+                  <div class="wifi-bar"></div>
+                  <div class="wifi-bar"></div>
+                  <div class="wifi-bar"></div>
+               </div>
+               <i class="fas fa-wifi-slash offline-icon"></i>
             </div>
-            
             <h2 class="offline-title">You're Offline</h2>
-            
             <p class="offline-message">
-                It looks like you've lost your internet connection. Don't worry, we'll get you back online!
+               It looks like you've lost your internet connection. Don't worry, we'll get you back online!
             </p>
-            
             <div class="offline-details">
-                <i class="fas fa-info-circle"></i>
-                Please check your internet connection and try again.
+               <i class="fas fa-info-circle"></i>
+               Please check your internet connection and try again.
             </div>
-            
             <button class="retry-button" onclick="OfflineManager.retryConnection()">
-                <i class="fas fa-sync-alt"></i>
-                Check Again
+            <i class="fas fa-sync-alt"></i>
+            Check Again
             </button>
-        </div>
-    </div>
-    <!-- Offline Dialog Overlay Ends -->
-
+         </div>
+      </div>
+      <!-- Offline Dialog Overlay Ends -->
       <!-- Scripts Start -->
       <!-- PWA Script -->     
       <script src="./js/pwa-utils.js"></script>
