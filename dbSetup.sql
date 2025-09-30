@@ -1,5 +1,22 @@
 -- Table creation starts
 
+-- Table to store dashboard card information for each subject
+CREATE TABLE subject_resources (
+  id BIGSERIAL PRIMARY KEY,
+  subject TEXT NOT NULL,
+  -- The grade this resource applies to. If NULL, it applies to all grades.
+  grade INT,
+  title TEXT NOT NULL,
+  icon TEXT NOT NULL,
+  -- A unique key for the page/feature, e.g., 'result', 'worksheet'
+  page_key TEXT NOT NULL,
+  -- The URL for the iframe, can be NULL for internal pages
+  link TEXT,
+  min_width INT,
+  -- To control the order of cards on the dashboard
+  display_order SMALLINT DEFAULT 0 NOT NULL
+);
+
 -- Create teachers table
 CREATE TABLE teachers (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -57,6 +74,54 @@ CREATE TABLE notifications (
 -- Table creation ends
 
 -- Function creation starts
+
+-- Function to get dashboard cards specific to a student and grade
+CREATE OR REPLACE FUNCTION get_student_dashboard_data()
+RETURNS jsonb -- Return a single JSONB object
+AS $$
+DECLARE
+  student_id_param UUID := auth.uid();
+  result jsonb;
+BEGIN
+  SELECT
+    -- Aggregate all subjects and their cards into a single JSON object
+    -- The structure will be: { "Computer": [...cards], "Science": [...cards] }
+    jsonb_object_agg(
+      subject,
+      cards
+    ) INTO result
+  FROM (
+    SELECT
+      s.subject,
+      -- Aggregate all cards for a subject into a JSON array
+      jsonb_agg(
+        -- Build a JSON object for each card
+        jsonb_build_object(
+          'title', sr.title,
+          'icon', sr.icon,
+          'page', sr.page_key, -- Use 'page' to match your existing JS property
+          'link', sr.link,
+          'min_width', sr.min_width
+        ) ORDER BY sr.display_order ASC -- Ensure cards are ordered correctly
+      ) AS cards
+    FROM
+      -- Start with the student's subscriptions
+      subscriptions s
+    JOIN
+      -- Join with the resources table on the subject name
+      subject_resources sr ON s.subject = sr.subject
+    WHERE
+      s.student_id = student_id_param
+      -- CRITICAL: Match the resource if its grade is NULL (for all grades)
+      -- OR if its grade matches the student's subscription grade.
+      AND (sr.grade IS NULL OR sr.grade = s.grade)
+    GROUP BY
+      s.subject
+  ) AS aggregated_subjects;
+
+  RETURN COALESCE(result, '{}'::jsonb); -- Return the result or an empty JSON object
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Function to get student details using access tokens
 CREATE OR REPLACE FUNCTION get_student_by_access_token(access_token_param TEXT)
@@ -267,6 +332,17 @@ EXECUTE FUNCTION handle_new_student_subscriptions();
 
 
 -- RLS Policies start
+
+-- Enable RLS for security
+ALTER TABLE subject_resources ENABLE ROW LEVEL SECURITY;
+
+-- Allow all authenticated users to read from this table.
+-- The backend function will handle the filtering.
+CREATE POLICY "Allow authenticated users to read resources"
+ON subject_resources
+FOR SELECT
+TO authenticated
+USING (true);
 
 -- Enable RLS on the teachers table
 ALTER TABLE teachers ENABLE ROW LEVEL SECURITY;
