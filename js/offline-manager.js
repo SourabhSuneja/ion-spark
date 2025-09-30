@@ -23,6 +23,8 @@ class OfflineManager {
       this.hideOffline();
       this.isRetrying = false;
       this.updateRetryButton(false);
+      // Connection restored - reload the page
+      window.location.reload();
    }
 
    handleOffline() {
@@ -58,7 +60,7 @@ class OfflineManager {
          setTimeout(() => {
             if (navigator.onLine) {
                // Connection restored - reload the page
-               //window.location.reload();
+               window.location.reload();
             } else {
                this.isRetrying = false;
                this.updateRetryButton(false);
