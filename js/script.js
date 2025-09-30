@@ -217,6 +217,12 @@ const UIComponents = {
          });
       }
 
+      // Toggle to light theme if theme in user settings is 1 (= light theme)
+      if(USER_DATA['theme'] === 1) {
+         APP_CONFIG.theme = 'light';
+         document.body.classList.add('light-theme');
+      }
+
       // Update name in header (visible only on desktop screens)
       DOMUtils.getElementById('name-in-header').innerText = StringUtils.capitalizeFirstLetter(USER_DATA.name)
 
@@ -590,10 +596,14 @@ const ThemeManager = {
          metaThemeColor.setAttribute("content", "#ffffff")
          APP_CONFIG.theme = "light";
          ThemeManager.syncThemeToIframes(true);
+          // Also send new theme setting to server
+         updateRow('settings', ['student_id'], [window.userId], ['theme'], [1]);
       } else {
          metaThemeColor.setAttribute("content", "#000000");
          APP_CONFIG.theme = "dark";
          ThemeManager.syncThemeToIframes(false);
+          // Also send new theme setting to server
+         updateRow('settings', ['student_id'], [window.userId], ['theme'], [0]);
       }
    },
 
