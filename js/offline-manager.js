@@ -24,7 +24,7 @@ class OfflineManager {
       this.isRetrying = false;
       this.updateRetryButton(false);
       // Connection restored - reload the page
-      window.location.reload();
+      forceReload();
    }
 
    handleOffline() {
@@ -39,6 +39,17 @@ class OfflineManager {
    hideOffline() {
       this.overlay.classList.remove('show');
       document.body.style.overflow = '';
+   }
+
+   forceReload() {
+      if (APP_CONFIG.currentPage === 'home') {
+         // Reload the main index.html (skip cache by adding unique query param)
+         const baseUrl = window.location.origin + window.location.pathname;
+         window.location.href = baseUrl + '?v=' + Date.now();
+      } else {
+         // Reload the current iframe page using existing PageManager logic
+         PageManager.loadPage(APP_CONFIG.currentPage);
+      }
    }
 
    async retryConnection() {
@@ -60,7 +71,7 @@ class OfflineManager {
          setTimeout(() => {
             if (navigator.onLine) {
                // Connection restored - reload the page
-               window.location.reload();
+               forceReload();
             } else {
                this.isRetrying = false;
                this.updateRetryButton(false);
