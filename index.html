@@ -175,6 +175,37 @@
          <button id="close-word-card">Close</button>
       </div>
       <!-- Word of the Day Card Ends -->
+    <!-- Offline Dialog Overlay Starts -->
+    <div class="offline-overlay" id="offlineOverlay">
+        <div class="offline-content">
+            <div class="offline-icon-container">
+                <div class="wifi-signal">
+                    <div class="wifi-bar"></div>
+                    <div class="wifi-bar"></div>
+                    <div class="wifi-bar"></div>
+                    <div class="wifi-bar"></div>
+                </div>
+                <i class="fas fa-wifi-slash offline-icon"></i>
+            </div>
+            
+            <h2 class="offline-title">You're Offline</h2>
+            
+            <p class="offline-message">
+                It looks like you've lost your internet connection. Don't worry, we'll get you back online!
+            </p>
+            
+            <div class="offline-details">
+                <i class="fas fa-info-circle"></i>
+                Please check your internet connection and try again.
+            </div>
+            
+            <button class="retry-button" onclick="retryConnection()">
+                <i class="fas fa-sync-alt"></i>
+                Check Again
+            </button>
+        </div>
+    </div>
+    <!-- Offline Dialog Overlay Ends -->
 
       <!-- Scripts Start -->
       <!-- PWA Script -->     
