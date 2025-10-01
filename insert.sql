@@ -6,7 +6,7 @@ VALUES
   ('General', NULL, 'My Result', 'podium-outline', 'result', 'https://sourabhsuneja.github.io/ion-spark/pages/result/', NULL, 0),
   ('General', NULL, 'My Attendance', 'calendar-clear-outline', 'attendance', 'https://sourabhsuneja.github.io/ion-spark/pages/attendance/', NULL, 1),
   ('General', NULL, 'File Vault', 'folder-open-outline', 'vault', 'https://sourabhsuneja.github.io/ion-spark/pages/files/', NULL, 2),
-  ('General', NULL, 'Exam Syllabus', 'clipboard-outline', 'syllabus', 'https://sourabhsuneja.github.io/ion-spark/pages/syllabus/', NULL, 3),
+  ('General', NULL, 'Exam Syllabus', 'clipboard-outline', 'syllabus', 'https://sourabhsuneja.github.io/ion-spark/pages/syllabus/?exam=Term-1', NULL, 3),
   ('General', NULL, 'Sarthak AI', 'chatbubble-outline', 'sarthak', 'https://sourabhsuneja.github.io/ion-spark/pages/sarthak/', NULL, 4),
   ('General', NULL, 'Word of the Day', 'language', 'word-of-the-day', NULL, NULL, 5);
 
