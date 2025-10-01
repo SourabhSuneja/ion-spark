@@ -357,7 +357,7 @@ const PageManager = {
    loadPage: (page) => {
       showProcessingDialog();
 
-      if (!(PAGELIST[currentSubject].includes(page)) && page !== 'home') {
+      if ( Object.keys(PAGELIST).length === 0 || (!(PAGELIST[currentSubject].includes(page)) && page !== 'home') ) {
          if (page === 'word-of-the-day') {
             showRandomWord();
          }
@@ -713,7 +713,7 @@ window.history.replaceState({
 const originalLoadPage = PageManager.loadPage;
 PageManager.loadPage = (page) => {
    originalLoadPage(page);
-   if (!(PAGELIST[currentSubject].includes(page))) {
+   if (Object.keys(PAGELIST).length === 0 || !(PAGELIST[currentSubject].includes(page))) {
       return;
    }
    if (window.history.state?.page !== page) {
