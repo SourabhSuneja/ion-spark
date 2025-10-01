@@ -1,12 +1,18 @@
 -- =========================
--- DROP TRIGGERS
+-- DROP TABLES (parent → child)
+-- This will also automatically drop associated triggers, policies, and constraints.
 -- =========================
-DROP TRIGGER IF EXISTS after_student_insert ON students;
-DROP TRIGGER IF EXISTS trg_set_default_avatar ON settings;
-DROP TRIGGER IF EXISTS on_student_insert_create_subscriptions ON students;
+DROP TABLE IF EXISTS subject_resources CASCADE;
+DROP TABLE IF EXISTS notifications CASCADE;
+DROP TABLE IF EXISTS push_subscriptions CASCADE;
+DROP TABLE IF EXISTS settings CASCADE;
+DROP TABLE IF EXISTS subscriptions CASCADE;
+DROP TABLE IF EXISTS students CASCADE;
+DROP TABLE IF EXISTS teachers CASCADE;
 
 -- =========================
 -- DROP FUNCTIONS
+-- These are not tied to a table, so they need to be dropped separately.
 -- =========================
 DROP FUNCTION IF EXISTS get_student_dashboard_data();
 DROP FUNCTION IF EXISTS get_student_by_access_token(TEXT);
@@ -15,19 +21,10 @@ DROP FUNCTION IF EXISTS create_settings_for_student();
 DROP FUNCTION IF EXISTS set_default_avatar();
 DROP FUNCTION IF EXISTS handle_new_student_subscriptions();
 
--- =========================
--- DROP TABLES (child → parent)
--- =========================
-DROP TABLE IF EXISTS notifications CASCADE;
-DROP TABLE IF EXISTS push_subscriptions CASCADE;
-DROP TABLE IF EXISTS settings CASCADE;
-DROP TABLE IF EXISTS subscriptions CASCADE;
-DROP TABLE IF EXISTS students CASCADE;
-DROP TABLE IF EXISTS teachers CASCADE;
-DROP TABLE IF EXISTS subject_resources CASCADE;
 
 -- =========================
 -- TABLE CREATION
+-- (Your table creation code is correct and goes here)
 -- =========================
 
 -- Table to store dashboard card information for each subject
@@ -109,6 +106,7 @@ CREATE TABLE notifications (
     recipient_count INTEGER NOT NULL DEFAULT 0,
     created_at      TIMESTAMP DEFAULT now()
 );
+
 
 -- =========================
 -- FUNCTIONS
@@ -222,6 +220,7 @@ BEGIN
 END;
 $$;
 
+
 -- =========================
 -- TRIGGER FUNCTIONS
 -- =========================
@@ -245,6 +244,10 @@ AS $$
 DECLARE
     student_gender TEXT;
 BEGIN
+    -- The avatar column is defined as NOT NULL in the settings table.
+    -- This check for NULL might be redundant unless you plan to change the table definition.
+    -- However, it is good practice to keep it.
+    -- We also need to handle the case where the INSERT statement explicitly sets avatar to NULL.
     IF NEW.avatar IS NULL THEN
         SELECT gender INTO student_gender FROM students WHERE id = NEW.student_id;
 
@@ -258,6 +261,7 @@ BEGIN
     RETURN NEW;
 END;
 $$;
+
 
 -- Auto-subscribe Jamna Vidyapeeth students
 CREATE OR REPLACE FUNCTION handle_new_student_subscriptions()
@@ -322,6 +326,7 @@ BEGIN
 END;
 $$;
 
+
 -- =========================
 -- TRIGGERS
 -- =========================
@@ -339,6 +344,7 @@ CREATE TRIGGER on_student_insert_create_subscriptions
 AFTER INSERT ON students
 FOR EACH ROW
 EXECUTE FUNCTION handle_new_student_subscriptions();
+
 
 -- =========================
 -- RLS POLICIES
