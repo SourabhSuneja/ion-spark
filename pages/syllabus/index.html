@@ -479,19 +479,32 @@
          // Get subject icon based on subject name
          function getSubjectIcon(subject) {
             const icons = {
-               'english': 'fa-book',
-               'science': 'fa-flask',
-               'maths': 'fa-calculator',
-               'mathematics': 'fa-calculator',
-               'history': 'fa-landmark',
-               'geography': 'fa-globe',
-               'physics': 'fa-atom',
-               'chemistry': 'fa-vial',
-               'biology': 'fa-dna',
-               'computer': 'fa-laptop-code',
-               'hindi': 'fa-language',
-               'social': 'fa-users'
+                'english': 'fa-book',
+                'hindi': 'fa-language',
+                'maths': 'fa-calculator',
+                'applied maths': 'fa-calculator',
+                'science': 'fa-flask',
+                'social science': 'fa-users',
+                'evs': 'fa-leaf',
+                'sanskrit': 'fa-book-open',
+                'gk': 'fa-globe',
+                'computer': 'fa-laptop-code',
+                'data science': 'fa-database',
+                'informatics practices': 'fa-code',
+                'physical education': 'fa-running',
+                'accountancy': 'fa-file-invoice-dollar',
+                'business studies': 'fa-briefcase',
+                'economics': 'fa-chart-line',
+                'history': 'fa-landmark',
+                'geography': 'fa-globe',
+                'political science': 'fa-university',
+                'psychology': 'fa-brain',
+                'fine arts': 'fa-palette',
+                'physics': 'fa-atom',
+                'chemistry': 'fa-vial',
+                'biology': 'fa-dna'
             };
+
             
             const subjectLower = subject.toLowerCase();
             for (const [key, icon] of Object.entries(icons)) {
