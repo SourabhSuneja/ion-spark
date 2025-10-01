@@ -208,7 +208,7 @@ BEGIN
         s.address,
         s.city,
         s.access_token,
-        COALESCE(st.theme, 0),
+        COALESCE(st.theme, 0::SMALLINT),
         COALESCE(
             st.avatar,
             'avatarStyle=Circle&topType=ShortHairShortCurly&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Happy&eyebrowType=Default&mouthType=Smile&skinColor=Light'
