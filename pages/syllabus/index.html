@@ -544,93 +544,9 @@
          }
 
          // Mock fetchSyllabus function for demo (replace with your actual implementation)
-         async function fetchSyllabus(token) {
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Return expanded demo data
-            return [
-               {
-                  "class": 8,
-                  "exam": "Term-1",
-                  "subject": "English",
-                  "syllabus_text": `Reader
-ch-3 Growing up Paons
-ch-4 The Bear Story
-Poem-2 Tiger
-
-Grammar
-ch-5 Tenses and Their Uses
-Ch-8 Subject Verb Agreement
-Ch-9 Pronouns
-Ch-18 Synonyms and Antonyms
-Ch-21 Phrasal Verbs
-Notice writing, Paragraph Writing`
-               },
-               {
-                  "class": 8,
-                  "exam": "Term-1",
-                  "subject": "Science",
-                  "syllabus_text": `Chapter 3 Coal and Petroleum 
-Chapter 9 Friction
-Chapter 11 Force and Pressure
-Chapter 13 Sound
-
-Practicals:
-- Friction experiment
-- Sound propagation demonstration`
-               },
-               {
-                  "class": 8,
-                  "exam": "Term-1",
-                  "subject": "Mathematics",
-                  "syllabus_text": `Chapter 1 Rational Numbers
-Chapter 2 Linear Equations in One Variable
-Chapter 3 Understanding Quadrilaterals
-Chapter 5 Data Handling
-Chapter 6 Squares and Square Roots
-
-Important Topics:
-- Properties of rational numbers
-- Solving linear equations
-- Area and perimeter of quadrilaterals`
-               },
-               {
-                  "class": 8,
-                  "exam": "Term-1",
-                  "subject": "Social Science",
-                  "syllabus_text": `History:
-Chapter 1 How, When and Where
-Chapter 2 From Trade to Territory
-Chapter 3 Ruling the Countryside
-
-Geography:
-Chapter 1 Resources
-Chapter 2 Land, Soil, Water, Natural Vegetation
-
-Civics:
-Chapter 1 The Indian Constitution
-Chapter 2 Understanding Secularism`
-               },
-               {
-                  "class": 8,
-                  "exam": "Term-1",
-                  "subject": "Hindi",
-                  "syllabus_text": `पाठ-1 ध्वनि
-पाठ-2 लाख की चूड़ियाँ
-पाठ-3 बस की यात्रा
-
-व्याकरण:
-संज्ञा और उसके भेद
-सर्वनाम
-विशेषण
-क्रिया
-
-लेखन:
-अनुच्छेद लेखन
-पत्र लेखन`
-               }
-            ];
+         async function fetchSyllabus(grade, examName) {
+            const data = await invokeFunctionJVP('get_syllabus_data', {'p_class': grade, 'p_exam': examName};
+            return data;
          }
 
          // Initialize app
@@ -651,7 +567,7 @@ Chapter 2 Understanding Secularism`
                showLoading();
 
                // Fetch syllabus data
-               const syllabusData = await fetchSyllabus(token);
+               const syllabusData = await fetchSyllabus(grade, examName);
 
                // Hide loading
                hideLoading();
