@@ -11,7 +11,7 @@
       <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
       <!-- Supabase CRUD Functions -->
-      <script type="module" src="https://myjvp.in/commons/supabase-crud.js"></script>
+      <script type="module" src="https://sourabhsuneja.github.io/ion-spark/js/supabase-crud.js"></script>
       <style>
          :root {
          /* Colors - Dark Theme */
@@ -637,13 +637,14 @@ Chapter 2 Understanding Secularism`
          async function initApp() {
             try {
                // Get parameters from URL
-               const token = getUrlParameter('token');
-               const examName = getUrlParameter('exam') || 'Upcoming Exam';
+               const token = getUrlParameter('token') || null;
+               const examName = getUrlParameter('exam') || null;
+               const grade = getUrlParameter('grade') || null;
 
                // Validate token
-               if (!token || !isValidUUID(token)) {
-                  //showError('Invalid access token. Please try again with a valid access token.');
-                  //return;
+               if (!token || !isValidUUID(token) || !examName || !grade) {
+                  showError('Invalid parameters. Please try again with valid parameters.');
+                  return;
                }
 
                // Show loading
