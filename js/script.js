@@ -208,7 +208,13 @@ const UIComponents = {
          iframe.style.minWidth = `${minWidth}px`;
       }
 
-      iframe.src = `${src}?token=${encodeURIComponent(USER_DATA['access_token'])}&user_id=${encodeURIComponent(window.userId)}&grade=${encodeURIComponent(USER_DATA['grade'])}`;
+      const paramData = {
+         token: USER_DATA['access_token'],
+         user_id: window.userId,
+         grade: USER_DATA['grade']
+      };
+      
+      iframe.src = StringUtils.addUrlParams(src, paramData);
 
       iframe.addEventListener('load', function () {
          hideProcessingDialog();
@@ -619,8 +625,18 @@ const StringUtils = {
          .split(/\s+/)
          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
          .join(" ");
+   },
+
+   addUrlParams: (url, params) => {
+      const paramString = Object.entries(params)
+         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+         .join('&');
+
+      const separator = url.includes('?') ? '&' : '?';
+      return url + separator + paramString;
    }
 };
+
 
 // =============================================================================
 // APP MANAGEMENT
