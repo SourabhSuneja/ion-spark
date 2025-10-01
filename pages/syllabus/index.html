@@ -481,7 +481,7 @@
             const icons = {
                'english': 'fa-book',
                'science': 'fa-flask',
-               'math': 'fa-calculator',
+               'maths': 'fa-calculator',
                'mathematics': 'fa-calculator',
                'history': 'fa-landmark',
                'geography': 'fa-globe',
@@ -495,7 +495,7 @@
             
             const subjectLower = subject.toLowerCase();
             for (const [key, icon] of Object.entries(icons)) {
-               if (subjectLower.includes(key)) {
+               if (subjectLower === key) {
                   return icon;
                }
             }
