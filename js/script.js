@@ -208,7 +208,7 @@ const UIComponents = {
          iframe.style.minWidth = `${minWidth}px`;
       }
 
-      iframe.src = `${src}?token=${encodeURIComponent(USER_DATA['access_token'])}&user_id=${encodeURIComponent(window.userId)}`;
+      iframe.src = `${src}?token=${encodeURIComponent(USER_DATA['access_token'])}&user_id=${encodeURIComponent(window.userId)}&grade=${encodeURIComponent(USER_DATA['grade'])}`;
 
       iframe.addEventListener('load', function () {
          hideProcessingDialog();
