@@ -21,6 +21,7 @@ DROP FUNCTION IF EXISTS handle_new_student_subscriptions();
 DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS push_subscriptions CASCADE;
 DROP TABLE IF EXISTS settings CASCADE;
+DROP TABLE IF EXISTS subscriptions CASCADE;
 DROP TABLE IF EXISTS students CASCADE;
 DROP TABLE IF EXISTS teachers CASCADE;
 DROP TABLE IF EXISTS subject_resources CASCADE;
@@ -28,6 +29,19 @@ DROP TABLE IF EXISTS subject_resources CASCADE;
 -- =========================
 -- TABLE CREATION
 -- =========================
+
+-- Table to store dashboard card information for each subject
+CREATE TABLE subject_resources (
+    id            BIGSERIAL PRIMARY KEY,
+    subject       TEXT NOT NULL,
+    grade         INT, -- NULL = applies to all grades
+    title         TEXT NOT NULL,
+    icon          TEXT NOT NULL,
+    page_key      TEXT NOT NULL, -- Unique key for the page/feature
+    link          TEXT,          -- The URL for the iframe, can be NULL for internal pages
+    min_width     INT,
+    display_order SMALLINT DEFAULT 0 NOT NULL
+);
 
 -- Students table
 CREATE TABLE students (
@@ -47,17 +61,17 @@ CREATE TABLE students (
     created_at   TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table to store dashboard card information for each subject
-CREATE TABLE subject_resources (
-    id            BIGSERIAL PRIMARY KEY,
-    subject       TEXT NOT NULL,
-    grade         INT, -- NULL = applies to all grades
-    title         TEXT NOT NULL,
-    icon          TEXT NOT NULL,
-    page_key      TEXT NOT NULL, -- Unique key for the page/feature
-    link          TEXT,          -- The URL for the iframe, can be NULL for internal pages
-    min_width     INT,
-    display_order SMALLINT DEFAULT 0 NOT NULL
+-- Subscriptions table
+CREATE TABLE subscriptions (
+    id                  BIGSERIAL PRIMARY KEY,
+    student_id          UUID REFERENCES students(id) ON DELETE CASCADE,
+    grade               INT NOT NULL,
+    subject             TEXT NOT NULL,
+    subscription_plan   TEXT NOT NULL DEFAULT 'Free',
+    subscription_ends_at TIMESTAMP NOT NULL DEFAULT '2026-03-31 23:59:59',
+
+    -- Prevent duplicates: one subscription per student per grade and subject
+    UNIQUE (student_id, grade, subject)
 );
 
 -- Teachers table
