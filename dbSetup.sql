@@ -1,3 +1,30 @@
+-- =========================
+-- DROP TRIGGERS
+-- =========================
+DROP TRIGGER IF EXISTS after_student_insert ON students;
+DROP TRIGGER IF EXISTS trg_set_default_avatar ON settings;
+DROP TRIGGER IF EXISTS on_student_insert_create_subscriptions ON students;
+
+-- =========================
+-- DROP FUNCTIONS
+-- =========================
+DROP FUNCTION IF EXISTS get_student_dashboard_data();
+DROP FUNCTION IF EXISTS get_student_by_access_token(TEXT);
+DROP FUNCTION IF EXISTS get_student_profile(UUID);
+DROP FUNCTION IF EXISTS create_settings_for_student();
+DROP FUNCTION IF EXISTS set_default_avatar();
+DROP FUNCTION IF EXISTS handle_new_student_subscriptions();
+
+-- =========================
+-- DROP TABLES (child → parent)
+-- =========================
+DROP TABLE IF EXISTS notifications CASCADE;
+DROP TABLE IF EXISTS push_subscriptions CASCADE;
+DROP TABLE IF EXISTS settings CASCADE;
+DROP TABLE IF EXISTS students CASCADE;
+DROP TABLE IF EXISTS teachers CASCADE;
+DROP TABLE IF EXISTS subject_resources CASCADE;
+
 -- Table creation starts
 -- Table to store dashboard card information for each subject
 CREATE TABLE subject_resources ( id BIGSERIAL PRIMARY KEY, subject TEXT NOT NULL, -- The grade this resource applies to. If NULL, it applies to all grades.
