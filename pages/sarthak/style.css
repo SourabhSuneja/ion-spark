@@ -378,7 +378,7 @@ body {
 
          h2 {
             font-size: var(--font-xl);
-            color: var(--accent-primary);
+            color: var(--text-primary);
             margin-bottom: var(--spacing-lg);
             font-weight: 700;
          }
