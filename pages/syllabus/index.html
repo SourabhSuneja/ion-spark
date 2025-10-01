@@ -265,38 +265,34 @@
          background-color: var(--accent-primary);
          color: var(--accent-button-text);
          }
-
          /* Syllabus specific styles */
          #results-container {
          width: 100%;
          display: none;
          }
-
          .exam-header {
          text-align: center;
-         margin-bottom: var(--spacing-xxxl);
+         margin-bottom: var(--spacing-xl);
          padding: var(--spacing-xl);
          /*background: var(--bg-gradient-dark);*/
          border-radius: var(--radius-lg);
          /*box-shadow: 0 4px 15px var(--shadow-light);*/
          }
-
          .exam-title {
-         font-size: var(--font-xxl);
+         font-size: var(--font-xl);
          color: var(--text-primary);
          margin-bottom: var(--spacing-sm);
          display: flex;
          align-items: center;
          justify-content: center;
          gap: var(--spacing-md);
+         text-transform: uppercase;
          }
-
          .exam-subtitle {
          font-size: var(--font-lg);
          color: var(--text-secondary);
          font-weight: bold;
          }
-
          .subject-card {
          background-color: var(--bg-secondary);
          border-radius: var(--radius-lg);
@@ -306,12 +302,10 @@
          transition: transform var(--transition-base), box-shadow var(--transition-base);
          border-left: 4px solid var(--accent-primary);
          }
-
          .subject-card:hover {
-         transform: translateY(-4px);
-         box-shadow: 0 8px 20px var(--shadow-medium);
+         /*transform: translateY(-4px);*/
+         /*box-shadow: 0 8px 20px var(--shadow-medium);*/
          }
-
          .subject-header {
          display: flex;
          align-items: center;
@@ -320,30 +314,27 @@
          padding-bottom: var(--spacing-md);
          border-bottom: 2px solid var(--bg-tertiary);
          }
-
          .subject-icon {
          font-size: var(--font-icon-md);
          color: var(--accent-primary);
          min-width: 40px;
          text-align: center;
          }
-
          .subject-name {
-         font-size: var(--font-xl);
+         font-size: var(--font-lg);
          font-weight: 700;
          color: var(--text-primary);
          flex: 1;
          }
-
          .class-badge {
          background-color: var(--accent-primary);
          color: var(--accent-button-text);
          padding: var(--spacing-xs) var(--spacing-md);
-         border-radius: var(--radius-md);
+         border-radius: var(--radius-sm);
          font-size: var(--font-sm);
          font-weight: 600;
+         /*display: none;*/
          }
-
          .syllabus-content {
          color: var(--text-secondary);
          font-size: var(--font-base);
@@ -353,19 +344,19 @@
          padding: var(--spacing-lg);
          border-radius: var(--radius-md);
          }
-
          .no-data {
          text-align: center;
          padding: var(--spacing-xxxl);
          color: var(--text-tertiary);
          }
-
          .no-data i {
          font-size: var(--font-icon-xl);
          margin-bottom: var(--spacing-lg);
          color: var(--text-tertiary);
          }
-
+         #loading-modal .fa-spinner {
+         color: var(--accent-primary); 
+         }
          @media (max-width: 768px) {
          h1 {
          font-size: 2rem;
@@ -381,9 +372,12 @@
          padding: var(--spacing-xl) var(--spacing-md);
          }
          .exam-title {
-         font-size: var(--font-xl);
+         font-size: var(--font-lg);
          flex-direction: column;
          gap: var(--spacing-sm);
+         }
+         .exam-subtitle {
+         font-size: var(--font-md);
          }
          .subject-card {
          padding: var(--spacing-lg);
@@ -392,7 +386,7 @@
          flex-wrap: wrap;
          }
          .subject-name {
-         font-size: var(--font-lg);
+         font-size: var(--font-md);
          }
          }
       </style>
@@ -448,35 +442,35 @@
             document.getElementById('error-modal').style.display = 'none';
             document.getElementById('loading-modal').style.display = 'none';
          }
-
+         
          function showError(message) {
             document.getElementById('error-message').textContent = message;
             document.getElementById('error-modal').style.display = 'flex';
             document.getElementById('spinner').style.display = 'none';
             document.getElementById('loading-modal').style.display = 'none';
          }
-
+         
          function showLoading() {
             document.getElementById('loading-modal').style.display = 'flex';
             document.getElementById('spinner').style.display = 'none';
          }
-
+         
          function hideLoading() {
             document.getElementById('loading-modal').style.display = 'none';
          }
-
+         
          // Get URL parameters
          function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
          }
-
+         
          // Validate UUID format
          function isValidUUID(uuid) {
             const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
             return uuidRegex.test(uuid);
          }
-
+         
          // Get subject icon based on subject name
          function getSubjectIcon(subject) {
             const icons = {
@@ -505,7 +499,7 @@
                 'chemistry': 'fa-vial',
                 'biology': 'fa-dna'
             };
-
+         
             
             const subjectLower = subject.toLowerCase();
             for (const [key, icon] of Object.entries(icons)) {
@@ -515,7 +509,7 @@
             }
             return 'fa-book-open';
          }
-
+         
          // Render syllabus data
          function renderSyllabus(syllabusData, examName) {
             const container = document.getElementById('syllabus-content');
@@ -530,7 +524,7 @@
                `;
                return;
             }
-
+         
             let html = `
                <div class="exam-header">
                   <h1 class="exam-title">
@@ -539,7 +533,7 @@
                   <p class="exam-subtitle">Class ${syllabusData[0].class}</p>
                </div>
             `;
-
+         
             syllabusData.forEach(item => {
                const icon = getSubjectIcon(item.subject);
                html += `
@@ -553,17 +547,17 @@
                   </div>
                `;
             });
-
+         
             container.innerHTML = html;
             document.getElementById('results-container').style.display = 'block';
          }
-
-         // Mock fetchSyllabus function for demo (replace with your actual implementation)
+         
+         // Fetch syllabus from My JVP Supabase backend
          async function fetchSyllabus(grade, examName) {
             const data = await invokeFunctionJVP('get_syllabus_data', {'p_class': grade, 'p_exam': examName});
             return data;
          }
-
+         
          // Initialize app
          async function initApp() {
             try {
@@ -571,33 +565,33 @@
                const token = getUrlParameter('token') || null;
                const examName = getUrlParameter('exam') || null;
                const grade = getUrlParameter('grade') || null;
-
+         
                // Validate token
                if (!token || !isValidUUID(token) || !examName || !grade) {
                   showError('Invalid parameters. Please try again with valid parameters.');
                   return;
                }
-
+         
                // Show loading
                showLoading();
-
+         
                // Fetch syllabus data
                const syllabusData = await fetchSyllabus(grade, examName);
-
+         
                // Hide loading
                hideLoading();
-
+         
                // Render syllabus
                renderSyllabus(syllabusData, examName);
-
+         
             } catch (error) {
                console.error('Error loading syllabus:', error);
                showError('Failed to load syllabus. Please try again later.');
             }
          }
-
-         // Start app when DOM is ready
-         document.addEventListener('DOMContentLoaded', initApp);
+         
+         // Start app when window loads
+         window.onload = initApp;
       </script>
    </body>
 </html>
