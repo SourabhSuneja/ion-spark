@@ -442,19 +442,18 @@ body {
 
 
          /* Responsive Design */
-         @media (max-width: 600px) {
+         @media (max-width: 768px) {
             .content {
                margin: 0;
                padding: var(--spacing-xl);
             }
 
-            h1 {
-               font-size: var(--font-xl);
-            }
-
-            h2 {
-               font-size: var(--font-lg);
-            }
+         h1, h2 {
+         font-size: var(--font-md);
+         }
+         p {
+         font-size: var(--font-base);
+         }
 
             .get-started-btn {
                font-size: var(--font-base);
