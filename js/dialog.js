@@ -1,4 +1,5 @@
 const loadingPhrases = [
+    // Original Phrases
     "Gearing up the magic...",
     "Setting things in motion...",
     "Almost there, hang tight!",
@@ -27,14 +28,92 @@ const loadingPhrases = [
     "Brewing ideas into reality...",
     "Stretching the possibilities...",
     "Tuning the final notes...",
-    "Almost unwrapping the surprise..."
+    "Almost unwrapping the surprise...",
+    "Calibrating the doodads...",
+    "Assembling the pixels...",
+    "Warming up the tubes...",
+    "Reticulating splines...",
+    "Herding digital cats...",
+    "Engaging the flux capacitor...",
+    "Buffering the good stuff...",
+    "Summoning the data spirits...",
+    "Shuffling the digital deck...",
+    "Finding the missing semicolon...",
+    "Greasing the cogs of the internet...",
+    "Teaching the hamsters to run faster...",
+    "Connecting the dots... literally.",
+    "Deciphering ancient code...",
+    "Getting the bits in a row...",
+    "Spinning up the hamster wheel...",
+    "Navigating the digital cosmos...",
+    "Distilling pure awesome...",
+    "Preparing for launch...",
+    "Sorting the ones and zeros...",
+    "Untangling the interwebs...",
+    "Charging the content cannons...",
+    "Asking the server nicely...",
+    "Waking up the gnomes...",
+    "Channeling the digital ether...",
+    "Combing the data streams...",
+    "Checking for digital dust bunnies...",
+    "Tuning the content frequency...",
+    "Making sure it's pixel-perfect...",
+    "Orchestrating the bytes...",
+    "Finalizing the awesomeness...",
+    "Consulting the digital oracle...",
+    "Knitting the code together...",
+    "The bits are flowing...",
+    "Cranking up the bandwidth...",
+    "Building your digital playground...",
+    "Unleashing the kraken... of content.",
+    "Compiling the fun parts...",
+    "Waiting for the digital tide...",
+    "Harnessing cosmic rays...",
+    "Letting the algorithms marinate...",
+    "Polishing the interface...",
+    "Please wait, magic is happening...",
+    "Booting up the brilliance...",
+    "Making things shiny for you...",
+    "Just a few more computations...",
+    "Fetching your digital destiny...",
+    "Our electrons are working hard!",
+    "Don't blink or you'll miss it...",
+    "Initiating awesome sequence..."
 ];
 
+
 // Function to select a random phrase
-function getRandomLoadingPhrase() {
-    const randomIndex = Math.floor(Math.random() * loadingPhrases.length);
-    return loadingPhrases[randomIndex];
-}
+const getRandomLoadingPhrase = (() => {
+    // This array will hold the shuffled phrases we can pick from.
+    let shuffledPhrases = [];
+
+    // A helper function to perform the shuffle and fill the "deck".
+    const shuffleAndFill = () => {
+        // Create a copy to avoid modifying the original array.
+        const phrasesCopy = [...loadingPhrases];
+
+        // Shuffle the copy using the Fisher-Yates algorithm.
+        for (let i = phrasesCopy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [phrasesCopy[i], phrasesCopy[j]] = [phrasesCopy[j], phrasesCopy[i]];
+        }
+        shuffledPhrases = phrasesCopy;
+    };
+
+    // Perform the initial shuffle immediately when this code is first run.
+    shuffleAndFill();
+
+    // This is the actual function that will be returned and used.
+    return () => {
+        // If the deck runs out, shuffle it again for the next cycle.
+        if (shuffledPhrases.length === 0) {
+            shuffleAndFill();
+        }
+        // Return the last phrase from the shuffled deck and remove it.
+        return shuffledPhrases.pop();
+    };
+})();
+
 
 
     // Attach showDialog function to the global window object
