@@ -426,12 +426,12 @@
 async function initAvatar() {
     // Show loading
     showProcessingDialog();
-    // Fetch the avatar string for the user
-    const currentAvatar = await selectData('settings', true, 'avatar', ['student_id'], [userID]);
+    // Fetch the avatar string for the user from the URL parameters
+    const currentAvatarString = await getUrlParameter('avatar') || '';
 
-    if (currentAvatar) {
+    if (currentAvatarString) {
         // Build full URL and set avatar image preview
-        const currentAvatarString = currentAvatar.avatar;
+
         const currentAvatarSrc = `${baseUrl}?${currentAvatarString}`;
         avatar.src = currentAvatarSrc;
 
