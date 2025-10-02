@@ -72,8 +72,6 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
-            background: var(--accent-primary);
-            color: var(--accent-button-text);
         }
 
         .button-no {
@@ -87,8 +85,8 @@
         }
 
         .button-ok {
-            background-color: #2196F3;
-            color: #fff;
+           background: var(--accent-primary);
+            color: var(--accent-button-text);
         }
 
         .dialog-button:hover {
