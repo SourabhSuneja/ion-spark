@@ -559,12 +559,12 @@
          }
          
          // Initialize app
-         async function initApp() {
+         async function initializePage(userData) {
             try {
-               // Get parameters from URL
-               const token = getUrlParameter('token') || null;
+               // Get parameters from userData
+               const token = userData['access_token'] || null;
                const examName = getUrlParameter('exam') || null;
-               const grade = getUrlParameter('grade') || null;
+               const grade = userData['grade'] || null;
          
                // Validate token
                if (!token || !isValidUUID(token) || !examName || !grade) {
@@ -589,9 +589,6 @@
                showError('Failed to load syllabus. Please try again later.');
             }
          }
-         
-         // Start app when window loads
-         window.onload = initApp;
       </script>
    </body>
 </html>
