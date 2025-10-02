@@ -211,8 +211,7 @@ const UIComponents = {
       const paramData = {
          token: USER_DATA['access_token'],
          user_id: window.userId,
-         grade: USER_DATA['grade'],
-         v: Date.now()
+         grade: USER_DATA['grade']
       };
       
       iframe.src = StringUtils.addUrlParams(src, paramData);
@@ -236,6 +235,13 @@ const UIComponents = {
          } catch (error) {
             console.warn('Cannot sync theme to iframe:', error);
          }
+
+         // Run special initialization function if exists in the loaded iframe page
+         if (typeof this.contentWindow.initializePage === 'function') {
+              // If it exists, call it
+              this.contentWindow.initializePage();          
+         }
+
       });
 
       return iframe;
@@ -748,3 +754,4 @@ window.addEventListener("popstate", (event) => {
       PageManager.loadPage(statePage);
    }
 });
+
