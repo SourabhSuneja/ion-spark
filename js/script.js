@@ -22,6 +22,9 @@ const USER_DATA = {
 // Variable to hold all dashboard data fetched from the backend.
 let DASHBOARD_DATA = {};
 
+// Variable to hold all subscription data fetched from the backend.
+let SUBSCRIPTION_DATA = [];
+
 // Array to hold all unique page keys for each subscribed subject
 let PAGELIST = {};
 
@@ -76,7 +79,19 @@ const BackendManager = {
          console.error("Error fetching dashboard data:", err);
          return {}; // Return empty object on error
       }
+   },
+
+   // Function to get all subscriptions for the logged-in user
+   getSubscriptionData: async () => {
+      try {
+         const data = await selectData('subscriptions', false, "subject, subscription_plan, subscription_ends_at", ['student_id'], [window.userId], 'id');
+         return data || []; // Return data or an empty array
+      } catch (err) {
+         console.error("Error fetching dashboard data:", err);
+         return []; // Return empty array on error
+      }
    }
+
 };
 
 // =============================================================================
@@ -654,6 +669,8 @@ const AppManager = {
       await UIComponents.createUserProfile();
       DASHBOARD_DATA = await BackendManager.getDashboardData(); // Fetch and store dashboard data
       PAGELIST = extractPages(DASHBOARD_DATA);
+      SUBSCRIPTION_DATA = await BackendManager.getSubscriptionData(); // Fetch and store subscription data
+      USER_DATA['subscriptions'] = SUBSCRIPTION_DATA;
       MenuManager.initialize();
    }
 };
