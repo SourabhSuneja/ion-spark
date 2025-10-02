@@ -211,7 +211,8 @@ const UIComponents = {
       const paramData = {
          token: USER_DATA['access_token'],
          user_id: window.userId,
-         grade: USER_DATA['grade']
+         grade: USER_DATA['grade'],
+         avatar: USER_DATA['avatar']
       };
       
       iframe.src = StringUtils.addUrlParams(src, paramData);
