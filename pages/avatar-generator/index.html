@@ -423,11 +423,11 @@
          select.addEventListener('change', updateAvatar);
          });
 
-async function initAvatar() {
+async function initializePage(userData) {
     // Show loading
     showProcessingDialog();
-    // Fetch the avatar string for the user from the URL parameters
-    const currentAvatarString = await getUrlParameter('avatar') || '';
+    // Fetch the avatar string from the user data
+    const currentAvatarString = userData['avatar'] || '';
 
     if (currentAvatarString) {
         // Build full URL and set avatar image preview
@@ -453,10 +453,6 @@ async function initAvatar() {
     // Hide loading
     hideProcessingDialog();
 }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    initAvatar();
-  });
       </script>
    </body>
 </html>
