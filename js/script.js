@@ -211,8 +211,7 @@ const UIComponents = {
       const paramData = {
          token: USER_DATA['access_token'],
          user_id: window.userId,
-         grade: USER_DATA['grade'],
-         avatar: USER_DATA['avatar']
+         grade: USER_DATA['grade']
       };
       
       iframe.src = StringUtils.addUrlParams(src, paramData);
@@ -239,8 +238,8 @@ const UIComponents = {
 
          // Run special initialization function if exists in the loaded iframe page
          if (typeof this.contentWindow.initializePage === 'function') {
-              // If it exists, call it
-              this.contentWindow.initializePage();          
+              // If it exists, call it with USER_DATA passed
+              this.contentWindow.initializePage(USER_DATA);
          }
 
       });
