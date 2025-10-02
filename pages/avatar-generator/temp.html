@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="Create your personalized avatar and express yourself in fun and unique ways. Join us for an exciting avatar-making experience tailored just for you!" />
-      <title>Avatar Creator</title>
+      <title>Avatar Generator</title>
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -423,7 +423,7 @@
          select.addEventListener('change', updateAvatar);
          });
 
-window.onload = async function() {
+async function initAvatar() {
     // Show loading
     showProcessingDialog();
     // Fetch the avatar string for the user
@@ -451,7 +451,11 @@ window.onload = async function() {
     document.getElementById('container').style.display = 'block';
     // Hide loading
     hideProcessingDialog();
-};
+}
+
+window.addEventListener("load", initAvatar);
+window.addEventListener("pageshow", initAvatar);
       </script>
    </body>
 </html>
+
