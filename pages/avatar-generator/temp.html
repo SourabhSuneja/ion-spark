@@ -453,8 +453,16 @@ async function initAvatar() {
     hideProcessingDialog();
 }
 
+
+// Run once when all assets are ready
 window.addEventListener("load", initAvatar);
-window.addEventListener("pageshow", initAvatar);
+
+// Run again if page is restored from cache or re-shown
+window.addEventListener("pageshow", function (event) {
+  if (event.persisted) {
+    initAvatar();
+  }
+});
       </script>
    </body>
 </html>
