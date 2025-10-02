@@ -366,7 +366,7 @@
         .subscription-plan {
             font-size: var(--font-sm);
             color: var(--accent-primary);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .subscription-expiry {
@@ -558,41 +558,9 @@
     </div>
 
     <script>
-        // Sample data - Replace these with your actual global objects
-        const student = {
-            avatar: 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight2&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Happy&eyebrowType=Default&mouthType=Smile&skinColor=Light',
-            name: 'Angel Pareek',
-            grade: 6,
-            section: 'A2',
-            gender: 'F',
-            school: 'Jamna Vidyapeeth',
-            house: 'Emerald',
-            dob: null,
-            father_name: null,
-            phone: null,
-            address: null
-        };
-
-        const subscriptions = [
-            {
-                'subject': 'General',
-                'subscription_plan': 'Free',
-                'subscription_ends_at': '2026-03-31 23:59:59'
-            },
-            {
-                'subject': 'English',
-                'subscription_plan': 'Free',
-                'subscription_ends_at': '2026-03-31 23:59:59'
-            },
-            {
-                'subject': 'Mathematics',
-                'subscription_plan': 'Premium',
-                'subscription_ends_at': '2025-12-31 23:59:59'
-            }
-        ];
-
-        function initializePage(userData) {
-            document.getElementById('avatar-preview').src = student.avatar;
+        function initializePage(student) {
+            const baseAvatarUrl = "https://avataaars.io/";
+            document.getElementById('avatar-preview').src = `${baseAvatarUrl}?${student.avatar}`;
             document.getElementById('student-name').textContent = student.name;
             document.getElementById('student-grade').textContent = `Class: ${student.grade}-${student.section}`;
             
@@ -616,10 +584,10 @@
             themeCheckbox.checked = isLightTheme;
             document.getElementById('theme-text').textContent = isLightTheme ? 'Light' : 'Dark';
 
-            renderSubscriptions();
+            renderSubscriptions(student['subscriptions']);
         }
 
-        function renderSubscriptions() {
+        function renderSubscriptions(subscriptions) {
             const container = document.getElementById('subscriptions-container');
             container.innerHTML = '';
 
@@ -682,7 +650,7 @@
                 father_name: document.getElementById('father-name').value || null,
                 phone: document.getElementById('phone').value || null,
                 address: document.getElementById('address').value || null,
-                theme: document.body.classList.contains('light-theme') ? 'light' : 'dark'
+                theme: document.body.classList.contains('light-theme') ? 1 : 0
             };
 
             console.log('Updated student data:', updatedData);
