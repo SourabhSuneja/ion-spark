@@ -382,8 +382,17 @@ function extractPages(obj) {
 // =============================================================================
 
 const PageManager = {
+
+   // This history will track manual page loads for the back button
+   manualHistory: [], 
+
    loadPage: (page) => {
       showProcessingDialog();
+
+      // Clear the manual history when navigating to a non-manual page
+      if (page === 'home') {
+          PageManager.manualHistory = [];
+      }
 
       if ( Object.keys(PAGELIST).length === 0 || (!(PAGELIST[currentSubject].includes(page)) && page !== 'home') ) {
          if (page === 'word-of-the-day') {
@@ -440,6 +449,39 @@ const PageManager = {
 
       const iframe = UIComponents.createIframe(cardData.link, page, cardData.min_width);
       elements.content.appendChild(iframe);
+   },
+
+   // Function to load custom URLs into an iframe
+   loadManualPage: (url, title, pageKey, minWidth) => {
+      showProcessingDialog();
+      APP_CONFIG.currentPage = pageKey;
+
+      const elements = {
+         content: DOMUtils.getElementById('content'),
+         screenName: DOMUtils.getElementById('screen-name'),
+         studentProfile: DOMUtils.getElementById('student-profile'),
+         menuBtn: DOMUtils.getElementById('menu-btn'),
+         backBtn: DOMUtils.getElementById('back-btn'),
+         subjectSwitcher: DOMUtils.getElementById('subject-switcher')
+      };
+
+      // Set up the page layout like other external pages
+      elements.content.innerHTML = '';
+      DOMUtils.hide(elements.subjectSwitcher);
+      elements.content.classList.add('externalPage');
+      elements.screenName.innerText = `${title} `;
+      DOMUtils.hide(elements.studentProfile);
+      DOMUtils.hide(elements.menuBtn);
+      DOMUtils.show(elements.backBtn);
+
+      // Create and append the iframe
+      const iframe = UIComponents.createIframe(url, pageKey, minWidth);
+      elements.content.appendChild(iframe);
+      
+      // Push state to browser history for back button functionality
+      const state = { page: pageKey, manual: true, url: url, title: title };
+      PageManager.manualHistory.push(state); // Keep track internally
+      window.history.pushState(state, title, `#${pageKey}`);
    },
 
    loadHomePage: (elements) => {
@@ -753,22 +795,37 @@ window.history.replaceState({
 const originalLoadPage = PageManager.loadPage;
 PageManager.loadPage = (page) => {
    originalLoadPage(page);
-   if (Object.keys(PAGELIST).length === 0 || !(PAGELIST[currentSubject].includes(page))) {
+    // Don't push history for pages that don't exist in PAGELIST
+   if (Object.keys(PAGELIST).length === 0 || !(PAGELIST[currentSubject] && PAGELIST[currentSubject].includes(page))) {
       return;
    }
    if (window.history.state?.page !== page) {
+      // Use a distinct state for dashboard pages
       window.history.pushState({
-         page
+         page: page,
+         manual: false
       }, "");
    }
 };
 
+// MODIFIED: Update the popstate listener
 window.addEventListener("popstate", (event) => {
-   const statePage = event.state?.page;
-   if (!statePage || statePage === "home") {
+   const state = event.state;
+   
+   if (!state || state.page === "home") {
       PageManager.loadPage("home");
+   } else if (state.manual) {
+      // If the page was manually loaded, use the state's info to reload it
+      PageManager.manualHistory.pop(); // Remove current state as we're going back
+      const previousState = PageManager.manualHistory[PageManager.manualHistory.length - 1];
+      if (previousState) {
+          PageManager.loadManualPage(previousState.url, previousState.title, previousState.page);
+      } else {
+          // If no manual pages are left in history, go home
+          PageManager.loadPage("home");
+      }
    } else {
-      PageManager.loadPage(statePage);
+      // Otherwise, it's a regular dashboard page
+      PageManager.loadPage(state.page);
    }
 });
-
