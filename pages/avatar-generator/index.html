@@ -8,9 +8,6 @@
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="https://sourabhsuneja.github.io/ion-spark/css/dialog.css">
-      <script src="https://sourabhsuneja.github.io/ion-spark/js/dialog.js"></script>
-      <script type="module" src="https://sourabhsuneja.github.io/ion-spark/js/supabase-crud.js"></script>
       <style>
          :root {
          /* Colors - Dark Theme */
@@ -350,17 +347,7 @@
             <button id="generate-avatar">Save My Avatar</button>
          </div>
       </div>
-      <!-- Dialog Overlay Starts -->
-      <div id="dialog-overlay" class="dialog-overlay">
-         <div class="dialog-box" id="dialog-box">
-            <div class="dialog-header" id="dialog-header">Title</div>
-            <div class="dialog-message" id="dialog-message">Message goes here</div>
-            <div class="dialog-buttons" id="dialog-buttons">
-               <!-- Buttons will be added dynamically -->
-            </div>
-         </div>
-      </div>
-      <!-- Dialog Overlay Ends -->
+
       <script>
          // Get URL parameters
          function getUrlParameter(name) {
@@ -368,7 +355,6 @@
             return urlParams.get(name);
          }
 
-         const userID = getUrlParameter('user_id') || '';
          const baseUrl = "https://avataaars.io/";
          
          // Avatar generation functionality
@@ -395,17 +381,18 @@
          window.scrollTo({ top: 0, behavior: 'smooth' });
          // sync new avatar to user settings on Supabase
          if(sync === true) {
-              showProcessingDialog();
-              const updated = await updateRow('settings', ['student_id'], [userID], ['avatar'], [queryString]);
+              window.parent.showProcessingDialog();
+              const updated = await window.parent.updateRow('settings', ['student_id'], [window.parent.userId], ['avatar'], [queryString]);
                if(updated) {
-                   await showDialog({
+                   await window.parent.showDialog({
                    title: 'Success',
                    message: 'Avatar updated!',
                    type: 'alert'
                    });
-                   window.top.location.href = 'https://sourabhsuneja.github.io/ion-spark/';
+                   // Load home screen
+                   window.parent.init();
                } else {
-                   showDialog({
+                   await window.parent.showDialog({
                    title: 'Error',
                    message: 'Error updating avatar!',
                    type: 'alert'
@@ -425,7 +412,7 @@
 
 async function initializePage(userData) {
     // Show loading
-    showProcessingDialog();
+    window.parent.showProcessingDialog();
     // Fetch the avatar string from the user data
     const currentAvatarString = userData['avatar'] || '';
 
@@ -451,7 +438,7 @@ async function initializePage(userData) {
     document.getElementById('container').style.display = 'block';
     updateAvatar();
     // Hide loading
-    hideProcessingDialog();
+    window.parent.hideProcessingDialog();
 }
       </script>
    </body>
