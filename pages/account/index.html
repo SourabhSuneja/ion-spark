@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account</title>
+    <title>Account Settings</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -454,7 +454,7 @@
     </style>
 </head>
 <body>
-    <button class="theme-toggle noselect" onclick="toggleTheme()">
+    <button class="theme-toggle noselect">
         <i class="fas fa-moon"></i>
     </button>
 
@@ -617,8 +617,7 @@
             });
         }
 
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
+        function toggleIframeTheme() {
             const icon = document.querySelector('.theme-toggle i');
             const isLight = document.body.classList.contains('light-theme');
             icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
@@ -637,6 +636,9 @@
             } else {
                 document.body.classList.remove('light-theme');
             }
+
+            // propagate this change live to the parent app page as well
+            window.parent.toggleTheme();
             
             document.getElementById('theme-text').textContent = isLight ? 'Light' : 'Dark';
             
@@ -644,40 +646,39 @@
             icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-        function saveChanges() {
-            const updatedData = {
-                dob: document.getElementById('dob').value || null,
-                father_name: document.getElementById('father-name').value || null,
-                phone: document.getElementById('phone').value || null,
-                address: document.getElementById('address').value || null,
-                theme: document.body.classList.contains('light-theme') ? 1 : 0
-            };
+        async function saveChanges() {
 
-            console.log('Updated student data:', updatedData);
-            
-            alert('Changes saved successfully! (This is a demo - implement your server call here)');
-            
-            // TODO: Implement your server API call here
-            // Example:
-            // fetch('/api/update-student', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify(updatedData)
-            // });
+            const dob = document.getElementById('dob').value || null;
+            const father_name = document.getElementById('father-name').value.trim() || null;
+            const phone = document.getElementById('phone').value.trim() || null;
+             const address = document.getElementById('address').value.trim() || null;
+
+             // Update student details on server
+              window.parent.showProcessingDialog();
+              const updated = await window.parent.updateRow('students', ['id'], [window.parent.userId], ['dob', 'father_name', 'phone', 'address'], [dob, father_name, phone, address]);
+               if(updated) {
+                   await window.parent.showDialog({
+                   title: 'Success',
+                   message: 'Details updated!',
+                   type: 'alert'
+                   });
+               } else {
+                   await window.parent.showDialog({
+                   title: 'Error',
+                   message: 'Error updating details!',
+                   type: 'alert'
+                   });
+               }
+               window.parent.hideProcessingDialog();
+
         }
 
         function navigateToAvatarGenerator() {
-            console.log('Navigate to Avatar Generator page');
-            alert('Redirecting to Avatar Generator... (Implement navigation here)');
-            // TODO: Implement navigation to avatar generator page
-            // window.location.href = '/avatar-generator';
+            window.parent.loadManualPage('./pages/avatar-generator/index.html', 'My Avatar', 'avatar-generator');
         }
 
         function manageSubscriptions() {
-            console.log('Navigate to Manage Subscriptions page');
-            alert('Redirecting to Manage Subscriptions... (Implement navigation here)');
-            // TODO: Implement navigation to subscriptions page
-            // window.location.href = '/manage-subscriptions';
+            window.parent.loadManualPage('./pages/coming-soon/index.html', 'Subscriptions', 'subscriptions');
         }
 
     </script>
