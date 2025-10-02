@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="Create your personalized avatar and express yourself in fun and unique ways. Join us for an exciting avatar-making experience tailored just for you!" />
-      <title>Avatar Creator</title>
+      <title>Avatar Generator</title>
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -136,6 +136,7 @@
          color: var(--text-primary);
          box-shadow: 0 8px 30px var(--shadow-medium);
          text-align: center;
+         display: none;
          }
          h1 {
          font-size: var(--font-xl);
@@ -259,10 +260,7 @@
       </style>
    </head>
    <body>
-      <button class="theme-toggle noselect" id="themeToggle" aria-label="Toggle theme">
-      <i class="fas fa-moon" id="themeIcon"></i>
-      </button>
-      <div class="container">
+      <div id="container" class="container">
          <h1 class="noselect">Create Your Avatar</h1>
          <div id="avatar-preview">
             <img id="avatar" src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortCurly&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Happy&eyebrowType=Default&mouthType=Smile&skinColor=Light" alt="Avatar" width="100%" height="100%">
@@ -369,6 +367,9 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
          }
+
+         const userID = getUrlParameter('user_id') || '';
+         const baseUrl = "https://avataaars.io/";
          
          // Avatar generation functionality
          const avatar = document.getElementById('avatar');
@@ -386,7 +387,6 @@
          };
          
          async function updateAvatar(sync=null) {
-         const baseUrl = "https://avataaars.io/";
          const queryString = `avatarStyle=Circle&topType=${selects.topType.value}&accessoriesType=${selects.accessoriesType.value}&hairColor=${selects.hairColor.value}&facialHairType=${selects.facialHairType.value}&clotheType=${selects.clotheType.value}&eyeType=${selects.eyeType.value}&eyebrowType=Default&mouthType=${selects.mouthType.value}&skinColor=${selects.skinColor.value}`;
          
          const url = `${baseUrl}?${queryString}`;
@@ -396,7 +396,6 @@
          // sync new avatar to user settings on Supabase
          if(sync === true) {
               showProcessingDialog();
-              const userID = getUrlParameter('user_id') || '';
               const updated = await updateRow('settings', ['student_id'], [userID], ['avatar'], [queryString]);
                if(updated) {
                    await showDialog({
@@ -423,6 +422,42 @@
          Object.values(selects).forEach(select => {
          select.addEventListener('change', updateAvatar);
          });
+
+async function initAvatar() {
+    // Show loading
+    showProcessingDialog();
+    // Fetch the avatar string for the user from the URL parameters
+    const currentAvatarString = await getUrlParameter('avatar') || '';
+
+    if (currentAvatarString) {
+        // Build full URL and set avatar image preview
+
+        const currentAvatarSrc = `${baseUrl}?${currentAvatarString}`;
+        avatar.src = currentAvatarSrc;
+
+        // Parse query string into key-value pairs
+        const params = new URLSearchParams(currentAvatarString);
+
+        // Loop through each select and set its value
+        Object.entries(selects).forEach(([key, select]) => {
+            const value = params.get(key);
+            if (value) {
+                select.value = value;
+            }
+        });
+    }
+
+    // Finally, reveal the container after avatar + selects are ready
+    document.getElementById('container').style.display = 'block';
+    updateAvatar();
+    // Hide loading
+    hideProcessingDialog();
+}
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initAvatar();
+  });
       </script>
    </body>
 </html>
+
