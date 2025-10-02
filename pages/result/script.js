@@ -278,19 +278,14 @@
                        ) || [];
          }
          
-         window.addEventListener("load", function () {
-         // Helper to get URL parameters
-         function getQueryParam(param) {
-         const urlParams = new URLSearchParams(window.location.search);
-         return urlParams.get(param);
-         }
+         async function initializePage(userData) {
          
-         // Get the "token" parameter
-         const accessToken = getQueryParam("token");
+         // Get the "access_token"
+         const accessToken = userData['access_token'];
          
          // Check if token exists and is a valid UUID
          if (accessToken && isValidUUID(accessToken)) {
          showLoadingModal();
          fetchStudentMarks(accessToken);
          }
-         });
+}
