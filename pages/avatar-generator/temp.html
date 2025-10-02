@@ -427,10 +427,11 @@ window.onload = async function() {
     // Show loading
     showProcessingDialog();
     // Fetch the avatar string for the user
-    const currentAvatarString = await selectData('settings', true, 'avatar', ['student_id'], [userID]);
+    const currentAvatar = await selectData('settings', true, 'avatar', ['student_id'], [userID]);
 
-    if (currentAvatarString) {
+    if (currentAvatar) {
         // Build full URL and set avatar image preview
+        const currentAvatarString = currentAvatar.avatar;
         const currentAvatarSrc = `${baseUrl}?${currentAvatarString}`;
         avatar.src = currentAvatarSrc;
 
