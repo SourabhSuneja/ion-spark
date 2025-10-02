@@ -423,7 +423,7 @@
          select.addEventListener('change', updateAvatar);
          });
 
-window.onload = async function() {
+async function initAvatar() {
     // Show loading
     showProcessingDialog();
     // Fetch the avatar string for the user
@@ -453,6 +453,10 @@ window.onload = async function() {
     // Hide loading
     hideProcessingDialog();
 }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initAvatar();
+  });
       </script>
    </body>
 </html>
