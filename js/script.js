@@ -5,7 +5,7 @@
 const APP_CONFIG = {
    name: 'Ion Spark',
    loadingDelay: 1000,
-   iframeTransitionDuration: '2s',
+   iframeTransitionDuration: '1s',
    currentPage: 'home',
    theme: 'dark'
 };
@@ -669,6 +669,11 @@ const ThemeManager = {
                } else {
                   iframeBody.classList.remove('light-theme');
                }
+               // Run special toggleIframeTheme function if exists in the loaded iframe page
+               if (typeof iframe.contentWindow.toggleIframeTheme === 'function') {
+                    // If it exists, call it to sync live theme changes
+                    iframe.contentWindow.toggleIframeTheme();
+               }
             }
          } catch (error) {
             console.warn('Cannot access iframe content (likely cross-origin):', error);
@@ -718,7 +723,7 @@ const AppManager = {
 };
 
 // =============================================================================
-// GLOBAL FUNCTIONS (for backward compatibility)
+// GLOBAL FUNCTIONS (for backward compatibility & sharing with iframes)
 // =============================================================================
 
 function toggleMenu() {
@@ -731,6 +736,10 @@ function toggleTheme() {
 
 function loadPage(page) {
    PageManager.loadPage(page);
+}
+
+function loadManualPage(url, title, pageKey, minWidth) {
+   PageManager.loadManualPage(url, title, pageKey, minWidth);
 }
 
 async function logOut() {
