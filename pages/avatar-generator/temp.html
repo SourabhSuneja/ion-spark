@@ -423,7 +423,7 @@
          select.addEventListener('change', updateAvatar);
          });
 
-async function initAvatar() {
+async function initializePage() {
     // Show loading
     showProcessingDialog();
     // Fetch the avatar string for the user
@@ -452,10 +452,6 @@ async function initAvatar() {
     // Hide loading
     hideProcessingDialog();
 }
-
-
-// Run when all assets are ready
-window.addEventListener("load", initAvatar);
       </script>
    </body>
 </html>
