@@ -423,7 +423,7 @@
          select.addEventListener('change', updateAvatar);
          });
 
-async function initializePage() {
+window.initializePage = async function() {
     // Show loading
     showProcessingDialog();
     // Fetch the avatar string for the user
@@ -449,6 +449,7 @@ async function initializePage() {
 
     // Finally, reveal the container after avatar + selects are ready
     document.getElementById('container').style.display = 'block';
+    updateAvatar();
     // Hide loading
     hideProcessingDialog();
 }
