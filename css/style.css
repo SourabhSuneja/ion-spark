@@ -458,6 +458,7 @@ body.light-theme #header {
   height: var(--avatar-sm);
   border-radius: var(--radius-full);
   vertical-align: middle;
+  cursor: pointer;
 }
 
 /* Header Buttons (Theme toggle & notification) */
@@ -471,6 +472,7 @@ body.light-theme #header {
 
 #header .name {
   text-align: left;
+  cursor: pointer;
 }
 
 #menu-btn, #back-btn {
