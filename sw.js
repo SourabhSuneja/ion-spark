@@ -1,5 +1,5 @@
 // Bump the version number when you deploy a new service worker
-const CACHE_NAME = 'ion-spark-v1.0.0.dev.37';
+const CACHE_NAME = 'ion-spark-v1.0.0.dev.38';
 const urlsToCache = [
   '/ion-spark/',
   '/ion-spark/index.html',
