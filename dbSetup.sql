@@ -37,7 +37,8 @@ CREATE TABLE subject_resources (
     page_key      TEXT NOT NULL, -- Unique key for the page/feature
     link          TEXT,          -- The URL for the iframe, can be NULL for internal pages
     min_width     INT,
-    display_order SMALLINT DEFAULT 0 NOT NULL
+    display_order SMALLINT DEFAULT 0 NOT NULL,
+    extra JSONB
 );
 
 -- Students table
@@ -132,7 +133,8 @@ BEGIN
                     'icon',      sr.icon,
                     'page',      sr.page_key,
                     'link',      sr.link,
-                    'min_width', sr.min_width
+                    'min_width', sr.min_width,
+                    'extra', sr.extra
                 )
                 ORDER BY sr.display_order ASC
             ) AS cards
@@ -383,3 +385,113 @@ CREATE POLICY "Students can read their own subscriptions"
 CREATE POLICY "Students can insert their own subscriptions"
     ON subscriptions FOR INSERT
     WITH CHECK (auth.uid() = student_id);
+
+
+-- =========================
+-- INSERT INITIAL SEED DATA
+-- =========================
+
+-- General tab resources for dashboard
+INSERT INTO subject_resources (
+    subject,
+    grade,
+    title,
+    icon,
+    page_key,
+    link,
+    min_width,
+    display_order,
+    extra
+)
+VALUES
+    -- Common resources (grade is NULL, subject is General so they appear for any subscribed grade)
+    (
+        'General', 
+        NULL, 
+        'My Result', 
+        'podium-outline', 
+        'result', 
+        'pages/result/index.html', 
+        NULL, 
+        0, 
+        '{"jvpOnly": true}'
+    ),
+    (
+        'General', 
+        NULL, 
+        'My Attendance', 
+        'calendar-clear-outline', 
+        'attendance', 
+        'pages/coming-soon/index.html', 
+        NULL, 
+        1, 
+        '{"jvpOnly": true}'
+    ),
+    (
+        'General', 
+        NULL, 
+        'Syllabus', 
+        'clipboard-outline', 
+        'syllabus', 
+        'pages/syllabus/index.html?exam=Term-1', 
+        NULL, 
+        2, 
+        '{"jvpOnly": true}'
+    ),
+    (
+        'General', 
+        NULL, 
+        'Blueprint', 
+        'reader-outline', 
+        'blueprint', 
+        'pages/blueprint/index.html?exam=Term-1', 
+        NULL, 
+        3, 
+        '{"jvpOnly": true}'
+    ),
+    (
+        'General', 
+        NULL, 
+        'File Vault', 
+        'folder-open-outline', 
+        'vault', 
+        'https://drive.google.com/embeddedfolderview?id=13PUh09AAJn7DLlhAxflcOSE_uQo3im_N', 
+        NULL, 
+        4, 
+        '{"jvpOnly": true}'
+    ),
+    (
+        'General', 
+        NULL, 
+        'Word of the Day', 
+        'language', 
+        'word-of-the-day', 
+        NULL, 
+        NULL, 
+        5, 
+        NULL
+    ),
+    (
+        'General', 
+        NULL, 
+        'Sarthak AI', 
+        'chatbubble-outline', 
+        'sarthak', 
+        'pages/sarthak/index.html', 
+        NULL, 
+        6, 
+        NULL
+    ),
+    (
+        'General', 
+        NULL, 
+        'Memory Game', 
+        'albums-outline', 
+        'flashcard-memory-game', 
+        'pages/coming-soon/index.html', 
+        NULL, 
+        7, 
+        NULL
+    );
+
+
