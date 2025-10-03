@@ -172,7 +172,7 @@ const UIComponents = {
       }
 
       // Toggle to light theme if theme in user settings is 1 (= light theme)
-      if(USER_DATA['theme'] === 1) {
+      if (USER_DATA['theme'] === 1) {
          APP_CONFIG.theme = 'light';
          document.body.classList.add('light-theme');
       }
@@ -228,7 +228,7 @@ const UIComponents = {
          user_id: window.userId,
          grade: USER_DATA['grade']
       };
-      
+
       iframe.src = StringUtils.addUrlParams(src, paramData);
 
       iframe.addEventListener('load', function () {
@@ -253,8 +253,8 @@ const UIComponents = {
 
          // Run special initialization function if exists in the loaded iframe page
          if (typeof this.contentWindow.initializePage === 'function') {
-              // If it exists, call it with USER_DATA passed
-              this.contentWindow.initializePage(USER_DATA);
+            // If it exists, call it with USER_DATA passed
+            this.contentWindow.initializePage(USER_DATA);
          }
 
       });
@@ -318,9 +318,11 @@ function renderDashboard(subject) {
    const cards = DASHBOARD_DATA[subject]; // Use the new data source
    if (cards) {
       cards.forEach(cardData => {
-         // The 'page' property is now the page_key
-         const cardElement = UIComponents.createCard(cardData);
-         content.appendChild(cardElement);
+         // Use a custom filtering logic to decide whether to show this card (such as, showing cards specific to a school)
+         if (shouldDisplayCard(cardData)) {
+            const cardElement = UIComponents.createCard(cardData);
+            content.appendChild(cardElement);
+         }
       });
    }
 }
@@ -338,7 +340,7 @@ function setupSubjectSwitcher() {
       DOMUtils.getElementById('content').innerHTML = '<p class="info-message">You are not subscribed to any subjects yet.</p>';
       return;
    }
-   
+
    // If currentSubject is not in the new list, default to the first one
    if (!subscribedSubjects.includes(currentSubject)) {
       currentSubject = subscribedSubjects[0];
@@ -365,15 +367,15 @@ function setupSubjectSwitcher() {
 }
 
 function extractPages(obj) {
-  const result = {};
-  
-  for (const [subject, items] of Object.entries(obj)) {
-    result[subject] = items
-      .filter(item => item.link)       // keep only entries with a non-falsy link
-      .map(item => item.page);         // extract the "page" value
-  }
-  
-  return result;
+   const result = {};
+
+   for (const [subject, items] of Object.entries(obj)) {
+      result[subject] = items
+         .filter(item => item.link) // keep only entries with a non-falsy link
+         .map(item => item.page); // extract the "page" value
+   }
+
+   return result;
 }
 
 
@@ -384,17 +386,17 @@ function extractPages(obj) {
 const PageManager = {
 
    // This history will track manual page loads for the back button
-   manualHistory: [], 
+   manualHistory: [],
 
    loadPage: (page) => {
       showProcessingDialog();
 
       // Clear the manual history when navigating to a non-manual page
       if (page === 'home') {
-          PageManager.manualHistory = [];
+         PageManager.manualHistory = [];
       }
 
-      if ( Object.keys(PAGELIST).length === 0 || (!(PAGELIST[currentSubject].includes(page)) && page !== 'home') ) {
+      if (Object.keys(PAGELIST).length === 0 || (!(PAGELIST[currentSubject].includes(page)) && page !== 'home')) {
          if (page === 'word-of-the-day') {
             showRandomWord();
          }
@@ -477,9 +479,14 @@ const PageManager = {
       // Create and append the iframe
       const iframe = UIComponents.createIframe(url, pageKey, minWidth);
       elements.content.appendChild(iframe);
-      
+
       // Push state to browser history for back button functionality
-      const state = { page: pageKey, manual: true, url: url, title: title };
+      const state = {
+         page: pageKey,
+         manual: true,
+         url: url,
+         title: title
+      };
       PageManager.manualHistory.push(state); // Keep track internally
       window.history.pushState(state, title, `#${pageKey}`);
    },
@@ -647,13 +654,13 @@ const ThemeManager = {
          metaThemeColor.setAttribute("content", "#ffffff")
          APP_CONFIG.theme = "light";
          ThemeManager.syncThemeToIframes(true);
-          // Also send new theme setting to server
+         // Also send new theme setting to server
          updateRow('settings', ['student_id'], [window.userId], ['theme'], [1]);
       } else {
          metaThemeColor.setAttribute("content", "#000000");
          APP_CONFIG.theme = "dark";
          ThemeManager.syncThemeToIframes(false);
-          // Also send new theme setting to server
+         // Also send new theme setting to server
          updateRow('settings', ['student_id'], [window.userId], ['theme'], [0]);
       }
    },
@@ -671,8 +678,8 @@ const ThemeManager = {
                }
                // Run special toggleIframeTheme function if exists in the loaded iframe page
                if (typeof iframe.contentWindow.toggleIframeTheme === 'function') {
-                    // If it exists, call it to sync live theme changes
-                    iframe.contentWindow.toggleIframeTheme();
+                  // If it exists, call it to sync live theme changes
+                  iframe.contentWindow.toggleIframeTheme();
                }
             }
          } catch (error) {
@@ -762,6 +769,11 @@ function createUserProfile() {
    UIComponents.createUserProfile();
 }
 
+// Function to filter out cards based on custom logic (such as, allowing certain cards only for the students of a specific school)
+function shouldDisplayCard(card) {
+   return (card.extra === null || (card.extra.jvpOnly === true && USER_DATA.school === 'Jamna Vidyapeeth'));
+}
+
 function createAndAppendCards() {
    // MODIFIED: Now renders the dashboard for the currently active subject
    renderDashboard(currentSubject);
@@ -804,7 +816,7 @@ window.history.replaceState({
 const originalLoadPage = PageManager.loadPage;
 PageManager.loadPage = (page) => {
    originalLoadPage(page);
-    // Don't push history for pages that don't exist in PAGELIST
+   // Don't push history for pages that don't exist in PAGELIST
    if (Object.keys(PAGELIST).length === 0 || !(PAGELIST[currentSubject] && PAGELIST[currentSubject].includes(page))) {
       return;
    }
@@ -820,7 +832,7 @@ PageManager.loadPage = (page) => {
 // MODIFIED: Update the popstate listener
 window.addEventListener("popstate", (event) => {
    const state = event.state;
-   
+
    if (!state || state.page === "home") {
       PageManager.loadPage("home");
    } else if (state.manual) {
@@ -828,10 +840,10 @@ window.addEventListener("popstate", (event) => {
       PageManager.manualHistory.pop(); // Remove current state as we're going back
       const previousState = PageManager.manualHistory[PageManager.manualHistory.length - 1];
       if (previousState) {
-          PageManager.loadManualPage(previousState.url, previousState.title, previousState.page);
+         PageManager.loadManualPage(previousState.url, previousState.title, previousState.page);
       } else {
-          // If no manual pages are left in history, go home
-          PageManager.loadPage("home");
+         // If no manual pages are left in history, go home
+         PageManager.loadPage("home");
       }
    } else {
       // Otherwise, it's a regular dashboard page
