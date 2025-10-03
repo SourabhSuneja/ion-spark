@@ -455,7 +455,7 @@
     </style>
 </head>
 <body>
-    <button class="theme-toggle noselect">
+    <button style="display: none" class="theme-toggle noselect">
         <i class="fas fa-moon"></i>
     </button>
 
@@ -652,7 +652,7 @@
             const dob = document.getElementById('dob').value || null;
             const father_name = document.getElementById('father-name').value.trim() || null;
             const phone = document.getElementById('phone').value.trim() || null;
-             const address = document.getElementById('address').value.trim() || null;
+            const address = document.getElementById('address').value.trim() || null;
 
              // Update student details on server
               window.parent.showProcessingDialog();
