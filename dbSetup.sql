@@ -497,7 +497,7 @@ VALUES
         'https://drive.google.com/embeddedfolderview?id=13PUh09AAJn7DLlhAxflcOSE_uQo3im_N', 
         NULL, 
         5, 
-        '{"jvpOnly": true}'
+        '{"jvpOnly": true, "forcedTheme": "light"}'
     ),
     (
         'General', 
