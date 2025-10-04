@@ -646,11 +646,11 @@
          }
          
          function navigateToAvatarGenerator() {
-             window.parent.loadManualPage('./pages/avatar-generator/index.html', 'My Avatar', 'avatar-generator');
+             window.parent.loadManualPage({link: './pages/avatar-generator/index.html', title: 'My Avatar', page_key: 'avatar-generator'});
          }
          
          function manageSubscriptions() {
-             window.parent.loadManualPage('./pages/coming-soon/index.html', 'Subscriptions', 'subscriptions');
+             window.parent.loadManualPage({link: './pages/coming-soon/index.html', title: 'Subscriptions', page_key: 'subscriptions'});
          }
          
       </script>
