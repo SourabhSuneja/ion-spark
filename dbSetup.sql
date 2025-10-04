@@ -33,7 +33,7 @@ CREATE TABLE menu_resources (
     title TEXT NOT NULL,
     icon TEXT NOT NULL,
     page_key TEXT NOT NULL UNIQUE,
-    link TEXT NOT NULL UNIQUE,
+    link TEXT NOT NULL,
     min_width INT,
     display_order SMALLINT NOT NULL DEFAULT 0,
     extra JSONB
@@ -46,7 +46,7 @@ CREATE TABLE subject_resources (
     grade         INT, -- NULL = applies to all grades
     title         TEXT NOT NULL,
     icon          TEXT NOT NULL,
-    page_key      TEXT NOT NULL, -- Unique key for the page/feature
+    page_key      TEXT NOT NULL UNIQUE,
     link          TEXT,          -- The URL for the iframe, can be NULL for internal pages
     min_width     INT,
     display_order SMALLINT DEFAULT 0 NOT NULL,
@@ -426,8 +426,9 @@ VALUES
     ('Dashboard',     'home',               'dashboard',      '',                                      1),
     ('My Progress',   'bar-chart-outline',  'my-progress',    'pages/progress-report/index.html',      2),
     ('Notifications', 'notifications',      'notifications',  'pages/notifications/index.html',        3),
-    ('Settings',      'settings',           'settings',       'pages/account/index.html',              4),
-    ('Developer',     'code-outline',       'about-developer','pages/about-developer/index.html',      5);
+    ('Subscriptions',   'ribbon-outline',  'subscriptions',    '',      4),
+    ('Settings',      'settings',           'settings',       'pages/account/index.html',              5),
+    ('Developer',     'code-outline',       'about-developer','pages/about-developer/index.html',      6);
 
 -- General tab resources for dashboard
 INSERT INTO subject_resources (
