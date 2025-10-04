@@ -148,7 +148,7 @@ const UIComponents = {
       menuItemDiv.appendChild(icon);
       menuItemDiv.appendChild(titleText);
       menuItemDiv.addEventListener('click', function () {
-         PageManager.loadManualPage(itemData.link, itemData.title, itemData.page_key, itemData.min_width);
+         PageManager.loadManualPage(itemData);
          MenuManager.close();
       });
 
@@ -420,7 +420,7 @@ const PageManager = {
    },
 
    loadExternalPage: (page, elements) => {
-      // MODIFIED: Hide subject switcher on external pages
+      // Hide subject switcher on external pages
       DOMUtils.hide(elements.subjectSwitcher);
       elements.content.classList.add('externalPage');
 
@@ -436,6 +436,16 @@ const PageManager = {
          return;
       }
 
+      // Theme forcing logic
+      if (cardData.extra && cardData.extra.forcedTheme) {
+         // If this is the first time we're forcing a theme, save the original.
+         if (ThemeManager.userPreferredTheme === null) {
+            ThemeManager.userPreferredTheme = APP_CONFIG.theme;
+         }
+         // Apply the forced theme without saving it as a user preference.
+         ThemeManager.setTheme(cardData.extra.forcedTheme, false);
+      }
+
       const displayTitle = cardData ? cardData.title : StringUtils.capitalizeFirstLetter(page);
 
       elements.screenName.innerText = `${displayTitle} `;
@@ -449,8 +459,17 @@ const PageManager = {
    },
 
    // Function to load custom URLs into an iframe
-   loadManualPage: (url, title, pageKey, minWidth) => {
+   loadManualPage: (itemData) => {
+      const {
+         link: url,
+         title,
+         page_key: pageKey,
+         min_width: minWidth,
+         extra
+      } = itemData;
+
       if (!url) return;
+
       showProcessingDialog();
       APP_CONFIG.currentPage = pageKey;
 
@@ -472,6 +491,14 @@ const PageManager = {
       DOMUtils.hide(elements.menuBtn);
       DOMUtils.show(elements.backBtn);
 
+      // Theme forcing logic for manual pages
+      if (extra && extra.forcedTheme) {
+         if (ThemeManager.userPreferredTheme === null) {
+            ThemeManager.userPreferredTheme = APP_CONFIG.theme;
+         }
+         ThemeManager.setTheme(extra.forcedTheme, false);
+      }
+
       // Create and append the iframe
       const iframe = UIComponents.createIframe(url, pageKey, minWidth);
       elements.content.appendChild(iframe);
@@ -488,17 +515,22 @@ const PageManager = {
    },
 
    loadHomePage: (elements) => {
+      // Theme restoration logic
+      if (ThemeManager.userPreferredTheme !== null) {
+         ThemeManager.setTheme(ThemeManager.userPreferredTheme, false); // Restore theme, don't save
+         ThemeManager.userPreferredTheme = null; // Reset the tracker
+      }
       DOMUtils.show(elements.menuBtn);
       DOMUtils.hide(elements.backBtn);
       DOMUtils.setDisplay(elements.studentProfile, 'flex');
-      DOMUtils.show(elements.subjectSwitcher); // MODIFIED: Show subject switcher
+      DOMUtils.show(elements.subjectSwitcher); // Show subject switcher
 
       elements.screenName.innerText = `${APP_CONFIG.name} `;
       elements.content.classList.remove('externalPage');
 
       AppManager.initialize(); // This still handles profile and menu setup
 
-      // MODIFIED: Setup switcher and render the dashboard for the current subject
+      // Setup switcher and render the dashboard for the current subject
       setupSubjectSwitcher();
       renderDashboard(currentSubject);
 
@@ -640,25 +672,36 @@ const AuthManager = {
 // =============================================================================
 
 const ThemeManager = {
-   toggle: () => {
+   // Variable to store the user's theme before forcing a change (certain pages force a specific theme — we're tracking user's original preference so we can revert)
+   userPreferredTheme: null,
+
+   // Central function to set the theme. Can optionally save the preference.
+   setTheme: (theme, savePreference = false) => {
       const body = document.body;
       const metaThemeColor = document.querySelector("meta[name=theme-color]");
+      const isLightTheme = theme === 'light';
 
-      body.classList.toggle("light-theme");
-
-      if (body.classList.contains("light-theme")) {
-         metaThemeColor.setAttribute("content", "#ffffff")
+      if (isLightTheme) {
+         body.classList.add("light-theme");
+         metaThemeColor.setAttribute("content", "#ffffff");
          APP_CONFIG.theme = "light";
-         ThemeManager.syncThemeToIframes(true);
-         // Also send new theme setting to server
-         updateRow('settings', ['student_id'], [window.userId], ['theme'], [1]);
+         if (savePreference) {
+            updateRow('settings', ['student_id'], [window.userId], ['theme'], [1]);
+         }
       } else {
+         body.classList.remove("light-theme");
          metaThemeColor.setAttribute("content", "#000000");
          APP_CONFIG.theme = "dark";
-         ThemeManager.syncThemeToIframes(false);
-         // Also send new theme setting to server
-         updateRow('settings', ['student_id'], [window.userId], ['theme'], [0]);
+         if (savePreference) {
+            updateRow('settings', ['student_id'], [window.userId], ['theme'], [0]);
+         }
       }
+      ThemeManager.syncThemeToIframes(isLightTheme);
+   },
+
+   toggle: () => {
+      const newTheme = document.body.classList.contains("light-theme") ? "dark" : "light";
+      ThemeManager.setTheme(newTheme, true); // Always save the preference when user toggles manually
    },
 
    syncThemeToIframes: (isLightTheme) => {
@@ -742,8 +785,8 @@ function loadPage(page) {
    PageManager.loadPage(page);
 }
 
-function loadManualPage(url, title, pageKey, minWidth) {
-   PageManager.loadManualPage(url, title, pageKey, minWidth);
+function loadManualPage(pageData) {
+   PageManager.loadManualPage(pageData);
 }
 
 async function logOut() {
@@ -837,7 +880,7 @@ window.addEventListener("popstate", (event) => {
       PageManager.manualHistory.pop(); // Remove current state as we're going back
       const previousState = PageManager.manualHistory[PageManager.manualHistory.length - 1];
       if (previousState) {
-         PageManager.loadManualPage(previousState.url, previousState.title, previousState.page);
+         PageManager.loadManualPage({link: previousState.url, title: previousState.title, page_key: previousState.page});
       } else {
          // If no manual pages are left in history, go home
          PageManager.loadPage("home");
