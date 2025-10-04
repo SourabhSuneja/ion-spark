@@ -31,27 +31,8 @@ let PAGELIST = {};
 // Variable to track the currently selected subject.
 let currentSubject = 'General';
 
-const MENU_ITEMS = [{
-      icon: 'home',
-      title: 'Dashboard',
-      page: 'dashboard'
-   },
-   {
-      icon: 'game-controller',
-      title: 'Games',
-      page: 'games'
-   },
-   {
-      icon: 'notifications',
-      title: 'Notifications',
-      page: 'notifications'
-   },
-   {
-      icon: 'settings',
-      title: 'Settings',
-      page: 'settings'
-   }
-];
+// Variable to hold all menu items fetched from the backend for the side navigation drawer
+let MENU_ITEMS = [];
 
 // =============================================================================
 // BACKEND MANAGEMENT
@@ -88,6 +69,17 @@ const BackendManager = {
          return data || []; // Return data or an empty array
       } catch (err) {
          console.error("Error fetching dashboard data:", err);
+         return []; // Return empty array on error
+      }
+   },
+
+   // Function to get all menu item resources for the side navigation drawer
+   getMenuItems: async () => {
+      try {
+         const data = await selectData('menu_resources', false, "*", [], [], 'display_order');
+         return data || []; // Return data or an empty array
+      } catch (err) {
+         console.error("Error fetching menu resources:", err);
          return []; // Return empty array on error
       }
    }
@@ -155,7 +147,10 @@ const UIComponents = {
 
       menuItemDiv.appendChild(icon);
       menuItemDiv.appendChild(titleText);
-      menuItemDiv.addEventListener('click', () => PageManager.loadPage(itemData.page));
+      menuItemDiv.addEventListener('click', function () {
+         PageManager.loadManualPage(itemData.link, itemData.title, itemData.page_key, itemData.min_width);
+         MenuManager.close();
+      });
 
       return menuItemDiv;
    },
@@ -455,6 +450,7 @@ const PageManager = {
 
    // Function to load custom URLs into an iframe
    loadManualPage: (url, title, pageKey, minWidth) => {
+      if (!url) return;
       showProcessingDialog();
       APP_CONFIG.currentPage = pageKey;
 
@@ -721,6 +717,7 @@ const StringUtils = {
 const AppManager = {
    initialize: async () => {
       await UIComponents.createUserProfile();
+      MENU_ITEMS = await BackendManager.getMenuItems(); // Fetch and store menu items
       DASHBOARD_DATA = await BackendManager.getDashboardData(); // Fetch and store dashboard data
       PAGELIST = extractPages(DASHBOARD_DATA);
       SUBSCRIPTION_DATA = await BackendManager.getSubscriptionData(); // Fetch and store subscription data
