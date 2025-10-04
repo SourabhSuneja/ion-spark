@@ -2,6 +2,7 @@
 -- DROP TABLES (parent → child)
 -- This will also automatically drop associated triggers, policies, and constraints.
 -- =========================
+DROP TABLE IF EXISTS menu_resources CASCADE;
 DROP TABLE IF EXISTS subject_resources CASCADE;
 DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS push_subscriptions CASCADE;
@@ -24,8 +25,19 @@ DROP FUNCTION IF EXISTS handle_new_student_subscriptions();
 
 -- =========================
 -- TABLE CREATION
--- (Your table creation code is correct and goes here)
 -- =========================
+
+-- Table to store menu items for app's navigation drawer
+CREATE TABLE menu_resources (
+    id BIGSERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    icon TEXT NOT NULL,
+    page_key TEXT NOT NULL UNIQUE,
+    link TEXT NOT NULL UNIQUE,
+    min_width INT,
+    display_order SMALLINT NOT NULL DEFAULT 0,
+    extra JSONB
+);
 
 -- Table to store dashboard card information for each subject
 CREATE TABLE subject_resources (
@@ -352,6 +364,13 @@ EXECUTE FUNCTION handle_new_student_subscriptions();
 -- RLS POLICIES
 -- =========================
 
+-- Menu resources
+ALTER TABLE menu_resources ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow authenticated users to read resources"
+    ON menu_resources FOR SELECT
+    TO authenticated
+    USING (true);
+
 -- Subject resources
 ALTER TABLE subject_resources ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow authenticated users to read resources"
@@ -391,6 +410,14 @@ CREATE POLICY "Students can insert their own subscriptions"
 -- INSERT INITIAL SEED DATA
 -- =========================
 
+-- Menu resources for navigation drawer
+INSERT INTO menu_resources (title, icon, page_key, link, display_order) VALUES
+('Dashboard', 'home', 'dashboard', '', 1),
+('My Progress', 'bar-chart-outline', 'my-progress', 'pages/progress-report/index.html', 2),
+('Notifications', 'notifications', 'notifications', 'pages/notifications/index.html', 3),
+('Settings', 'settings', 'settings', 'pages/account/index.html', 4),
+('About Developer', 'code-outline', 'about-developer', 'pages/about-developer/index.html', 5);
+
 -- General tab resources for dashboard
 INSERT INTO subject_resources (
     subject,
@@ -413,7 +440,7 @@ VALUES
         'result', 
         'pages/result/index.html', 
         NULL, 
-        0, 
+        1, 
         '{"jvpOnly": true}'
     ),
     (
@@ -424,7 +451,7 @@ VALUES
         'attendance', 
         'pages/coming-soon/index.html', 
         NULL, 
-        1, 
+        2, 
         '{"jvpOnly": true}'
     ),
     (
@@ -435,7 +462,7 @@ VALUES
         'syllabus', 
         'pages/syllabus/index.html?exam=Term-1', 
         NULL, 
-        2, 
+        3, 
         '{"jvpOnly": true}'
     ),
     (
@@ -446,7 +473,7 @@ VALUES
         'blueprint', 
         'pages/blueprint/index.html?exam=Term-1', 
         NULL, 
-        3, 
+        4, 
         '{"jvpOnly": true}'
     ),
     (
@@ -457,7 +484,7 @@ VALUES
         'vault', 
         'https://drive.google.com/embeddedfolderview?id=13PUh09AAJn7DLlhAxflcOSE_uQo3im_N', 
         NULL, 
-        4, 
+        5, 
         '{"jvpOnly": true}'
     ),
     (
@@ -468,7 +495,7 @@ VALUES
         'word-of-the-day', 
         NULL, 
         NULL, 
-        5, 
+        6, 
         NULL
     ),
     (
@@ -479,7 +506,7 @@ VALUES
         'sarthak', 
         'pages/sarthak/index.html', 
         NULL, 
-        6, 
+        7, 
         NULL
     ),
     (
@@ -490,7 +517,7 @@ VALUES
         'flashcard-memory-game', 
         'pages/coming-soon/index.html', 
         NULL, 
-        7, 
+        8, 
         NULL
     );
 
