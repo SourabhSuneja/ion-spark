@@ -415,12 +415,19 @@ CREATE POLICY "Students can insert their own subscriptions"
 -- =========================
 
 -- Menu resources for navigation drawer
-INSERT INTO menu_resources (title, icon, page_key, link, display_order) VALUES
-('Dashboard', 'home', 'dashboard', '', 1),
-('My Progress', 'bar-chart-outline', 'my-progress', 'pages/progress-report/index.html', 2),
-('Notifications', 'notifications', 'notifications', 'pages/notifications/index.html', 3),
-('Settings', 'settings', 'settings', 'pages/account/index.html', 4),
-('About Developer', 'code-outline', 'about-developer', 'pages/about-developer/index.html', 5);
+INSERT INTO menu_resources (
+    title,
+    icon,
+    page_key,
+    link,
+    display_order
+)
+VALUES
+    ('Dashboard',     'home',               'dashboard',      '',                                      1),
+    ('My Progress',   'bar-chart-outline',  'my-progress',    'pages/progress-report/index.html',      2),
+    ('Notifications', 'notifications',      'notifications',  'pages/notifications/index.html',        3),
+    ('Settings',      'settings',           'settings',       'pages/account/index.html',              4),
+    ('Developer',     'code-outline',       'about-developer','pages/about-developer/index.html',      5);
 
 -- General tab resources for dashboard
 INSERT INTO subject_resources (
