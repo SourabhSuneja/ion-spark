@@ -68,7 +68,8 @@ CREATE TABLE students (
     address      TEXT,
     city         TEXT,
     access_token UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE,
-    created_at   TIMESTAMP NOT NULL DEFAULT now()
+    created_at   TIMESTAMP NOT NULL DEFAULT now(),
+    extra JSONB
 );
 
 -- Subscriptions table
@@ -79,6 +80,7 @@ CREATE TABLE subscriptions (
     subject             TEXT NOT NULL,
     subscription_plan   TEXT NOT NULL DEFAULT 'Free',
     subscription_ends_at TIMESTAMP NOT NULL DEFAULT '2026-03-31 23:59:59',
+    extra               JSONB,
 
     -- Prevent duplicates: one subscription per student per grade and subject
     UNIQUE (student_id, grade, subject)
@@ -88,7 +90,8 @@ CREATE TABLE subscriptions (
 CREATE TABLE teachers (
     id    UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     name  TEXT NOT NULL,
-    email TEXT NOT NULL
+    email TEXT NOT NULL,
+    extra JSONB
 );
 
 -- Settings table
@@ -96,7 +99,8 @@ CREATE TABLE settings (
     student_id UUID PRIMARY KEY REFERENCES students(id) ON DELETE CASCADE,
     theme      SMALLINT NOT NULL DEFAULT 0 CHECK (theme IN (0, 1)), -- 0 = dark, 1 = light
     avatar     TEXT NOT NULL,
-    nickname   TEXT
+    nickname   TEXT,
+    extra      JSONB
 );
 
 -- Push subscriptions table
