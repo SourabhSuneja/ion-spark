@@ -424,11 +424,11 @@ INSERT INTO menu_resources (
 )
 VALUES
     ('Dashboard',     'home',               'dashboard',      '',                                      1),
-    ('My Progress',   'bar-chart-outline',  'my-progress',    'pages/progress-report/index.html',      2),
+    ('My Progress',   'bar-chart',  'my-progress',    'pages/progress-report/index.html',      2),
     ('Notifications', 'notifications',      'notifications',  'pages/notifications/index.html',        3),
-    ('Subscriptions',   'ribbon-outline',  'subscriptions',    '',      4),
+    ('Subscriptions',   'ribbon',  'subscriptions',    '',      4),
     ('Settings',      'settings',           'settings',       'pages/account/index.html',              5),
-    ('Developer',     'code-outline',       'about-developer','pages/about-developer/index.html',      6);
+    ('Developer',     'code',       'about-developer','pages/about-developer/index.html',      6);
 
 -- General tab resources for dashboard
 INSERT INTO subject_resources (
@@ -527,7 +527,7 @@ VALUES
         'Memory Game', 
         'albums-outline', 
         'flashcard-memory-game', 
-        'pages/coming-soon/index.html', 
+        'pages/flashcard-memory-game/index.html', 
         NULL, 
         8, 
         NULL
