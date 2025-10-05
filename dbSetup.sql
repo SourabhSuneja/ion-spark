@@ -531,6 +531,17 @@ VALUES
         NULL, 
         8, 
         NULL
+    ),
+    (
+        'General', 
+        NULL, 
+        'Focus Builder', 
+        'bulb-outline', 
+        'color-meaning-game', 
+        'pages/color-meaning-game/index.html', 
+        NULL, 
+        9, 
+        NULL
     );
 
 
