@@ -542,6 +542,17 @@ VALUES
         NULL, 
         9, 
         NULL
+    ),
+    (
+        'General', 
+        NULL, 
+        'Rabbit Game', 
+        'paw-outline', 
+        'rabbit-run-game', 
+        'pages/rabbit-run-game/index.html', 
+        NULL, 
+        10, 
+        NULL
     );
 
 
