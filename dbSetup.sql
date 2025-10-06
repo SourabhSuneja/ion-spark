@@ -566,4 +566,27 @@ VALUES
         '{"forcedTheme": "light"}'
     );
 
-
+-- Subject specific resources
+INSERT INTO subject_resources (
+    subject,
+    grade,
+    title,
+    icon,
+    page_key,
+    link,
+    min_width,
+    display_order,
+    extra
+)
+VALUES
+(
+        'Computer', 
+        6, 
+        'Quiz', 
+        'help-outline', 
+        'quiz', 
+        'pages/quiz/index.html', 
+        NULL, 
+        1, 
+        NULL
+);
