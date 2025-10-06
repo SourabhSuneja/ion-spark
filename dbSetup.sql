@@ -424,9 +424,9 @@ INSERT INTO menu_resources (
 )
 VALUES
     ('Dashboard',     'home',               'dashboard',      '',                                      1),
-    ('My Progress',   'bar-chart',  'my-progress',    'pages/progress-report/index.html',      2),
-    ('Notifications', 'notifications',      'notifications',  'pages/notifications/index.html',        3),
-    ('Subscriptions',   'ribbon',  'subscriptions',    '',      4),
+    ('My Progress',   'bar-chart',  'my-progress',    'pages/coming-soon/index.html',      2),
+    ('Notifications', 'notifications',      'notifications',  'pages/coming-soon/index.html',        3),
+    ('Subscriptions',   'ribbon',  'subscriptions',    'pages/coming-soon/index.html',      4),
     ('Settings',      'settings',           'settings',       'pages/account/index.html',              5),
     ('Developer',     'code',       'about-developer','pages/about-developer/index.html',      6);
 
