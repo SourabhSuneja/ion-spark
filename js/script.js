@@ -811,7 +811,7 @@ function createUserProfile() {
 
 // Function to filter out cards based on custom logic (such as, allowing certain cards only for the students of a specific school)
 function shouldDisplayCard(card) {
-   return (card.extra === null || (card.extra.jvpOnly === true && USER_DATA.school === 'Jamna Vidyapeeth'));
+  return !card?.extra?.hasOwnProperty("jvpOnly") || card.extra.jvpOnly === true;
 }
 
 function createAndAppendCards() {
