@@ -163,7 +163,6 @@
         }
 
         /* --- Result Section --- */
-        /* FIX: This positions the progress ring correctly */
         .chart {
             display: flex;
             justify-content: center;
@@ -173,9 +172,13 @@
             position: relative; /* Essential for easy-pie-chart */
             width: 180px;      /* Must match JS 'size' option */
             height: 180px;     /* Must match JS 'size' option */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+        /* This new rule perfectly centers the number inside the ring */
+        .percentage-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         /* --- Result Stats Table --- */
@@ -232,8 +235,7 @@
                         </div>
                         <div class="chart">
                             <div class="percentage text-5xl font-bold" data-percent="0">
-                                <span>0</span><sup class="text-2xl">%</sup>
-                            </div>
+                                </div>
                         </div>
                     </div>
                      <h3 class="message text-lg sm:text-xl mt-8 font-light" style="color: var(--text-secondary);"></h3>
@@ -433,14 +435,17 @@
                 resultBox.find('.message').text(message);
                 
                 $('.percentage').attr('data-percent', Math.round(percentage));
-                $('.percentage span').text(Math.round(percentage));
                 initializePieChart();
             }
             
             function initializePieChart() {
                 // Clear any existing chart
-                $('.percentage').empty().removeData('easyPieChart').html(`<span>${$('.percentage').attr('data-percent')}</span><sup class="text-2xl">%</sup>`);
-
+                const percentValue = $('.percentage').attr('data-percent');
+                // A wrapper div around the number for precise positioning
+                const numberHTML = `<div class="percentage-label"><span>${percentValue}</span><sup class="text-2xl">%</sup></div>`;
+            
+                $('.percentage').empty().removeData('easyPieChart').html(numberHTML);
+            
                 const computedStyle = getComputedStyle(document.body);
                 $('.percentage').easyPieChart({
                     animate: 1000,
