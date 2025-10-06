@@ -546,7 +546,7 @@ VALUES
     (
         'General', 
         NULL, 
-        'Rabbit Game', 
+        'Rabbit Run', 
         'paw-outline', 
         'rabbit-run-game', 
         'pages/rabbit-run-game/index.html', 
