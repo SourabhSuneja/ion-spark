@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="noselect">
 
 <head>
     <meta charset="UTF-8">
@@ -56,6 +56,16 @@
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
         }
+
+         .noselect {
+         -webkit-user-select: none;
+         -moz-user-select: none;
+         -ms-user-select: none;
+         user-select: none;
+         -webkit-touch-callout: none;
+         -webkit-user-drag: none;
+         -webkit-tap-highlight-color: transparent;
+         }
 
         /* --- Main Quiz Container --- */
         .quiz-box {
