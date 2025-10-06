@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Themed Quiz Application</title>
+    <title>Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -269,6 +269,7 @@
                 <button id="nextButton" class="btn">Next</button>
                 <button id="submitButton" class="btn">Submit</button>
                 <button id="resultButton" class="btn">See Review</button>
+	<button id="replayButton" class="btn">Re-play Quiz</button>
             </div>
         </div>
     </div>
@@ -340,7 +341,7 @@
 
             // --- DOM ELEMENTS ---
             const nameBox = $('#name-box'), questionBox = $('#question-box'), resultBox = $('#result'), resultStatsBox = $('#result-stats');
-            const prevButton = $('#prevButton'), nextButton = $('#nextButton'), submitButton = $('#submitButton'), resultButton = $('#resultButton');
+            const prevButton = $('#prevButton'), nextButton = $('#nextButton'), submitButton = $('#submitButton'), resultButton = $('#resultButton'), replayButton = $('#replayButton');
             const themeToggleButton = $('#theme-toggle');
 
             // --- INITIALIZATION ---
@@ -400,6 +401,8 @@
                     resultButton.hide();
                 });
             });
+
+            replayButton.on('click', replayQuiz);
 
             themeToggleButton.on('click', () => {
                 $('body').toggleClass('light-theme');
@@ -467,6 +470,7 @@
                 questionBox.fadeOut(() => resultBox.fadeIn());
                 $('.navigation-buttons button').hide();
                 resultButton.show();
+	replayButton.show();
                 
                 const percentage = (score / quizData.length) * 100;
                 let smiley = '', message = '';
@@ -534,7 +538,28 @@
                     tableBody.append(row);
                 });
             }
+
+function replayQuiz() {
+    // 1. Reset all state variables
+    currentQuestion = 0;
+    score = 0;
+    userAnswers.fill(null); // Clear all previous answers
+
+    // 2. Hide the result and review sections
+    resultBox.hide();
+    resultStatsBox.hide();
+
+    // 3. Hide the result-specific buttons
+    resultButton.hide();
+    replayButton.hide();
+
+    // 4. Show the question container and load the first question
+    questionBox.fadeIn();
+    loadQuestion(currentQuestion);
+}
         });
+
+
     </script>
 </body>
 </html>
