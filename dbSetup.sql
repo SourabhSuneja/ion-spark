@@ -553,6 +553,17 @@ VALUES
         NULL, 
         10, 
         NULL
+    ),
+    (
+        'General', 
+        NULL, 
+        'Rubic Cube', 
+        'cube-outline', 
+        'rubic-cube-game', 
+        'pages/rubic-cube-game/index.html', 
+        NULL, 
+        11, 
+        NULL
     );
 
 
