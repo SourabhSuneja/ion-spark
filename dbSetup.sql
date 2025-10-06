@@ -563,7 +563,7 @@ VALUES
         'pages/rubic-cube-game/index.html', 
         NULL, 
         11, 
-        NULL
+        '{"forcedTheme": "light"}'
     );
 
 
