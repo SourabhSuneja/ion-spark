@@ -1,5 +1,8 @@
 // Push Notification Functionality
 
+// VAPID Public Key
+const VAPID_PUBLIC_KEY = 'BCHU24zEIGx_r51XxETbqK-sXT99y_DZby17DWvmeEVb0ED_sCsckFqcigF5Fhjj-gTx-C14dcYwD6goKwqLBr4';
+
 // This utility function is required by the Push API
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -42,8 +45,6 @@ async function handleStudentLogin(studentId) {
                 return;
             }
 
-            // Replace with your VAPID Public Key
-            const VAPID_PUBLIC_KEY = 'BGd1Oy5sam6Un1U3dL7XfyePdKcEAxM5WNuu5yJwVSD2ya5whvh-gfNjyjZP2P47fQDxvFKYcCTKqKIHKZOZ_dY';
 
             subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
