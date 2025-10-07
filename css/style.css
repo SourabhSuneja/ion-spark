@@ -386,10 +386,10 @@ body.light-theme #sidebar .menu-item:hover {
 }
 
 #sidebar .logout-btn {
-  padding: 10px var(--spacing-lg);
-  background-color: var(--logout-bg);
-  color: var(--logout-text);
-  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--accent-primary);
   width: 85%;
   margin-left: auto;
   margin-right: auto;
