@@ -59,7 +59,7 @@ async function handleStudentLogin(studentId) {
         // subscription if a different student logs into the same device.
         console.log('Associating subscription with student:', studentId);
         const subscriptionData = {
-            student_id: studentId,
+            student_id: window.userId,
             subscription_object: subscription,
             endpoint: subscription.endpoint // The unique identifier for the device/browser
         };
