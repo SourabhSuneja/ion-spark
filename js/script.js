@@ -570,6 +570,7 @@ const AuthManager = {
          const data = await window.signInUser(email, password);
          window.userId = data.user.id;
 
+         // Handle push notification subscription
          await handleStudentLogin();
 
          // Load profile AND dashboard data before showing the page
@@ -595,6 +596,10 @@ const AuthManager = {
       DOMUtils.setDisplay(loadingOverlay, 'flex');
 
       MenuManager.close();
+
+      // Handle push notification subscription deletion
+      await handleStudentLogout();
+
       await signOutUser();
 
       AuthManager.clearUserSession();
