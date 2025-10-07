@@ -570,6 +570,8 @@ const AuthManager = {
          const data = await window.signInUser(email, password);
          window.userId = data.user.id;
 
+         await handleStudentLogin();
+
          // Load profile AND dashboard data before showing the page
          await AppManager.initialize();
 
