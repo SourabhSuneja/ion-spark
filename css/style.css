@@ -401,7 +401,10 @@ body.light-theme #sidebar .menu-item:hover {
 }
 
 #sidebar .logout-btn:hover {
-  background-color: var(--logout-hover);
+  background: var(--accent-primary);
+  color: var(--accent-button-text);
+  border-color: var(--accent-primary);
+  box-shadow: 0 4px 15px var(--shadow-medium);
 }
 
 /* Main Container */
