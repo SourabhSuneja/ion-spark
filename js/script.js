@@ -296,7 +296,9 @@ const MenuManager = {
       });
 
       // Add logout button
-      const logoutBtn = DOMUtils.createElement('button', 'logout-btn', 'Logout');
+      const logoutBtn = DOMUtils.createElement('button', 'logout-btn');
+
+      logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
       logoutBtn.addEventListener('click', AuthManager.logout);
       sidebar.appendChild(logoutBtn);
    }
