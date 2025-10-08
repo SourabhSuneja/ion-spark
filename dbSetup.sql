@@ -426,6 +426,13 @@ CREATE POLICY "Students can insert their own subscriptions"
     ON subscriptions FOR INSERT
     WITH CHECK (auth.uid() = student_id);
 
+-- Push subscriptions
+ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Students can manage their own push notification subscriptions"
+    ON push_subscriptions FOR ALL
+    USING (auth.uid() = student_id)
+    WITH CHECK (auth.uid() = student_id);
+
 
 -- =========================
 -- INSERT INITIAL SEED DATA
