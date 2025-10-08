@@ -19,6 +19,9 @@ const USER_DATA = {
    avatar: ''
 };
 
+// Variable to store notification ID in case the app was opened by notification click
+let notifId = null;
+
 // Variable to hold all dashboard data fetched from the backend.
 let DASHBOARD_DATA = {};
 
@@ -577,7 +580,17 @@ const AuthManager = {
          await AppManager.initialize();
 
          DOMUtils.hide(elements.signInScreen);
-         PageManager.loadPage('home'); // Load home page to trigger correct setup
+         await PageManager.loadPage('home'); // Load home page to trigger correct setup
+
+         // Load notification page immediately, if notifId is available
+          if(notifId) {
+            PageManager.loadManualPage({
+    link: './pages/notifications/show.html?notification_id=' + notifId,
+    title: 'Notification',
+    page_key: 'show-notification'
+             });
+          }
+
       } catch (error) {
          AuthManager.showError(elements, errorIcon, error.message);
       }
@@ -664,7 +677,16 @@ const AuthManager = {
             // Load profile AND dashboard data before showing the page
             await AppManager.initialize();
             DOMUtils.hide(signInScreen);
-            PageManager.loadPage('home'); // Load home page to trigger correct setup
+            await PageManager.loadPage('home'); // Load home page to trigger correct setup
+
+            // Load notification page immediately, if notifId is available
+             if(notifId) {
+               PageManager.loadManualPage({
+    link: './pages/notifications/show.html?notification_id=' + notifId,
+    title: 'Notification',
+    page_key: 'show-notification'
+                });
+             }
          } else {
             DOMUtils.setDisplay(signInScreen, 'flex');
          }
