@@ -112,6 +112,14 @@ async function unsubscribeFromPush() {
 navigator.serviceWorker.addEventListener('message', event => {
     if (event.data && event.data.type === 'NOTIFICATION_CLICK') {
         console.log(`Notification clicked with ID: ${event.data.id}`);
+
+        // Load notification page into an iframe right away (app is already open)
+             PageManager.loadManualPage({
+    link: './pages/notifications/show.html?notification_id=' + event.data.id,
+    title: 'Notification',
+    page_key: 'show-notification'
+             });
+
         // Now you can call your custom function
         if (typeof showNotification === 'function') {
             showNotification(event.data.id);
