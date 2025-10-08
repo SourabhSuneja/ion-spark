@@ -133,5 +133,6 @@ window.addEventListener('load', () => {
 
 
 function showNotification(notificationId) {
-  PageManager.loadManualPage({link: './pages/notifications/show.html?notification_id=' + notificationId, title: 'Notification', page_key: 'show-notification'});
+  // Just store the notification ID in a global variable, the app's main script will see how to handle this
+  notifId = notificationId;
 }
