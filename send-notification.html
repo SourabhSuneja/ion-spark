@@ -174,7 +174,7 @@
 
             <div class="form-group">
                 <label for="detailedMessage">Detailed Message</label>
-                <textarea id="detailedMessage" required placeholder="e.g., Dear Students, This is to inform..."></textarea>
+                <textarea id="detailedMessage" placeholder="e.g., Dear Students, This is to inform..."></textarea>
             </div>
 
             <button type="submit" id="submitBtn" class="submit-btn">Send Notification</button>
@@ -284,7 +284,7 @@
                 const passcode = document.getElementById('passcode').value;
                 const title = document.getElementById('title').value.trim();
                 const body = document.getElementById('body').value.trim();
-                const detailedMessage = document.getElementById('detailedMessage').value.trim();
+                const detailedMessage = document.getElementById('detailedMessage').value.trim() || null;
                 const notificationID = await generateUUID();
                 const targetType = targetTypeSelect.value;
 
