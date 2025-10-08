@@ -20,12 +20,12 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 /**
- * Call this function immediately AFTER a student successfully logs in.
+ * Call this function immediately AFTER a student successfully logs in or after auth status is confirmed.
  * It handles everything: requests permission if needed, gets the device's
  * subscription, and ensures it's associated with the current student in the database.
  * * @param {string} studentId The unique UUID of the logged-in student.
  */
-async function handleStudentLogin(studentId) {
+async function subscribeToPush(studentId) {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         console.warn('Push messaging is not supported.');
         return;
@@ -84,7 +84,7 @@ async function handleStudentLogin(studentId) {
  * It removes the subscription record from the database, ensuring the logged-out
  * student no longer receives notifications on this device.
  */
-async function handleStudentLogout() {
+async function unsubscribeFromPush() {
     try {
         const registration = await navigator.serviceWorker.ready;
         const subscription = await registration.pushManager.getSubscription();
