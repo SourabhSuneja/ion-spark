@@ -291,7 +291,7 @@
                 
                 // Display success message
                 responseDiv.className = 'success';
-                responseDiv.textContent = `✅ Success! Targeted ${result.targeted_students_count} students. Successfully notified ${result.successful_deliveries_count} devices.`;
+                responseDiv.textContent = `✅ Success! Targeted ${result.targeted_recipients} students. Successfully notified ${result.success_count} devices.`; 
 
             } catch (err) {
                 console.error("Error sending notification:", err);
