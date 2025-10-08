@@ -4,7 +4,7 @@
 -- =========================
 DROP TABLE IF EXISTS menu_resources CASCADE;
 DROP TABLE IF EXISTS subject_resources CASCADE;
-DROP TABLE IF EXISTS notifications CASCADE;
+DROP TABLE IF EXISTS notification_logs CASCADE;
 DROP TABLE IF EXISTS push_subscriptions CASCADE;
 DROP TABLE IF EXISTS settings CASCADE;
 DROP TABLE IF EXISTS subscriptions CASCADE;
@@ -51,6 +51,28 @@ CREATE TABLE subject_resources (
     min_width     INT,
     display_order SMALLINT DEFAULT 0 NOT NULL,
     extra JSONB
+);
+
+-- Notification Logs
+CREATE TABLE notification_logs (
+    -- Primary Key and Logging
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+
+    -- Notification Details
+    message_title text NOT NULL,
+    message_body text NOT NULL,
+    detailed_message text,
+
+    -- Targeting Information
+    target_type text NOT NULL, -- e.g., 'all', 'grade', 'grade-section', 'token'
+    target_tokens jsonb,       -- The specific tokens/grades/sections used for filtering
+
+    -- Result Metrics
+    targeted_recipients integer NOT NULL, -- The number of subscriptions found
+    success_count integer NOT NULL,       -- The number of devices successfully reached
+
+    sent_by text NOT NULL
 );
 
 -- Students table
@@ -110,18 +132,6 @@ CREATE TABLE push_subscriptions (
     subscription_object JSONB NOT NULL,
     endpoint           TEXT UNIQUE,
     created_at         TIMESTAMP DEFAULT now()
-);
-
--- Notifications table
-CREATE TABLE notifications (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    title           TEXT NOT NULL,
-    body            TEXT,
-    data            JSONB, -- Custom payload like notificationID
-    sent_by         UUID REFERENCES public.teachers(id) ON DELETE SET NULL,
-    target_criteria JSONB NOT NULL, -- e.g., { "type": "grade-section", "value": "6-A1" }
-    recipient_count INTEGER NOT NULL DEFAULT 0,
-    created_at      TIMESTAMP DEFAULT now()
 );
 
 
@@ -379,6 +389,13 @@ CREATE POLICY "Allow authenticated users to read resources"
 ALTER TABLE subject_resources ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow authenticated users to read resources"
     ON subject_resources FOR SELECT
+    TO authenticated
+    USING (true);
+
+-- Notification logs
+ALTER TABLE notification_logs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow authenticated users to read notifications"
+    ON notification_logs FOR SELECT
     TO authenticated
     USING (true);
 
