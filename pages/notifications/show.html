@@ -6,8 +6,6 @@
       <title>Notification</title>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-      <!-- Supabase CRUD -->
-      <script type="module" src="./js/supabase-crud.js"></script>
       <style>
          :root {
          /* Colors - Dark Theme */
@@ -385,7 +383,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const notificationId = urlParams.get('notification_id');
 
-            const notification = await invokeFunction('get_specific_notification', {
+            const notification = await window.parent.invokeFunction('get_specific_notification', {
          'p_notification_id': notificationId
       }, true); 
             renderNotification(notification);
