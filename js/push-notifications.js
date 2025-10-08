@@ -133,5 +133,5 @@ window.addEventListener('load', () => {
 
 
 function showNotification(notificationId) {
-  alert(('Notification received: ' + notificationId));
+  PageManager.loadManualPage({link: './pages/notifications/show.html?notification_id=' + notificationId, title: 'Notification', page_key: 'show-notification'});
 }
