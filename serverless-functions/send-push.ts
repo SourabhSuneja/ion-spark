@@ -21,7 +21,7 @@ serve(async (req)=>{
       });
     }
     // Parse incoming request body
-    const { passcode, message, target_type, target_tokens, sent_by } = await req.json();
+    const { passcode, message, detailed_message, target_type, target_tokens, sent_by } = await req.json();
     // 🔒 Step 1: Validate passcode
     const SUPABASE_PASSCODE = Deno.env.get("PUSH_SECRET_PASSCODE");
     if (!SUPABASE_PASSCODE || passcode !== SUPABASE_PASSCODE) {
@@ -83,6 +83,7 @@ serve(async (req)=>{
         id: notificationID,
         message_title: message.title,
         message_body: message.body,
+        detailed_message,
         target_type,
         target_tokens,
         targeted_recipients: subscriptions.length,
