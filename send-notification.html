@@ -171,11 +171,6 @@
                 <label for="body">Notification Body</label>
                 <textarea id="body" required placeholder="e.g., The annual sports day has been scheduled..."></textarea>
             </div>
-            
-            <div class="form-group">
-                <label for="notificationID">Notification ID (Optional)</label>
-                <input type="text" id="notificationID" placeholder="e.g., SPORTS-DAY-2025">
-            </div>
 
             <button type="submit" id="submitBtn" class="submit-btn">Send Notification</button>
         </form>
@@ -195,6 +190,48 @@
         const targetTokensTextarea = document.getElementById('targetTokens');
         const submitBtn = document.getElementById('submitBtn');
         const responseDiv = document.getElementById('response');
+
+        // Random notification ID generator
+        async function generateUUID() {
+  // Use Web Crypto API (browser/Deno)
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // Version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // Variant 10
+    const hex = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+    return (
+      hex.slice(0, 8) + '-' +
+      hex.slice(8, 12) + '-' +
+      hex.slice(12, 16) + '-' +
+      hex.slice(16, 20) + '-' +
+      hex.slice(20)
+    );
+  }
+
+  // Use Node.js crypto if available
+  try {
+    const { randomBytes } = require('crypto');
+    const bytes = randomBytes(16);
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // Version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // Variant 10
+    const hex = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+    return (
+      hex.slice(0, 8) + '-' +
+      hex.slice(8, 12) + '-' +
+      hex.slice(12, 16) + '-' +
+      hex.slice(16, 20) + '-' +
+      hex.slice(20)
+    );
+  } catch (err) {
+    // Fallback (less secure, uses Math.random)
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+}
 
         // --- DYNAMIC UI LOGIC ---
         
@@ -242,7 +279,7 @@
                 const passcode = document.getElementById('passcode').value;
                 const title = document.getElementById('title').value;
                 const body = document.getElementById('body').value;
-                const notificationID = document.getElementById('notificationID').value;
+                const notificationID = await generateUUID();
                 const targetType = targetTypeSelect.value;
 
                 // 2. Process target tokens
