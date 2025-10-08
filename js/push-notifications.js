@@ -58,7 +58,7 @@ async function subscribeToPush(studentId) {
         // 2. UPSERT: Ensure the subscription is associated with the current student.
         // This handles new subscriptions, and also re-associates an existing
         // subscription if a different student logs into the same device.
-        console.log('Associating subscription with student:', studentId);
+        console.log('Associating subscription with student:', window.userId);
         const subscriptionData = {
             student_id: window.userId,
             subscription_object: subscription,
