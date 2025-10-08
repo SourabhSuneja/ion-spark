@@ -659,6 +659,8 @@ const AuthManager = {
          const isAuthenticated = await checkAuth();
 
          if (isAuthenticated) {
+             // Handle push notification subscription
+            await subscribeToPush();
             // Load profile AND dashboard data before showing the page
             await AppManager.initialize();
             DOMUtils.hide(signInScreen);
