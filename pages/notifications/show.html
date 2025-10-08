@@ -381,7 +381,7 @@
          }
 
          // Initialize the page
-         async function initializePage() {
+         async function initializePage(userData) {
             const urlParams = new URLSearchParams(window.location.search);
             const notificationId = urlParams.get('notification_id');
 
