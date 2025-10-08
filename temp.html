@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Push Notification Sender</title>
+    <!-- Supabase CRUD -->
+    <script type="module" src="./js/supabase-crud.js"></script>
     <style>
         /* --- Basic Reset & Typography --- */
         :root {
@@ -181,9 +183,7 @@
         <div id="response"></div>
     </main>
 
-    <script type="module">
-        // --- MODULE IMPORTS ---
-        import { invokeEdgeFunction } from './js/supabase-crud.js';
+    <script>
 
         // --- DOM ELEMENT REFERENCES ---
         const form = document.getElementById('notificationForm');
