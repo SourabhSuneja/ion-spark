@@ -386,7 +386,7 @@ body.light-theme #sidebar .menu-item:hover {
 }
 
 #sidebar .logout-btn {
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: var(--spacing-sm) var(--spacing-lg);
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   border: 2px solid var(--accent-primary);
