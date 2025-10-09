@@ -21,6 +21,7 @@ DROP FUNCTION IF EXISTS get_student_profile(UUID);
 DROP FUNCTION IF EXISTS create_settings_for_student();
 DROP FUNCTION IF EXISTS set_default_avatar();
 DROP FUNCTION IF EXISTS handle_new_student_subscriptions();
+DROP FUNCTION IF EXISTS get_specific_notification(p_notification_id text);
 
 
 -- =========================
@@ -351,6 +352,110 @@ BEGIN
     END IF;
 
     RETURN NEW;
+END;
+$$;
+
+-- Function to return a specific notification (only if a student is eligible for this notification)
+CREATE OR REPLACE FUNCTION get_specific_notification(p_notification_id text)
+RETURNS TABLE (
+    id uuid,
+    created_at timestamp,
+    message_title text,
+    message_body text,
+    detailed_message text,
+    target_type text,
+    target_tokens jsonb,
+    targeted_recipients integer,
+    success_count integer,
+    sent_by text
+)
+SECURITY INVOKER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_student_id uuid;
+    v_student_grade int;
+    v_student_section text;
+    v_student_access_token uuid;
+    v_target_type text;
+    v_target_tokens jsonb;
+    v_is_eligible boolean := false;
+    v_grade_section text;
+    v_target_grade int;
+    v_target_section text;
+BEGIN
+    -- Get the authenticated user's ID
+    v_student_id := auth.uid();
+    
+    -- If no authenticated user, return nothing
+    IF v_student_id IS NULL THEN
+        RETURN;
+    END IF;
+    
+    -- Get student details
+    SELECT s.grade, s.section, s.access_token
+    INTO v_student_grade, v_student_section, v_student_access_token
+    FROM students s
+    WHERE s.id = v_student_id;
+    
+    -- If student not found, return nothing
+    IF NOT FOUND THEN
+        RETURN;
+    END IF;
+    
+    -- Get notification details
+    SELECT nl.target_type, nl.target_tokens
+    INTO v_target_type, v_target_tokens
+    FROM notification_logs nl
+    WHERE nl.id = p_notification_id::uuid;
+    
+    -- If notification not found, return nothing
+    IF NOT FOUND THEN
+        RETURN;
+    END IF;
+    
+    -- Check eligibility based on target_type
+    CASE v_target_type
+        WHEN 'all' THEN
+            v_is_eligible := true;
+            
+        WHEN 'token' THEN
+            -- Check if student's access_token is in the target_tokens array
+            v_is_eligible := v_target_tokens ? v_student_access_token::text;
+            
+        WHEN 'grade' THEN
+            -- Check if student's grade is in the target_tokens array
+            v_is_eligible := v_target_tokens ? v_student_grade::text;
+            
+        WHEN 'grade-section' THEN
+            -- Construct the grade-section string for this student
+            v_grade_section := v_student_grade::text || '-' || v_student_section;
+            -- Check if this grade-section combination is in target_tokens
+            v_is_eligible := v_target_tokens ? v_grade_section;
+            
+        ELSE
+            v_is_eligible := false;
+    END CASE;
+    
+    -- If eligible, return the notification
+    IF v_is_eligible THEN
+        RETURN QUERY
+        SELECT 
+            nl.id,
+            nl.created_at,
+            nl.message_title,
+            nl.message_body,
+            nl.detailed_message,
+            nl.target_type,
+            nl.target_tokens,
+            nl.targeted_recipients,
+            nl.success_count,
+            nl.sent_by
+        FROM notification_logs nl
+        WHERE nl.id = p_notification_id::uuid;
+    END IF;
+    
+    RETURN;
 END;
 $$;
 
