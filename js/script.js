@@ -717,6 +717,7 @@ const ThemeManager = {
       if (isLightTheme) {
          body.classList.add("light-theme");
          metaThemeColor.setAttribute("content", "#ffffff");
+         DOMUtils.getElementById('theme-toggle-btn').setAttribute("name", "moon-outline");
          APP_CONFIG.theme = "light";
          if (savePreference) {
             updateRow('settings', ['student_id'], [window.userId], ['theme'], [1]);
@@ -724,6 +725,7 @@ const ThemeManager = {
       } else {
          body.classList.remove("light-theme");
          metaThemeColor.setAttribute("content", "#000000");
+         DOMUtils.getElementById('theme-toggle-btn').setAttribute("name", "sunny-outline");
          APP_CONFIG.theme = "dark";
          if (savePreference) {
             updateRow('settings', ['student_id'], [window.userId], ['theme'], [0]);
